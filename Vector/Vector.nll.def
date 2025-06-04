@@ -1,0 +1,19 @@
+namespace NumberDuck
+{
+	namespace Secret
+	{
+		class Vector<T>
+		{
+			public void PushFront(T xObject);
+			public void PushBack(T xObject);
+			public int GetSize();
+			public T Get(int nIndex);
+			public void Clear();
+			public void Set(int nIndex, T xObject);
+			public void Insert(int nIndex, T xObject);
+			public void Erase(int nIndex);
+			public T PopBack();
+			public T PopFront();
+		}
+	}
+}

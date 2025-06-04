@@ -1,0 +1,7 @@
+namespace NumbatLogic
+{
+	class Assert
+	{
+		public static void Plz(bool result);
+	}
+}
