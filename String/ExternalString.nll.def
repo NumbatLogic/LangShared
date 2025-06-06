@@ -1,0 +1,12 @@
+namespace NumbatLogic
+{
+	class ExternalString
+	{
+		public static bool Equal(string sxA, string sxB);
+		public static int GetChecksum(string sxString);
+		public static Uint64 hextol(string sxString);
+		public static int atoi(string sxString);
+		public static Uint64 atol(string sxString);
+		public static double atof(string sxString);
+	}
+}
