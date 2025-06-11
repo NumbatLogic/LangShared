@@ -1,0 +1,33 @@
+namespace NumbatLogic
+{
+	class InternalString
+	{
+		public construct(string szString);
+		public InternalString** CreateClone();
+		public void Set(string szString);
+		public string GetExternalString();
+		public void Append(string sString);
+		public void AppendChar(UniChar nChar);
+		public void AppendString(string szString);
+		public void AppendInt(int nInt);
+		public void AppendUint32(Uint32 nUint32);
+		//public void AppendUnsignedInt(uint nUint);
+		public void AppendDouble(double fDouble);
+		public void PrependString(string sString);
+		public void PrependChar(UniChar cChar);
+		public void SubStr(int nStart, int nLength);
+		public void CropFront(int nLength);
+		public int GetLength();
+		public UniChar GetChar(int nIndex);
+		public void BlobWriteUtf8(BlobView pBlobView, bool bZeroTerminator);
+		public void BlobWrite16Bit(BlobView pBlobView, bool bZeroTerminator);
+		public bool IsAscii();
+		public bool IsEqual(string sString);
+		public bool StartsWith(string szString);
+		public bool EndsWith(string szString);
+		public double ParseDouble();
+		public Uint32 ParseHex();
+		public int FindChar(UniChar nChar);
+		public void Replace(string sxFind, string sxReplace);
+	}
+}
