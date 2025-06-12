@@ -4,27 +4,27 @@
 
 namespace NumbatLogic
 {
-	float Math::Abs(float fAngle)
+	double Math::Abs(double fAngle)
 	{
 		return abs(fAngle);
 	}
 
-	float Math::Sin(float fAngle)
+	double Math::Sin(double fAngle)
 	{
 		return sin(fAngle);
 	}
 
-	float Math::Cos(float fAngle)
+	double Math::Cos(double fAngle)
 	{
 		return cos(fAngle);
 	}
 
-	float Math::Sqrt(float fX)
+	double Math::Sqrt(double fX)
 	{
 		return sqrt(fX);
 	}
 
-	float Math::Atan2(float fX, float fY)
+	double Math::Atan2(double fX, double fY)
 	{
 		return atan2(fX, fY);
 	}
