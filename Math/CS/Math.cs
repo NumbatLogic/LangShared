@@ -4,29 +4,29 @@ namespace NumbatLogic
 {
 	class Math
 	{
-		public static float Abs(float fX)
+		public static double Abs(double fX)
 		{
 			return System.Math.Abs(fX);
 		}
 
-		public static float Sin(float fAngle)
+		public static double Sin(double fAngle)
 		{
-			return (float)System.Math.Sin(fAngle);
+			return System.Math.Sin(fAngle);
 		}
 
-		public static float Cos(float fAngle)
+		public static double Cos(double fAngle)
 		{
-			return (float)System.Math.Cos(fAngle);
+			return System.Math.Cos(fAngle);
 		}
 
-		public static float Sqrt(float fValue)
+		public static double Sqrt(double fValue)
 		{
-			return (float)System.Math.Sqrt(fValue);
+			return System.Math.Sqrt(fValue);
 		}
 
-		public static float Atan2(float fY, float fX)
+		public static double Atan2(double fY, double fX)
 		{
-			return (float)System.Math.Atan2(fY, fX);
+			return System.Math.Atan2(fY, fX);
 		}
 	}
 } 

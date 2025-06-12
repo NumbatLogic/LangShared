@@ -7,11 +7,11 @@ namespace NumbatLogic
 	class Math
 	{
 		public:
-			static float Abs(float fX);
-			static float Sin(float fAngle);
-			static float Cos(float fAngle);
-			static float Sqrt(float fX);
-			static float Atan2(float fX, float fY);
+			static double Abs(double fX);
+			static double Sin(double fAngle);
+			static double Cos(double fAngle);
+			static double Sqrt(double fX);
+			static double Atan2(double fX, double fY);
 	};
 }
 
