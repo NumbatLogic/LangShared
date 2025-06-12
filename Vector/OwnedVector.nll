@@ -38,7 +38,8 @@ namespace NumberDuck
 				{
 					// HAXXXX, this loses owned pointer...
 					T pTemp = m_pVector.PopBack();
-					delete pTemp;
+					if (pTemp != null) // hax to stop CS complaining
+						delete pTemp;
 				}
 			}
 
