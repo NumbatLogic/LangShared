@@ -1,75 +1,72 @@
-namespace NumberDuck
+namespace NumbatLogic
 {
-	namespace Secret
+	class OwnedVector<T>
 	{
-		class OwnedVector<T>
+		private Vector<T*>* m_pVector;
+
+		public construct()
 		{
-			private Vector<T*>* m_pVector;
+			m_pVector = own new Vector<T*>();
+		}
 
-			public construct()
-			{
-				m_pVector = own new Vector<T*>();
-			}
+		public destruct()
+		{
+			Clear();
+		}
 
-			public destruct()
-			{
-				Clear();
-			}
+		public T PushBack(T** xObject)
+		{
+			m_pVector.PushBack(own xObject);
+			return m_pVector.Get(m_pVector.GetSize()-1);
+		}
 
-			public T PushBack(T** xObject)
-			{
-				m_pVector.PushBack(own xObject);
-				return m_pVector.Get(m_pVector.GetSize()-1);
-			}
+		public int GetSize()
+		{
+			return m_pVector.GetSize();
+		}
 
-			public int GetSize()
-			{
-				return m_pVector.GetSize();
-			}
+		public T Get(int nIndex)
+		{
+			return m_pVector.Get(nIndex);
+		}
 
-			public T Get(int nIndex)
+		public void Clear()
+		{
+			while (m_pVector.GetSize() > 0)
 			{
-				return m_pVector.Get(nIndex);
+				// HAXXXX, this loses owned pointer...
+				T pTemp = m_pVector.PopBack();
+				if (pTemp != null) // hax to stop CS complaining
+					delete pTemp;
 			}
+		}
 
-			public void Clear()
-			{
-				while (m_pVector.GetSize() > 0)
-				{
-					// HAXXXX, this loses owned pointer...
-					T pTemp = m_pVector.PopBack();
-					if (pTemp != null) // hax to stop CS complaining
-						delete pTemp;
-				}
-			}
+		public void Insert(int nIndex, T** pObject)
+		{
+			m_pVector.Insert(nIndex, own pObject);
+		}
 
-			public void Insert(int nIndex, T** pObject)
-			{
-				m_pVector.Insert(nIndex, own pObject);
-			}
+		public T** Remove(int nIndex)
+		{
+			T** pTemp = m_pVector.Get(nIndex);
+			m_pVector.Erase(nIndex);
+			return pTemp;
+		}
 
-			public T** Remove(int nIndex)
-			{
-				T** pTemp = m_pVector.Get(nIndex);
-				m_pVector.Erase(nIndex);
-				return pTemp;
-			}
+		public void Erase(int nIndex)
+		{
+			delete m_pVector.Get(nIndex);
+			m_pVector.Erase(nIndex);
+		}
 
-			public void Erase(int nIndex)
-			{
-				delete m_pVector.Get(nIndex);
-				m_pVector.Erase(nIndex);
-			}
+		public T** PopBack()
+		{
+			return m_pVector.PopBack(); //disown
+		}
 
-			public T** PopBack()
-			{
-				return m_pVector.PopBack(); //disown
-			}
-
-			public T** PopFront()
-			{
-				return m_pVector.PopFront(); //disown
-			}
+		public T** PopFront()
+		{
+			return m_pVector.PopFront(); //disown
 		}
 	}
 }
