@@ -18,12 +18,13 @@ namespace NumbatLogic
             bool Pending();
             ClientSocket* Accept();
 
-            virtual bool Send(Blob* pBlob);
+            virtual bool Send(Blob* pBlob, unsigned int clientSocketId);
 			virtual Blob* Receive();
 
         protected:
             int m_nSocket;
 			int m_nPort;
+            unsigned int m_nNextClientId;
 
             Vector<ClientSocket*>* m_pClientSocketVector;
 	};
