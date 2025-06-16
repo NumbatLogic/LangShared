@@ -1,0 +1,11 @@
+namespace NumbatLogic
+{
+	class ServerSocket : Socket
+	{
+		public void Start(int port);
+		public void Stop();
+		public void Update();
+		public bool Pending();
+		public ClientSocket Accept();
+	}
+} 

@@ -1,13 +1,16 @@
 <?php
 	class LangShared_Config extends Project_Config
 	{	
-		public function __construct($sAction, $sPackageList)
+		public function __construct($sAction, $sPackageList, $sTranspiledDirectory)
 		{
 			parent::__construct($sAction);
 
 			$sAllowedDirectoryArray = file($sPackageList, FILE_IGNORE_NEW_LINES);
-			$this->m_xFileArray = ProjectGen_ParseDirectory(dirname(__FILE__), "/\.hpp|\.cpp/",  $sAllowedDirectoryArray);
-			// also transpiled folder?
+			//$this->m_xFileArray = ProjectGen_ParseDirectory(dirname(__FILE__), "/\.hpp|\.cpp/",  $sAllowedDirectoryArray);
+
+			$this->m_xFileArray = array_merge(
+				ProjectGen_ParseDirectory(dirname(__FILE__), "/\.hpp|\.cpp/",  $sAllowedDirectoryArray),
+				ProjectGen_ParseDirectory($sTranspiledDirectory, "/\.hpp|\.cpp/"));
 		}
 
 		public function GetName() { return "LangShared"; }
