@@ -31,6 +31,7 @@ namespace NumbatLogic
         m_nPort = -1;
         m_bConnected = false;
         m_pHost = nullptr;
+        m_nClientSocketId = 0;  // Initialize client socket ID to 0
 
         // Initialize buffers
         m_nWriteDataSize = 0;

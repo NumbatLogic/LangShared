@@ -29,6 +29,7 @@ namespace NumbatLogic
 	{
 		m_nSocket = -1;
 		m_nPort = -1;
+		m_nNextClientId = 1;  // Start client IDs at 1 (0 is reserved for broadcast)
 		m_pClientSocketVector = new Vector<ClientSocket*>();
 	}
 
@@ -177,51 +178,68 @@ namespace NumbatLogic
 
 		// Create new client socket
 		ClientSocket* pNewClient = new ClientSocket();
-		if (pNewClient)
-		{
-			pNewClient->SetAcceptedSocket(clientSocket);
-			// Set non-blocking mode
-			#ifdef NB_WINDOWS
-				u_long mode = 1;
-				ioctlsocket(clientSocket, FIONBIO, &mode);
-			#else
-				int flags = fcntl(clientSocket, F_GETFL, 0);
-				if (flags != -1)
-				{
-					fcntl(clientSocket, F_SETFL, flags | O_NONBLOCK);
-				}
-			#endif
-			// Add to client vector
-			m_pClientSocketVector->PushBack(pNewClient);
-		}
+		Assert::Plz(pNewClient != nullptr);
+		pNewClient->SetAcceptedSocket(clientSocket);
+		pNewClient->SetClientSocketId(m_nNextClientId++);  // Assign and increment client socket ID
+		
+		// Set non-blocking mode
+		#ifdef NB_WINDOWS
+			u_long mode = 1;
+			ioctlsocket(clientSocket, FIONBIO, &mode);
+		#else
+			int flags = fcntl(clientSocket, F_GETFL, 0);
+			if (flags != -1)
+			{
+				fcntl(clientSocket, F_SETFL, flags | O_NONBLOCK);
+			}
+		#endif
+		// Add to client vector
+		m_pClientSocketVector->PushBack(pNewClient);
 
 		return pNewClient;
 	}
 
-	bool ServerSocket::Send(Blob* pBlob)
+	bool ServerSocket::Send(Blob* pBlob, unsigned int clientSocketId)
 	{
 		if (!pBlob || m_nSocket == -1)
 			return false;
 
-		// Send to all connected clients
 		bool bSuccess = true;
-		for (unsigned int i = 0; i < m_pClientSocketVector->GetSize(); i++)
+		
+		Blob* pClientBlob = new Blob(false);
+		pClientBlob->Resize(pBlob->GetSize(), false);
+		pClientBlob->PackData(pBlob->GetData(), 0, pBlob->GetSize());
+		
+		if (clientSocketId == 0)
 		{
-			ClientSocket* pClientSocket = m_pClientSocketVector->Get(i);
-			if (pClientSocket)
+			// Broadcast to all clients
+			for (unsigned int i = 0; i < m_pClientSocketVector->GetSize(); i++)
 			{
-				// Create a copy of the blob for each client
-				Blob* pClientBlob = new Blob(false);
-				pClientBlob->Resize(pBlob->GetSize(), false);
-				pClientBlob->PackData(pBlob->GetData(), 0, pBlob->GetSize());
-				
-				if (!pClientSocket->Send(pClientBlob))
+				ClientSocket* pClientSocket = m_pClientSocketVector->Get(i);
+				if (pClientSocket)
 				{
-					bSuccess = false;
+					if (!pClientSocket->Send(pClientBlob))
+					{
+						bSuccess = false;
+					}
 				}
-				delete pClientBlob;
 			}
 		}
+		else
+		{
+			// Send to specific client
+			for (unsigned int i = 0; i < m_pClientSocketVector->GetSize(); i++)
+			{
+				ClientSocket* pClientSocket = m_pClientSocketVector->Get(i);
+				if (pClientSocket && pClientSocket->GetClientSocketId() == clientSocketId)
+				{
+					bSuccess = pClientSocket->Send(pClientBlob);
+					break;  // Found and sent to the target client
+				}
+			}
+		}
+		
+		delete pClientBlob;
 		return bSuccess;
 	}
 

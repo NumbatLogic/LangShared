@@ -14,13 +14,13 @@ namespace NumbatLogic
 			pServerSocket.Update();
 			pClientSocket.Update();
 
-			ClientSocket p = pServerSocket.Accept();
-			Assert::Plz(p != null);
+			ClientSocket pServerClientSocket = pServerSocket.Accept();
+			Assert::Plz(pServerClientSocket != null);
 
 			Blob* pSendBlob = own new Blob(true);
 			BlobView pSendBlobView = pSendBlob.GetBlobView();
 			pSendBlobView.PackInt32(619);
-			Assert::Plz(pServerSocket.Send(pSendBlob));
+			Assert::Plz(pServerSocket.Send(pSendBlob, 0)); //pServerClientSocket.GetClientId()
 
 			while (pServerSocket.Pending() || pClientSocket.Pending())
 			{
@@ -28,7 +28,7 @@ namespace NumbatLogic
 				pClientSocket.Update();
 			}
 
-			Blob* pReceiveBlob = pClientSocket.Receive();
+			Blob* pReceiveBlob = own pClientSocket.Receive();
 			Assert::Plz(pReceiveBlob != null);
 			BlobView pReceiveBlobView = pReceiveBlob.GetBlobView();
 			int nRecievedInt = pReceiveBlobView.UnpackInt32();
