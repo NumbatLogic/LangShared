@@ -1,0 +1,8 @@
+namespace NumbatLogic
+{
+	class Socket
+	{
+		public virtual bool Send(Blob pBlob);
+		public virtual Blob** Receive();
+	}
+} 
