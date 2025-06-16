@@ -13,6 +13,9 @@ namespace NumbatLogic
 		public void Update();
 		public bool Pending();
 
+
+		
+
 		/*extern void nbClientSocket_Write(nbClientSocket* pClientSocket, const Uint8* pData, Uint32 nSize);
 		extern Uint32 nbClientSocket_Read(nbClientSocket* pClientSocket, Uint8* pData, Uint32 nSize);
 		extern Uint32 nbClientSocket_GetReadDataSize(nbClientSocket* pClientSocket);

@@ -179,7 +179,7 @@ namespace NumbatLogic
         if (!m_bConnected || m_nSocket < 0)
             return false;
 
-        return m_nWriteDataSize > 0 || m_nReadDataSize > 0;
+        return m_nWriteDataSize > 0; // || m_nReadDataSize > 0;
     }
 
     bool ClientSocket::Send(Blob* pBlob)
