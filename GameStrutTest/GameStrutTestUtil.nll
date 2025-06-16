@@ -1,0 +1,17 @@
+namespace NumbatLogic
+{
+	class GameStrutTestUtil
+	{
+        public static void Update(ServerSocket pServerSocket, ClientSocket pClientSocket)
+		{
+			while (true)
+			{
+				pServerSocket.Update();
+				pClientSocket.Update();
+
+				if (!pServerSocket.Pending() && !pClientSocket.Pending())
+					break;
+			}
+		}
+	}
+}

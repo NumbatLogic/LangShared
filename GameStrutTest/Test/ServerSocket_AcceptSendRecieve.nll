@@ -1,0 +1,52 @@
+namespace NumbatLogic
+{
+	class ServerSocket_AcceptSendRecieve
+	{
+        public static void Run()
+		{
+			ServerSocket* pServerSocket = own new ServerSocket();
+			pServerSocket.Start(9876);
+
+			ClientSocket* pClientSocket = own new ClientSocket();
+			pClientSocket.Connect("localhost", 9876);
+
+			GameStrutTestUtil::Update(pServerSocket, pClientSocket);
+
+			ClientSocket pServerClientSocket = pServerSocket.Accept();
+			Assert::Plz(pServerClientSocket != null);
+
+			{
+				Blob* pSendBlob = own new Blob(true);
+				pSendBlob.GetBlobView().PackInt32(619);
+				pServerSocket.Send(pSendBlob, 0);
+			}
+
+			GameStrutTestUtil::Update(pServerSocket, pClientSocket);
+
+			{
+				Blob* pReceiveBlob = own pClientSocket.Receive();
+				Assert::Plz(pReceiveBlob != null);
+				int nRecievedInt = pReceiveBlob.GetBlobView().UnpackInt32();
+				Assert::Plz(nRecievedInt == 619);
+			}
+
+			{
+				Blob* pClientResponseBlob = own new Blob(true);
+				pClientResponseBlob.GetBlobView().PackInt32(420);
+				pClientSocket.Send(pClientResponseBlob);
+			}
+
+			GameStrutTestUtil::Update(pServerSocket, pClientSocket);
+
+			{
+				Blob* pServerReceiveBlob = own pServerClientSocket.Receive();
+				Assert::Plz(pServerReceiveBlob != null);
+				int nServerReceivedInt = pServerReceiveBlob.GetBlobView().UnpackInt32();
+				Assert::Plz(nServerReceivedInt == 420);
+			}
+
+			pClientSocket.Disconnect();
+			pServerSocket.Stop();
+		}
+	}
+}

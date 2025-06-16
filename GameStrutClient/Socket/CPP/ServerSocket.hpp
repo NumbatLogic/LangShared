@@ -18,8 +18,7 @@ namespace NumbatLogic
             bool Pending();
             ClientSocket* Accept();
 
-            virtual bool Send(Blob* pBlob, unsigned int clientSocketId);
-			virtual Blob* Receive();
+            void Send(Blob* pBlob, unsigned int clientSocketId);
 
         protected:
             int m_nSocket;

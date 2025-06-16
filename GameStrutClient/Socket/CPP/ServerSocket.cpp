@@ -199,20 +199,17 @@ namespace NumbatLogic
 		return pNewClient;
 	}
 
-	bool ServerSocket::Send(Blob* pBlob, unsigned int clientSocketId)
+	void ServerSocket::Send(Blob* pBlob, unsigned int clientSocketId)
 	{
-		if (!pBlob || m_nSocket == -1)
-			return false;
+		Assert::Plz(pBlob != nullptr);
+		Assert::Plz(m_nSocket != -1);
 
-		bool bSuccess = true;
-		
 		Blob* pClientBlob = new Blob(false);
 		pClientBlob->Resize(pBlob->GetSize(), false);
 		pClientBlob->PackData(pBlob->GetData(), 0, pBlob->GetSize());
 		
 		if (clientSocketId == 0)
 		{
-			// Broadcast to all clients
 			for (unsigned int i = 0; i < m_pClientSocketVector->GetSize(); i++)
 			{
 				ClientSocket* pClientSocket = m_pClientSocketVector->Get(i);
@@ -220,47 +217,28 @@ namespace NumbatLogic
 				{
 					if (!pClientSocket->Send(pClientBlob))
 					{
-						bSuccess = false;
+						Assert::Plz(false);
 					}
 				}
 			}
+			delete pClientBlob;
+			return;
 		}
 		else
 		{
-			// Send to specific client
 			for (unsigned int i = 0; i < m_pClientSocketVector->GetSize(); i++)
 			{
 				ClientSocket* pClientSocket = m_pClientSocketVector->Get(i);
 				if (pClientSocket && pClientSocket->GetClientSocketId() == clientSocketId)
 				{
-					bSuccess = pClientSocket->Send(pClientBlob);
-					break;  // Found and sent to the target client
+					pClientSocket->Send(pClientBlob);
+					delete pClientBlob;
+					return;
 				}
 			}
 		}
-		
+
 		delete pClientBlob;
-		return bSuccess;
-	}
-
-	Blob* ServerSocket::Receive()
-	{
-		if (m_nSocket == -1)
-			return nullptr;
-
-		// Check all clients for received data
-		for (unsigned int i = 0; i < m_pClientSocketVector->GetSize(); i++)
-		{
-			ClientSocket* pClientSocket = m_pClientSocketVector->Get(i);
-			if (pClientSocket)
-			{
-				Blob* pBlob = pClientSocket->Receive();
-				if (pBlob)
-				{
-					return pBlob;
-				}
-			}
-		}
-		return nullptr;
+		Assert::Plz(false);
 	}
 }
