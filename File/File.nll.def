@@ -1,0 +1,12 @@
+namespace NumbatLogic
+{
+	class File
+	{
+		public static InternalString** GetContents(string sPath);
+		public static void PutContents(string sPath, string sContents);
+		public static OwnedVector<InternalString>** GetRecursiveFileVector(string sPath);
+
+		public static InternalString** GetFileDirectory(string sPath);
+		public static void CreateDirectory(string sPath);
+	}
+}

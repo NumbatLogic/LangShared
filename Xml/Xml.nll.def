@@ -1,0 +1,17 @@
+namespace NumbatLogic
+{
+    class XmlNode
+    {
+        public XmlNode GetFirstChildElement(string szName);
+        public XmlNode GetNextSiblingElement(string szName);
+        public string GetValue();
+        public string GetText();
+        public string GetAttribute(string szName);
+    }
+
+    class XmlFile : XmlNode
+    {
+        public construct();
+        public bool Load(BlobView pBlobView);
+    }
+}
