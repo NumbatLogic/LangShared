@@ -1,8 +1,8 @@
 #include "File.hpp"
-#include "Blob.hpp"
-#include "InternalString.hpp"
-#include "Vector.hpp"
-#include "../../Transpiled/Shared/OwnedVector.hpp"
+#include "../../Blob/CPP/Blob.hpp"
+#include "../../InternalString/CPP/InternalString.hpp"
+#include "../../Vector/CPP/Vector.hpp"
+#include "../../../Lang/Transpiled/LangShared/Vector/OwnedVector.hpp"
 
 #include "tinydir/tinydir.h"
 
