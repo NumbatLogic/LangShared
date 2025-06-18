@@ -56,7 +56,7 @@ namespace NumbatLogic
             int nBufferSize = m_pBuffer.Length;
 
             if (bAutoResize)
-                Secret.nbAssert.Assert(m_bAutoResize);
+                Assert.Plz(m_bAutoResize);
 
             if (nSize > nBufferSize)
             {
@@ -151,7 +151,7 @@ namespace NumbatLogic
 
         public void UnpackData(byte[] pData, int nOffset, int nSize)
         {
-            Secret.nbAssert.Assert(nOffset + nSize <= m_nSize);
+            Assert.Plz(nOffset + nSize <= m_nSize);
             System.Buffer.BlockCopy(m_pBuffer, nOffset, pData, 0, nSize);
         }
 
@@ -159,25 +159,25 @@ namespace NumbatLogic
         public void PackUint8(byte val, int nOffset) { m_pBuffer[nOffset] = val; }
 
 
-        public short UnpackInt16(int nOffset) { Secret.nbAssert.Assert(nOffset + 2 <= m_nSize); return System.BitConverter.ToInt16(m_pBuffer, nOffset); }
-        public int UnpackInt32(int nOffset) { Secret.nbAssert.Assert(nOffset + 4 <= m_nSize); return System.BitConverter.ToInt32(m_pBuffer, nOffset); }
-        public byte UnpackUint8(int nOffset) { Secret.nbAssert.Assert(nOffset + 1 <= m_nSize); return m_pBuffer[nOffset]; }
-        public ushort UnpackUint16(int nOffset) { Secret.nbAssert.Assert(nOffset + 2 <= m_nSize); return System.BitConverter.ToUInt16(m_pBuffer, nOffset); }
-        public uint UnpackUint32(int nOffset) { Secret.nbAssert.Assert(nOffset + 4 <= m_nSize); return System.BitConverter.ToUInt32(m_pBuffer, nOffset); }
-        public double UnpackDouble(int nOffset) { Secret.nbAssert.Assert(nOffset + 8 <= m_nSize); return System.BitConverter.ToDouble(m_pBuffer, nOffset); }
+        public short UnpackInt16(int nOffset) { Assert.Plz(nOffset + 2 <= m_nSize); return System.BitConverter.ToInt16(m_pBuffer, nOffset); }
+        public int UnpackInt32(int nOffset) { Assert.Plz(nOffset + 4 <= m_nSize); return System.BitConverter.ToInt32(m_pBuffer, nOffset); }
+        public byte UnpackUint8(int nOffset) { Assert.Plz(nOffset + 1 <= m_nSize); return m_pBuffer[nOffset]; }
+        public ushort UnpackUint16(int nOffset) { Assert.Plz(nOffset + 2 <= m_nSize); return System.BitConverter.ToUInt16(m_pBuffer, nOffset); }
+        public uint UnpackUint32(int nOffset) { Assert.Plz(nOffset + 4 <= m_nSize); return System.BitConverter.ToUInt32(m_pBuffer, nOffset); }
+        public double UnpackDouble(int nOffset) { Assert.Plz(nOffset + 8 <= m_nSize); return System.BitConverter.ToDouble(m_pBuffer, nOffset); }
 
 
         public void PackData(byte[] pData, int nOffset, int nSize)
         {
-            Secret.nbAssert.Assert(nOffset + nSize <= m_nSize);
+            Assert.Plz(nOffset + nSize <= m_nSize);
             System.Buffer.BlockCopy(pData, 0, m_pBuffer, nOffset, nSize);
         }
 
 
         public void Pack(byte[] pData, int nDataOffset, int nOffset, int nSize)
         {
-            Secret.nbAssert.Assert(nSize > 0);
-            Secret.nbAssert.Assert(nOffset + nSize <= m_nSize);
+            Assert.Plz(nSize > 0);
+            Assert.Plz(nOffset + nSize <= m_nSize);
             System.Buffer.BlockCopy(pData, nDataOffset, m_pBuffer, nOffset, nSize);
         }
 
@@ -222,8 +222,8 @@ namespace NumbatLogic
 
         public BlobView(Blob pBlob, int nStart, int nEnd)
         {
-            Secret.nbAssert.Assert(nStart <= nEnd);
-            Secret.nbAssert.Assert(nEnd <= pBlob.GetSize());
+            Assert.Plz(nStart <= nEnd);
+            Assert.Plz(nEnd <= pBlob.GetSize());
 
             m_pBlob = pBlob;
             m_nStart = nStart;
@@ -291,7 +291,7 @@ namespace NumbatLogic
             }
             else
             {
-                Secret.nbAssert.Assert(nBlobOffset + nSize <= m_nEnd);
+                Assert.Plz(nBlobOffset + nSize <= m_nEnd);
             }
             m_pBlob.PackData(pData, nBlobOffset, nSize);
         }
@@ -338,7 +338,7 @@ namespace NumbatLogic
             int nEnd = m_nEnd;
             if (nEnd == 0)
                 nEnd = m_pBlob.GetSize();
-            Secret.nbAssert.Assert(nBlobOffset + nSize <= nEnd);
+            Assert.Plz(nBlobOffset + nSize <= nEnd);
             m_pBlob.UnpackData(pData, nBlobOffset, nSize);
         }
 
