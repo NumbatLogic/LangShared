@@ -1,0 +1,12 @@
+namespace NumbatLogic
+{
+	class Utils
+	{
+		public static double Pow(double fBase, double fExponent);
+		public static double ByteConvertUint64ToDouble(Uint64 nValue);
+		public static Int32 ByteConvertUint32ToInt32(Uint32 nValue);
+		public static Uint32 ByteConvertInt32ToUint32(Int32 nValue);
+
+		public static void Indent(int nTabDepth, InternalString sOut);
+	}
+}
