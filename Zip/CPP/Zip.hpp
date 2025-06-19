@@ -4,10 +4,10 @@
 	#include "miniz/miniz.h"
 #endif
 
+namespace NumbatLogic { class BlobView; }
+
 namespace NumbatLogic
 {
-	class Blob;
-	class BlobView;
 	class InternalString;
 
 	class ZipFileInfo

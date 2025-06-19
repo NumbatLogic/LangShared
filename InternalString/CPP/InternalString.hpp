@@ -3,10 +3,10 @@
 #include <cstddef>
 #include <string.h>	// for NULL
 
+namespace NumbatLogic { class BlobView; }
+
 namespace NumbatLogic
 {
-	class BlobView;
-
 	class InternalString
 	{
 		public:
