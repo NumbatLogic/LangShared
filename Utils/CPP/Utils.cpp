@@ -1,4 +1,4 @@
-#include "InternalString.hpp"
+#include "../../InternalString/CPP/InternalString.hpp"
 #include "Utils.hpp"
 
 #include <math.h>

@@ -1,6 +1,5 @@
-#include "Blob.hpp"
-#include "Assert.hpp"
-#include "InternalString.hpp"
+#include "../../Assert/CPP/Assert.hpp"
+#include "../../InternalString/CPP/InternalString.hpp"
 #include "Zip.hpp"
 
 namespace NumbatLogic
@@ -137,7 +136,7 @@ namespace NumbatLogic
 		{
 			mz_bool bResult;
 			bResult = mz_zip_reader_end(m_pArchive);
-			CLIFFY_ASSERT(bResult);
+			Assert::Plz(bResult);
 			delete m_pArchive;
 			m_pArchive = NULL;
 		}

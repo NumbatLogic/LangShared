@@ -4,11 +4,10 @@
 	#include "tinyxml2/tinyxml2.h"
 #endif
 
+namespace NumbatLogic { class BlobView; }
+
 namespace NumbatLogic
 {
-	class Blob;
-	class BlobView;
-
 	template <class T>
 	class Vector;
 
