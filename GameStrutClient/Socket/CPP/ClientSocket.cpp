@@ -30,7 +30,7 @@ namespace NumbatLogic
         m_nSocket = -1;
         m_nPort = -1;
         m_bConnected = false;
-        m_pHost = nullptr;
+        m_pHost = NULL;
         m_nClientSocketId = 0;  // Initialize client socket ID to 0
 
         // Initialize buffers
@@ -74,7 +74,7 @@ namespace NumbatLogic
         #endif
 
         struct addrinfo hints;
-        struct addrinfo* result = nullptr;
+        struct addrinfo* result = NULL;
         memset(&hints, 0, sizeof(hints));
         hints.ai_family = AF_INET;
         hints.ai_socktype = SOCK_STREAM;
@@ -112,7 +112,7 @@ namespace NumbatLogic
         m_bConnected = false;
         m_nPort = -1;
         delete m_pHost;
-        m_pHost = nullptr;
+        m_pHost = NULL;
 
         #ifdef NB_WINDOWS
             Assert::Plz(s_nWsaCount > 0);
@@ -213,13 +213,13 @@ namespace NumbatLogic
     Blob* ClientSocket::Receive()
     {
         if (!m_bConnected || m_nSocket < 0)
-            return nullptr;
+            return NULL;
 
         // Process any pending data
         Update();
 
         if (m_nReadDataSize == 0)
-            return nullptr;
+            return NULL;
 
         // Create new blob with available data
         Blob* pBlob = new Blob(false);

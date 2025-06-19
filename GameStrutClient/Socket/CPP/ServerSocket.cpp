@@ -173,12 +173,12 @@ namespace NumbatLogic
 		if (clientSocket < 0)
 		{
 			// No pending connection or error
-			return nullptr;
+			return NULL;
 		}
 
 		// Create new client socket
 		ClientSocket* pNewClient = new ClientSocket();
-		Assert::Plz(pNewClient != nullptr);
+		Assert::Plz(pNewClient != NULL);
 		pNewClient->SetAcceptedSocket(clientSocket);
 		pNewClient->SetClientSocketId(m_nNextClientId++);  // Assign and increment client socket ID
 		
@@ -201,7 +201,7 @@ namespace NumbatLogic
 
 	void ServerSocket::Send(Blob* pBlob, unsigned int clientSocketId)
 	{
-		Assert::Plz(pBlob != nullptr);
+		Assert::Plz(pBlob != NULL);
 		Assert::Plz(m_nSocket != -1);
 
 		Blob* pClientBlob = new Blob(false);
