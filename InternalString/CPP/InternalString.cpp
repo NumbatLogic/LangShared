@@ -241,7 +241,7 @@ namespace NumbatLogic
 		m_nCharLength = nLength;
 		m_nByteLength = (int)(pOut - (unsigned char*)szTemp);
 
-		delete m_szBuffer;
+		delete [] m_szBuffer;
 		m_szBuffer = szTemp;
 	}
 
