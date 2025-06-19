@@ -136,7 +136,7 @@ namespace NumbatLogic
 		{
 			mz_bool bResult;
 			bResult = mz_zip_reader_end(m_pArchive);
-			Assert::Plz(bResult);
+			Assert::Plz(bResult != 0);
 			delete m_pArchive;
 			m_pArchive = NULL;
 		}
