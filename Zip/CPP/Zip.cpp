@@ -1,5 +1,6 @@
 #include "../../Assert/CPP/Assert.hpp"
 #include "../../InternalString/CPP/InternalString.hpp"
+#include "../../Blob/CPP/Blob.hpp"
 #include "Zip.hpp"
 
 namespace NumbatLogic
