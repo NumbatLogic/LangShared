@@ -13,5 +13,6 @@ namespace NumbatLogic
     {
         public construct();
         public bool Load(BlobView pBlobView);
+        public bool Save(BlobView pBlobView);
     }
 }

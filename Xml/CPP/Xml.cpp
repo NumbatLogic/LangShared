@@ -95,6 +95,30 @@ namespace NumbatLogic
 		return true;
 	}
 
+	bool XmlFile::Save(BlobView* pBlobView)
+	{
+		if (!m_pDocument)
+			return false;
+
+		// Create a memory buffer to hold the XML
+		tinyxml2::XMLPrinter printer;
+		m_pDocument->Print(&printer);
+		
+		const char* szXml = printer.CStr();
+		int nSize = (int)strlen(szXml);
+		
+		// Ensure the blob has enough space
+		if (pBlobView->GetBlob()->GetSize() < pBlobView->GetStart() + nSize)
+		{
+			pBlobView->GetBlob()->Resize(pBlobView->GetStart() + nSize, true);
+		}
+		
+		// Copy the XML data to the blob
+		memcpy(pBlobView->GetBlob()->GetData() + pBlobView->GetStart(), szXml, nSize);
+		
+		return true;
+	}
+
 	void XmlFile::Cleanup()
 	{
 		if (m_pDocument)

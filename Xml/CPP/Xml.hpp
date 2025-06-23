@@ -38,6 +38,7 @@ namespace NumbatLogic
 			~XmlFile();
 
 			bool Load(BlobView* pBlobView);
+			bool Save(BlobView* pBlobView);
 
 		protected:
 			#ifndef CLANG_PARSE
