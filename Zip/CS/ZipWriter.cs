@@ -20,17 +20,12 @@ namespace NumbatLogic
 		{
 		}
 
-		public bool AddFileFromBlobView(string szFileName, BlobView pBlobView)
+		public bool AddFileFromBlob(string szFileName, Blob pBlob)
 		{
 			try
 			{
-				// Create a new blob and copy data from the blob view
-				Blob blob = new Blob(true);
-				pBlobView.SetOffset(0);
-
-				blob.GetBlobView().Pack(pBlobView, pBlobView.GetSize());
-				
-				ZipEntry entry = new ZipEntry(szFileName, blob);
+				// Take ownership of the blob - no copying needed
+				ZipEntry entry = new ZipEntry(szFileName, pBlob);
 				m_lstEntries.Add(entry);
 				return true;
 			}

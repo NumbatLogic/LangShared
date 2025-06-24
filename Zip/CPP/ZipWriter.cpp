@@ -1,38 +1,44 @@
+#include "ZipWriter.hpp"
 #include "../../Assert/CPP/Assert.hpp"
 #include "../../Blob/CPP/Blob.hpp"
-#include "ZipWriter.hpp"
+#include "../../InternalString/CPP/InternalString.hpp"
+#include "../../Vector/CPP/Vector.hpp"
 
 namespace NumbatLogic
 {
+    ZipEntry::ZipEntry(const char* szFileName, Blob* pBlob)
+	{
+		sFileName = new InternalString(szFileName);
+		this->pBlob = pBlob;
+	}
+
+	ZipEntry::~ZipEntry()
+	{
+		delete sFileName;
+		delete pBlob;
+	}
+
 	ZipWriter::ZipWriter()
 	{
-		m_lstEntries = new Vector<ZipEntry*>();
+		m_pZipEntryVector = new Vector<ZipEntry*>();
 	}
 
 	ZipWriter::~ZipWriter()
 	{
-		// Clean up all entries
-		while (m_lstEntries->GetSize() > 0)
+		while (m_pZipEntryVector->GetSize() > 0)
 		{
-			ZipEntry* pEntry = m_lstEntries->PopBack();
-			delete pEntry->pBlob;
+			ZipEntry* pEntry = m_pZipEntryVector->PopBack();
 			delete pEntry;
 		}
-		delete m_lstEntries;
+		delete m_pZipEntryVector;
 	}
 
-	bool ZipWriter::AddFileFromBlobView(const char* szFileName, BlobView* pBlobView)
+	bool ZipWriter::AddFileFromBlob(const char* szFileName, Blob* pBlob)
 	{
 		try
 		{
-			// Create a new blob and copy data from the blob view
-			Blob* pBlob = new Blob(true);
-			pBlobView->SetOffset(0);
-
-			pBlob->GetBlobView()->Pack(pBlobView, pBlobView->GetSize() - pBlobView->GetOffset());
-			
 			ZipEntry* pEntry = new ZipEntry(szFileName, pBlob);
-			m_lstEntries->PushBack(pEntry);
+			m_pZipEntryVector->PushBack(pEntry);
 			return true;
 		}
 		catch (...)
@@ -56,9 +62,9 @@ namespace NumbatLogic
 			}
 
 			// Add all files to the zip archive
-			for (int i = 0; i < m_lstEntries->GetSize(); i++)
+			for (int i = 0; i < m_pZipEntryVector->GetSize(); i++)
 			{
-				ZipEntry* pEntry = m_lstEntries->Get(i);
+				ZipEntry* pEntry = m_pZipEntryVector->Get(i);
 				BlobView* pEntryBlobView = pEntry->pBlob->GetBlobView();
 				
 				pEntryBlobView->SetOffset(0);
