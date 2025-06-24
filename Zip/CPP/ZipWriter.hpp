@@ -28,6 +28,11 @@ namespace NumbatLogic
 					sFileName = new InternalString(szFileName);
 					this->pBlob = pBlob;
 				}
+
+				~ZipEntry()
+				{
+					delete sFileName;
+				}
 			};
 
 			Vector<ZipEntry*>* m_lstEntries;
