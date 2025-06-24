@@ -79,6 +79,37 @@ namespace NumbatLogic
 		return true;
 	}
 
+	bool Zip::SaveBlobView(BlobView* pBlobView)
+	{
+		// Create a separate archive for writing
+		mz_zip_archive writeArchive;
+		mz_zip_zero_struct(&writeArchive);
+		
+		// Initialize for writing to memory
+		if (!mz_zip_writer_init_heap(&writeArchive, 0, 0))
+		{
+			return false;
+		}
+
+		// Finalize the archive
+		void* pData = NULL;
+		size_t nSize = 0;
+		if (!mz_zip_writer_finalize_heap_archive(&writeArchive, &pData, &nSize))
+		{
+			mz_zip_writer_end(&writeArchive);
+			return false;
+		}
+
+		// Write the zip data to the blob view
+		pBlobView->PackData((uint8_t*)pData, (int)nSize);
+
+		// Clean up
+		mz_free(pData);
+		mz_zip_writer_end(&writeArchive);
+
+		return true;
+	}
+
 	int Zip::GetNumFile()
 	{
 		return mz_zip_reader_get_num_files(m_pArchive);
@@ -127,6 +158,59 @@ namespace NumbatLogic
 		sOut->AppendStringData(pData, (int)nSize);
 
 		mz_free(pData);
+
+		return true;
+	}
+
+	bool Zip::AddFileFromBlobView(const char* szFileName, BlobView* pBlobView)
+	{
+		// Create a separate archive for writing
+		mz_zip_archive writeArchive;
+		mz_zip_zero_struct(&writeArchive);
+		
+		// Initialize for writing to memory
+		if (!mz_zip_writer_init_heap(&writeArchive, 0, 0))
+		{
+			return false;
+		}
+
+		// Add the file from blob view
+		if (!mz_zip_writer_add_mem(&writeArchive, szFileName, 
+			pBlobView->GetBlob()->GetData() + pBlobView->GetStart() + pBlobView->GetOffset(), 
+			pBlobView->GetSize() - pBlobView->GetOffset(), MZ_DEFAULT_COMPRESSION))
+		{
+			mz_zip_writer_end(&writeArchive);
+			return false;
+		}
+
+		// Finalize the archive
+		void* pData = NULL;
+		size_t nSize = 0;
+		if (!mz_zip_writer_finalize_heap_archive(&writeArchive, &pData, &nSize))
+		{
+			mz_zip_writer_end(&writeArchive);
+			return false;
+		}
+
+		// Clean up the old archive if it exists
+		CleanupArchive();
+
+		// Create new archive for reading
+		m_pArchive = new mz_zip_archive();
+		mz_zip_zero_struct(m_pArchive);
+
+		// Initialize for reading from the new data
+		if (!mz_zip_reader_init_mem(m_pArchive, pData, nSize, 0))
+		{
+			mz_free(pData);
+			mz_zip_writer_end(&writeArchive);
+			CleanupArchive();
+			return false;
+		}
+
+		// Clean up
+		mz_free(pData);
+		mz_zip_writer_end(&writeArchive);
 
 		return true;
 	}

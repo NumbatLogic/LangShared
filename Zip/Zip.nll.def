@@ -1,20 +1,21 @@
 namespace NumbatLogic
 {
-    class ZipFileInfo
-    {
-        public string GetFileName();
-        public int GetSize();
-    }
+	class ZipFileInfo
+	{
+		public string GetFileName();
+		public int GetSize();
+	}
 
-    class Zip
-    {
-        public construct();
-        public bool LoadBlobView(BlobView pBlobView);
-        public bool LoadFile(string szFileName);
-        public int GetNumFile();
-        public ZipFileInfo GetFileInfo(int nIndex);
-        public bool ExtractFileByIndex(int nIndex, BlobView pOutBlobView);
-        public bool ExtractFileByName(string szFileName, BlobView pOutBlobView);
-        public bool ExtractFileByIndexToString(int nIndex, InternalString sOut);
-    }
+	class Zip
+	{
+		public construct();
+		public bool LoadBlobView(BlobView pBlobView);
+		public bool LoadFile(string szFileName);
+		public bool SaveBlobView(BlobView pBlobView);
+		public int GetNumFile();
+		public ZipFileInfo GetFileInfo(int nIndex);
+		public bool ExtractFileByIndex(int nIndex, BlobView pOutBlobView);
+		public bool ExtractFileByName(string szFileName, BlobView pOutBlobView);
+		public bool ExtractFileByIndexToString(int nIndex, InternalString sOut);
+	}
 }
