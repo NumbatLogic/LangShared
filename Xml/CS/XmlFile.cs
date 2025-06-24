@@ -2,17 +2,24 @@
 {
 	class XmlFile : XmlNode
 	{
-		public XmlFile() : base(null)
+
+		public XmlFile() : base(new System.Xml.XmlDocument())
 		{
+		}
+
+		public XmlNode CreateElement(string szName)
+		{
+			System.Xml.XmlElement newElement = ((System.Xml.XmlDocument)m_pNode).CreateElement(szName);
+			return new XmlNode(newElement);
 		}
 
 		public bool Load(BlobView pBlobView)
 		{
 			try
 			{
-				System.Xml.XmlDocument document = new System.Xml.XmlDocument();
-				document.Load(pBlobView.CreateStream());
-				m_pNode = document;
+				System.Xml.XmlDocument pDocument = new System.Xml.XmlDocument();
+				pDocument.Load(pBlobView.CreateStream());
+				m_pNode = pDocument;
 			}
 			catch (System.Exception)
 			{
@@ -25,17 +32,9 @@
 		{
 			try
 			{
-				if (m_pNode == null)
-					return false;
-
-				System.Xml.XmlDocument document = m_pNode as System.Xml.XmlDocument;
-				if (document == null)
-					return false;
-
-				// Create a memory stream to hold the XML
 				using (System.IO.MemoryStream stream = new System.IO.MemoryStream())
 				{
-					document.Save(stream);
+					((System.Xml.XmlDocument)m_pNode).Save(stream);
 					stream.Position = 0;
 					
 					// Ensure the blob has enough space

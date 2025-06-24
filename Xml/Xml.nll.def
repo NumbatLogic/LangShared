@@ -1,18 +1,23 @@
 namespace NumbatLogic
 {
-    class XmlNode
-    {
-        public XmlNode GetFirstChildElement(string szName);
-        public XmlNode GetNextSiblingElement(string szName);
-        public string GetValue();
-        public string GetText();
-        public string GetAttribute(string szName);
-    }
+	class XmlNode
+	{
+		public XmlNode GetFirstChildElement(string szName);
+		public XmlNode GetNextSiblingElement(string szName);
+		public string GetValue();
+		public string GetText();
+		public string GetAttribute(string szName);
 
-    class XmlFile : XmlNode
-    {
-        public construct();
-        public bool Load(BlobView pBlobView);
-        public bool Save(BlobView pBlobView);
-    }
+		public void SetAttribute(string szName, string szValue);
+		public void SetText(string szText);
+		public void AppendChild(XmlNode pChild);
+	}
+
+	class XmlFile : XmlNode
+	{
+		public construct();
+		public bool Load(BlobView pBlobView);
+		public bool Save(BlobView pBlobView);
+		public XmlNode CreateElement(string szName);
+	}
 }

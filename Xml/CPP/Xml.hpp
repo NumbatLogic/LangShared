@@ -20,15 +20,16 @@ namespace NumbatLogic
 			const char* GetText();
 			const char* GetAttribute(const char* szName);
 
-		protected:
-			#ifndef CLANG_PARSE
-				XmlNode(tinyxml2::XMLNode* pNode, XmlNode* pParent);
-				virtual ~XmlNode();
+			void SetAttribute(const char* szName, const char* szValue);
+			void SetText(const char* szText);
+			void AppendChild(XmlNode* pChild);
 
-				tinyxml2::XMLNode* m_pNode;
-				XmlNode* m_pParent;
-				Vector<XmlNode*>* m_pChildNodeVector;
-			#endif
+			XmlNode(tinyxml2::XMLNode* pNode, XmlNode* pParent);
+			virtual ~XmlNode();
+
+			tinyxml2::XMLNode* m_pNode;
+			XmlNode* m_pParent;
+			Vector<XmlNode*>* m_pChildNodeVector;
 	};
 
 	class XmlFile : public XmlNode
@@ -39,12 +40,10 @@ namespace NumbatLogic
 
 			bool Load(BlobView* pBlobView);
 			bool Save(BlobView* pBlobView);
+			XmlNode* CreateElement(const char* szName);
 
 		protected:
-			#ifndef CLANG_PARSE
-				void Cleanup();
-
-				tinyxml2::XMLDocument* m_pDocument;
-			#endif
+			void Cleanup();
+			tinyxml2::XMLDocument* m_pDocument;
 	};
 }
