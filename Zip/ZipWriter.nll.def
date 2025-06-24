@@ -1,0 +1,9 @@
+namespace NumbatLogic
+{
+	class ZipWriter
+	{
+		public construct();
+		public bool SaveBlobView(BlobView pBlobView);
+		public bool AddFileFromBlobView(string szFileName, BlobView pBlobView);
+	}
+}

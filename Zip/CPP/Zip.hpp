@@ -4,7 +4,7 @@
 	#include "miniz/miniz.h"
 #endif
 
-namespace NumbatLogic { class BlobView; }
+namespace NumbatLogic { class Blob; class BlobView; }
 
 namespace NumbatLogic
 {
@@ -36,6 +36,7 @@ namespace NumbatLogic
 
 			bool LoadBlobView(BlobView* pBlobView);
 			bool LoadFile(const char* szFileName);
+			bool SaveBlobView(BlobView* pBlobView);
 
 			int GetNumFile();
 			ZipFileInfo* GetFileInfo(int nIndex);
@@ -44,6 +45,8 @@ namespace NumbatLogic
 			bool ExtractFileByName(const char* szFileName, BlobView* pOutBlobView);
 
 			bool ExtractFileByIndexToString(int nIndex, InternalString* sOut);
+
+			bool AddFileFromBlobView(const char* szFileName, BlobView* pBlobView);
 
 		private:
 			#ifndef CLANG_PARSE

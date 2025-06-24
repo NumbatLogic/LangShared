@@ -9,7 +9,7 @@
 			//$this->m_xFileArray = ProjectGen_ParseDirectory(dirname(__FILE__), "/\.hpp|\.cpp/",  $sAllowedDirectoryArray);
 
 			$this->m_xFileArray = array_merge(
-				ProjectGen_ParseDirectory(dirname(__FILE__), "/\.hpp|\.cpp/",  $sAllowedDirectoryArray),
+				ProjectGen_ParseDirectory(dirname(__FILE__), "/\.hpp$|\.cpp$|\.h$|\.c$/",  $sAllowedDirectoryArray),
 				ProjectGen_ParseDirectory($sTranspiledDirectory, "/\.hpp|\.cpp/"));
 		}
 
