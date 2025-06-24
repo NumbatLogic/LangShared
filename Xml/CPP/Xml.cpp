@@ -64,9 +64,36 @@ namespace NumbatLogic
 		return NULL;
 	}
 
+	void XmlNode::SetAttribute(const char* szName, const char* szValue)
+	{
+		tinyxml2::XMLElement* pElement = m_pNode ? m_pNode->ToElement() : NULL;
+		if (pElement)
+		{
+			pElement->SetAttribute(szName, szValue);
+		}
+	}
+
+	void XmlNode::SetText(const char* szText)
+	{
+		tinyxml2::XMLElement* pElement = m_pNode ? m_pNode->ToElement() : NULL;
+		if (pElement)
+		{
+			pElement->SetText(szText);
+		}
+	}
+
+	void XmlNode::AppendChild(XmlNode* pChild)
+	{
+		if (pChild && pChild->m_pNode && m_pNode)
+		{
+			m_pNode->InsertEndChild(pChild->m_pNode);
+		}
+	}
+
 	XmlFile::XmlFile() : XmlNode(NULL, NULL)
 	{
-		m_pDocument = NULL;
+		m_pDocument = new tinyxml2::XMLDocument();
+		m_pNode = m_pDocument;
 	}
 
 	XmlFile::~XmlFile()
@@ -124,6 +151,22 @@ namespace NumbatLogic
 		if (m_pDocument)
 		{
 			delete m_pDocument;
+			m_pDocument = NULL;
+			m_pNode = NULL;
 		}
+	}
+
+	XmlNode* XmlFile::CreateElement(const char* szName)
+	{
+		if (!m_pDocument)
+			return NULL;
+
+		tinyxml2::XMLElement* pNewElement = m_pDocument->NewElement(szName);
+		if (!pNewElement)
+			return NULL;
+
+		XmlNode* pNewNode = new XmlNode(pNewElement, this);
+		m_pChildNodeVector->PushBack(pNewNode);
+		return pNewNode;
 	}
 }

@@ -50,5 +50,29 @@
                     return m_pNode.Attributes[i].Value;
             return null;
         }
+
+        public void SetAttribute(string szName, string szValue)
+        {
+            if (m_pNode is System.Xml.XmlElement element)
+            {
+                element.SetAttribute(szName, szValue);
+            }
+        }
+
+        public void SetText(string szText)
+        {
+            if (m_pNode is System.Xml.XmlElement element)
+            {
+                element.InnerText = szText;
+            }
+        }
+
+        public void AppendChild(XmlNode pChild)
+        {
+            if (pChild != null && pChild.m_pNode != null)
+            {
+                m_pNode.AppendChild(pChild.m_pNode);
+            }
+        }
     }
 }
