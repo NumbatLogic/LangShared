@@ -4,6 +4,6 @@ namespace NumbatLogic
 	{
 		public construct();
 		public bool SaveBlobView(BlobView pBlobView);
-		public bool AddFileFromBlobView(string szFileName, BlobView pBlobView);
+		public bool AddFileFromBlob(string szFileName, Blob** pBlob);
 	}
 }

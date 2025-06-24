@@ -1,13 +1,25 @@
 #pragma once
 
 #include "miniz/miniz.h"
-#include "../../InternalString/CPP/InternalString.hpp"
-#include "../../Vector/CPP/Vector.hpp"
 
-namespace NumbatLogic { class Blob; class BlobView; }
+namespace NumbatLogic { 
+	class Blob; 
+	class BlobView; 
+	template<typename T> class Vector;
+	class InternalString;
+}
 
 namespace NumbatLogic
 {
+	struct ZipEntry
+	{
+		InternalString* sFileName;
+		Blob* pBlob;
+
+		ZipEntry(const char* szFileName, Blob* pBlob);
+		~ZipEntry();
+	};
+	
 	class ZipWriter
 	{
 		public:
@@ -15,26 +27,11 @@ namespace NumbatLogic
 			~ZipWriter();
 
 			bool SaveBlobView(BlobView* pBlobView);
-			bool AddFileFromBlobView(const char* szFileName, BlobView* pBlobView);
+			bool AddFileFromBlob(const char* szFileName, Blob* pBlob);
 
 		private:
-			struct ZipEntry
-			{
-				InternalString* sFileName;
-				Blob* pBlob;
+			
 
-				ZipEntry(const char* szFileName, Blob* pBlob)
-				{
-					sFileName = new InternalString(szFileName);
-					this->pBlob = pBlob;
-				}
-
-				~ZipEntry()
-				{
-					delete sFileName;
-				}
-			};
-
-			Vector<ZipEntry*>* m_lstEntries;
+			Vector<ZipEntry*>* m_pZipEntryVector;
 	};
 } 
