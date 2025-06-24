@@ -4,7 +4,8 @@
 	#include "miniz/miniz.h"
 #endif
 
-namespace NumbatLogic { class Blob; class BlobView; }
+namespace NumbatLogic { class Blob; }
+namespace NumbatLogic { class BlobView; }
 
 namespace NumbatLogic
 {
