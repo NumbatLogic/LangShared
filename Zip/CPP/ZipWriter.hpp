@@ -2,15 +2,14 @@
 
 #include "miniz/miniz.h"
 
-namespace NumbatLogic { 
-	class Blob; 
-	class BlobView; 
-	template<typename T> class Vector;
-	class InternalString;
-}
+namespace NumbatLogic { class Blob; }
+namespace NumbatLogic { class BlobView; }
 
 namespace NumbatLogic
 {
+	template<typename T> class Vector;
+	class InternalString;
+
 	struct ZipEntry
 	{
 		InternalString* sFileName;
