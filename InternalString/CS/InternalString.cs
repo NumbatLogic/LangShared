@@ -59,6 +59,11 @@ namespace NumbatLogic
 			m_pStringBuilder.Append(fDouble.ToString("G6"));
 		}
 
+		public void AppendHex(uint nUint32)
+		{
+			m_pStringBuilder.Append(nUint32.ToString("X"));
+		}
+
 		public void PrependString(string sString)
 		{
 			m_pStringBuilder = new System.Text.StringBuilder(sString + m_pStringBuilder.ToString());
