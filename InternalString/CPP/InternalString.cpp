@@ -137,7 +137,7 @@ namespace NumbatLogic
 		if (nInt == -0)
 			nInt = 0;
 
-		char szTemp[1024];
+		char szTemp[32];
 		sprintf(szTemp, "%d", nInt);
 		AppendString(szTemp);
 	}
@@ -149,19 +149,26 @@ namespace NumbatLogic
 
 	void InternalString::AppendUint32(unsigned int nUint32)
 	{
-		char szTemp[1024];
+		char szTemp[32];
 		sprintf(szTemp, "%u", nUint32);
 		AppendString(szTemp);
 	}
 
 	void InternalString::AppendDouble(double fDouble)
 	{
-		char szTemp[1024];
+		char szTemp[32];
 		sprintf(szTemp, "%G", fDouble);
 		if (strcmp(szTemp, "-0") == 0)
 			AppendString("0");
 		else
 			AppendString(szTemp);
+	}
+
+	void InternalString::AppendHex(unsigned int nUint32)
+	{
+		char szTemp[32]; // 8 hex digits + null terminator
+		sprintf(szTemp, "%X", nUint32);
+		AppendString(szTemp);
 	}
 
 	void InternalString::PrependChar(unsigned short nChar)

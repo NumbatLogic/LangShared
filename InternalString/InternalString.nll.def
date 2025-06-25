@@ -13,6 +13,7 @@ namespace NumbatLogic
 		public void AppendUint32(Uint32 nUint32);
 		//public void AppendUnsignedInt(uint nUint);
 		public void AppendDouble(double fDouble);
+		public void AppendHex(Uint32 nUint32);
 		public void PrependString(string sString);
 		public void PrependChar(UniChar cChar);
 		public void SubStr(int nStart, int nLength);

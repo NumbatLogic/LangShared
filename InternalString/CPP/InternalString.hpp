@@ -27,6 +27,7 @@ namespace NumbatLogic
 			void AppendUnsignedInt(unsigned int nUint32);
 			void AppendUint32(unsigned int nUint32);
 			void AppendDouble(double fDouble);
+			void AppendHex(unsigned int nUint32);
 
 			void PrependChar(unsigned short nChar);
 			void PrependString(const char* szString);
