@@ -51,6 +51,11 @@ namespace NumbatLogic
 				return (*m_pVector)[nIndex];
 			}
 
+			T GetBack()
+			{
+				return m_pVector->back();
+			}
+
 			void Set(int nIndex, T xObject)
 			{
 				(*m_pVector)[nIndex] = xObject;
