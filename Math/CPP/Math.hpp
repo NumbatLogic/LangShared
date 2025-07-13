@@ -11,7 +11,13 @@ namespace NumbatLogic
 			static double Sin(double fAngle);
 			static double Cos(double fAngle);
 			static double Sqrt(double fX);
+			static double Pow(double fbase, double fExponent);
 			static double Atan2(double fX, double fY);
+
+			static float SinF(float fAngle);
+			static float CosF(float fAngle);
+			static float SqrtF(float fX);
+			static float PowF(float fbase, float fExponent);
 	};
 }
 

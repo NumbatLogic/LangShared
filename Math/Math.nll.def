@@ -6,6 +6,12 @@ namespace NumbatLogic
 		public static double Sin(double fAngle);
 		public static double Cos(double fAngle);
 		public static double Sqrt(double fAngle);
+		public static double Pow(double fbase, double fExponent);
 		public static double Atan2(double fX, double fY);
+
+		public static float SinF(float fAngle);
+		public static float CosF(float fAngle);
+		public static float SqrtF(float fAngle);
+		public static float PowF(float fbase, float fExponent);
 	}
 }
