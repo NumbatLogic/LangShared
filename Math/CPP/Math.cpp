@@ -24,8 +24,33 @@ namespace NumbatLogic
 		return sqrt(fX);
 	}
 
+	double Math::Pow(double fbase, double fExponent)
+	{
+		return pow(fbase, fExponent);
+	}
+
 	double Math::Atan2(double fX, double fY)
 	{
 		return atan2(fX, fY);
+	}
+
+	float Math::SinF(float fAngle)
+	{
+		return sinf(fAngle);
+	}
+
+	float Math::CosF(float fAngle)
+	{
+		return cosf(fAngle);
+	}
+
+	float Math::SqrtF(float fX)
+	{
+		return sqrtf(fX);
+	}
+
+	float Math::PowF(float fbase, float fExponent)
+	{
+		return powf(fbase, fExponent);
 	}
 }
