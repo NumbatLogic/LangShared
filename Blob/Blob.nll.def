@@ -25,6 +25,8 @@ namespace NumbatLogic
 		//public void Pack(byte[] pData, int nDataOffset, int nOffset, int nSize);
 		public BlobView GetBlobView();
 		public bool Equal(Blob pOther);
+
+		public Blob** Clone();
 	}
 
 

@@ -192,6 +192,25 @@ namespace NumbatLogic
 		return memcmp(m_pBuffer, pOther->m_pBuffer, m_nSize) == 0;
 	}
 
+	Blob* Blob::Clone()
+	{
+		Blob* pClone = new Blob(m_bAutoResize);
+		pClone->m_nBufferSize = m_nBufferSize;
+		pClone->m_nSize = m_nSize;
+		
+		// Reallocate buffer to match original size
+		free(pClone->m_pBuffer);
+		pClone->m_pBuffer = (unsigned char*)malloc(m_nBufferSize);
+		
+		// Copy all data from original buffer
+		memcpy(pClone->m_pBuffer, m_pBuffer, m_nBufferSize);
+		
+		// Update the blob view to reflect the new size
+		pClone->m_pBlobView->SetEnd(m_nSize);
+		
+		return pClone;
+	}
+
 	// Blob View
 	BlobView::BlobView(Blob* pBlob, int nStart, int nEnd)
 	{
