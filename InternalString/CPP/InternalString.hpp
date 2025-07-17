@@ -14,6 +14,7 @@ namespace NumbatLogic
 			~InternalString();
 
 			InternalString* CreateClone();
+			InternalString* Clone();
 
 			void Set(const char* szString);
 			const char* GetExternalString() const;
@@ -33,6 +34,7 @@ namespace NumbatLogic
 			void PrependString(const char* szString);
 
 			void SubStr(int nStart, int nLength);
+			void Crop(int nStart, int nLength);
 			void CropFront(int nLength);
 
 			//void CropBack(int nLength);
@@ -53,6 +55,7 @@ namespace NumbatLogic
 			unsigned int ParseHex();
 
 			int FindChar(unsigned short nChar);
+			int LastIndexOf(const char* sxFind);
 
 			void Replace(const char* sxFind, const char* sxReplace);
 

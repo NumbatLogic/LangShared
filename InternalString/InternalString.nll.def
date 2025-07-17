@@ -3,7 +3,8 @@ namespace NumbatLogic
 	class InternalString
 	{
 		public construct(string szString);
-		public InternalString** CreateClone();
+		public InternalString** CreateClone(); // deprecate
+		public InternalString** Clone();
 		public void Set(string szString);
 		public string GetExternalString();
 		public void Append(string sString);
@@ -16,7 +17,8 @@ namespace NumbatLogic
 		public void AppendHex(Uint32 nUint32);
 		public void PrependString(string sString);
 		public void PrependChar(UniChar cChar);
-		public void SubStr(int nStart, int nLength);
+		public void SubStr(int nStart, int nLength); // deprecate
+		public void Crop(int nStart, int nLength);
 		public void CropFront(int nLength);
 		public int GetLength();
 		public UniChar GetChar(int nIndex);
@@ -29,6 +31,7 @@ namespace NumbatLogic
 		public double ParseDouble();
 		public Uint32 ParseHex();
 		public int FindChar(UniChar nChar);
+		public int LastIndexOf(string sxFind);
 		public void Replace(string sxFind, string sxReplace);
 	}
 }
