@@ -27,6 +27,11 @@ namespace NumbatLogic
 		return new InternalString(m_szBuffer);
 	}
 
+	InternalString* InternalString::Clone()
+	{
+		return new InternalString(m_szBuffer);
+	}
+
 	void InternalString::Set(const char* szString)
 	{
 		GetUtf8Length(szString, &m_nCharLength, &m_nByteLength);
@@ -252,6 +257,46 @@ namespace NumbatLogic
 		m_szBuffer = szTemp;
 	}
 
+	void InternalString::Crop(int nStart, int nLength)
+	{
+		Assert::Plz(nStart >= 0);
+		Assert::Plz(nLength >= 0);
+		Assert::Plz(nStart + nLength <= m_nCharLength);
+
+		if (IsAscii())
+		{
+			memmove(m_szBuffer, m_szBuffer+nStart, nLength);
+			m_szBuffer[nLength] = 0;
+			m_nCharLength = nLength;
+			m_nByteLength = nLength;
+			return;
+		}
+
+		int i;
+		unsigned char* p = (unsigned char*)m_szBuffer;
+		for (i = 0; i < nStart; i++)
+			p += GetUtf8CharSize((*p));
+
+		char* szTemp = new char[m_nBufferSize];
+
+		unsigned char* pOut = (unsigned char*)szTemp;
+		for (i = 0; i < nLength; i++)
+		{
+			unsigned short nChar = DecodeChar(p);
+			int nCharSize = EncodeChar(nChar, pOut);
+
+			p += nCharSize;
+			pOut += nCharSize;
+		}
+		(*pOut) = 0;
+
+		m_nCharLength = nLength;
+		m_nByteLength = (int)(pOut - (unsigned char*)szTemp);
+
+		delete [] m_szBuffer;
+		m_szBuffer = szTemp;
+	}
+
 	/*void InternalString :: CropBack(int nLength)
 		{
 		Assert::Plz(nLength <= m_nCharLength);
@@ -374,6 +419,30 @@ namespace NumbatLogic
 			nIndex++;
 		}
 		return -1;
+	}
+
+	int InternalString::LastIndexOf(const char* sxFind)
+	{
+		InternalString* sFind = new InternalString(sxFind);
+		int nLastFoundIndex = -1;
+		int nCurrentCharIndex = 0;
+		int nOffset = 0;
+
+		while (nOffset + sFind->m_nByteLength <= m_nByteLength)
+		{
+			if (memcmp(m_szBuffer + nOffset, sFind->m_szBuffer, sFind->m_nByteLength) == 0)
+				nLastFoundIndex = nCurrentCharIndex;
+
+			unsigned char c = m_szBuffer[nOffset];
+			if (c == 0)
+				break;
+
+			nOffset += GetUtf8CharSize(c);
+			nCurrentCharIndex++;
+		}
+
+		delete sFind;
+		return nLastFoundIndex;
 	}
 
 	// probably broken...

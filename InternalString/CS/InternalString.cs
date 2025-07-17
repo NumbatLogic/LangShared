@@ -14,6 +14,11 @@ namespace NumbatLogic
 			return new InternalString(m_pStringBuilder.ToString());
 		}
 
+		public InternalString Clone()
+		{
+			return new InternalString(m_pStringBuilder.ToString());
+		}
+
 		public void Set(string szString)
 		{
 			m_pStringBuilder = new System.Text.StringBuilder(szString);
@@ -75,6 +80,11 @@ namespace NumbatLogic
 		}
 
 		public void SubStr(int nStart, int nLength)
+		{
+			m_pStringBuilder = new System.Text.StringBuilder(m_pStringBuilder.ToString().Substring(nStart, nLength));
+		}
+
+		public void Crop(int nStart, int nLength)
 		{
 			m_pStringBuilder = new System.Text.StringBuilder(m_pStringBuilder.ToString().Substring(nStart, nLength));
 		}
@@ -147,6 +157,11 @@ namespace NumbatLogic
 		public int FindChar(char nChar)
 		{
 			return m_pStringBuilder.ToString().IndexOf((char)nChar);
+		}
+
+		public int LastIndexOf(string sxFind)
+		{
+			return m_pStringBuilder.ToString().LastIndexOf(sxFind);
 		}
 
 		public void Replace(string sxFind, string sxReplace)
