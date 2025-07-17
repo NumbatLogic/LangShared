@@ -27,6 +27,8 @@ namespace NumbatLogic
 			void UnpackData(unsigned char* pData, int nOffset, int nSize);
 			unsigned char* GetData();
 
+			Blob* Clone();
+
 		protected:
 			friend class BlobView;
 

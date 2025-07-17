@@ -210,6 +210,23 @@ namespace NumbatLogic
                     return false;
             return true;
         }
+
+        public Blob Clone()
+        {
+            Blob clone = new Blob(m_bAutoResize);
+            clone.m_nSize = m_nSize;
+            
+            // Create a new buffer with the same size as the original
+            clone.m_pBuffer = new byte[m_pBuffer.Length];
+            
+            // Copy all data from original buffer
+            System.Buffer.BlockCopy(m_pBuffer, 0, clone.m_pBuffer, 0, m_nSize);
+            
+            // Update the blob view to reflect the new size
+            clone.m_pBlobView.m_nEnd = m_nSize;
+            
+            return clone;
+        }
     }
 
     class BlobView
