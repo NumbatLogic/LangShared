@@ -18,6 +18,7 @@ namespace NumbatLogic
 		public construct();
 		public bool Load(BlobView pBlobView);
 		public bool Save(BlobView pBlobView);
+		public bool SaveToString(InternalString sOut);
 		public XmlNode CreateElement(string szName);
 	}
 }

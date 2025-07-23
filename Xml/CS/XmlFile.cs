@@ -55,5 +55,22 @@
 			}
 			return true;
 		}
+
+		public bool SaveToString(InternalString sOut)
+		{
+			try
+			{
+				using (var stringWriter = new System.IO.StringWriter())
+				{
+					((System.Xml.XmlDocument)m_pNode).Save(stringWriter);
+					sOut.AppendString(stringWriter.ToString());
+				}
+			}
+			catch (System.Exception)
+			{
+				return false;
+			}
+			return true;
+		}
 	}
 }
