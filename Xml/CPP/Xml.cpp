@@ -146,6 +146,20 @@ namespace NumbatLogic
 		return true;
 	}
 
+	bool XmlFile::SaveToString(InternalString* sOut)
+	{
+		if (!m_pDocument)
+			return false;
+
+		tinyxml2::XMLPrinter printer;
+		m_pDocument->Print(&printer);
+		const char* szXml = printer.CStr();
+		if (!szXml)
+			return false;
+		sOut->AppendString(szXml);
+		return true;
+	}
+
 	void XmlFile::Cleanup()
 	{
 		if (m_pDocument)

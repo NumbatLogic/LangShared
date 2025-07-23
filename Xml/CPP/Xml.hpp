@@ -40,6 +40,7 @@ namespace NumbatLogic
 
 			bool Load(BlobView* pBlobView);
 			bool Save(BlobView* pBlobView);
+			bool SaveToString(InternalString* sOut);
 			XmlNode* CreateElement(const char* szName);
 
 		protected:
