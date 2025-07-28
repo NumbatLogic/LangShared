@@ -59,7 +59,7 @@ namespace NumbatLogic
 			}
 			else
 			{
-				//if (!m_bCompactMode && !m_bElementHasContent)
+				if (!m_bCompactMode && !m_bElementHasContent)
 				{
 					m_sOutput.AppendString("\n");
 					WriteIndent();
@@ -88,7 +88,7 @@ namespace NumbatLogic
 			m_sOutput.AppendString("\"");
 		}
 
-		public void WriteText(string sText)
+		public void SetText(string sText)
 		{
 			Assert::Plz(sText != null);
 			Assert::Plz(!ExternalString::Equal(sText, ""));
