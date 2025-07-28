@@ -10,6 +10,8 @@ namespace NumbatLogic
 {
 	template <class T>
 	class Vector;
+	
+	class InternalString;
 
 	class XmlNode
 	{
