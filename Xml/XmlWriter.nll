@@ -1,0 +1,196 @@
+namespace NumbatLogic
+{
+	class XmlWriter
+	{
+		private InternalString* m_sOutput;
+		private int m_nIndentLevel;
+		private bool m_bCompactMode;
+		private bool m_bElementOpen;
+		private bool m_bElementHasContent;
+		private OwnedVector<InternalString>* m_sElementStack;
+
+		public construct(bool bCompact)
+		{
+			m_sOutput = own new InternalString("");
+			m_nIndentLevel = 0;
+			m_bCompactMode = bCompact;
+			m_bElementOpen = false;
+			m_bElementHasContent = false;
+			m_sElementStack = own new OwnedVector<InternalString>();
+		}
+
+		public void StartElement(string sName)
+		{
+			Assert::Plz(sName != null);
+			Assert::Plz(!ExternalString::Equal(sName, ""));
+			
+			if (m_bElementOpen)
+			{
+				m_sOutput.AppendString(">");
+				m_bElementOpen = false;
+			}
+
+			if (!m_bCompactMode && m_nIndentLevel > 0)
+			{
+				m_sOutput.AppendString("\n");
+				WriteIndent();
+			}
+
+			m_sOutput.AppendString("<");
+			m_sOutput.AppendString(sName);
+			m_bElementOpen = true;
+			m_bElementHasContent = false;
+			m_nIndentLevel++;
+			m_sElementStack.PushBack(new InternalString(sName));
+		}
+
+		public void EndElement()
+		{
+			Assert::Plz(m_nIndentLevel > 0);
+			Assert::Plz(m_sElementStack.GetSize() > 0);
+
+			m_nIndentLevel--;
+
+			if (m_bElementOpen)
+			{
+				m_sOutput.AppendString(" />");
+				m_bElementOpen = false;
+				m_sElementStack.PopBack();
+			}
+			else
+			{
+				//if (!m_bCompactMode && !m_bElementHasContent)
+				{
+					m_sOutput.AppendString("\n");
+					WriteIndent();
+				}
+
+				InternalString* sElementName = own m_sElementStack.PopBack();
+				m_sOutput.AppendString("</");
+				m_sOutput.AppendString(sElementName.GetExternalString());
+				m_sOutput.AppendString(">");
+			}
+
+			m_bElementHasContent = false;
+		}
+
+		public void SetAttribute(string sName, string sValue)
+		{
+			Assert::Plz(sName != null);
+			Assert::Plz(!ExternalString::Equal(sName, ""));
+			Assert::Plz(m_bElementOpen);
+			Assert::Plz(sValue != null);
+			
+			m_sOutput.AppendString(" ");
+			m_sOutput.AppendString(sName);
+			m_sOutput.AppendString("=\"");
+			WriteEscapedAttribute(sValue);
+			m_sOutput.AppendString("\"");
+		}
+
+		public void WriteText(string sText)
+		{
+			Assert::Plz(sText != null);
+			Assert::Plz(!ExternalString::Equal(sText, ""));
+			Assert::Plz(!m_bElementHasContent);
+			
+			if (m_bElementOpen)
+			{
+				m_sOutput.AppendString(">");
+				m_bElementOpen = false;
+			}
+
+			m_bElementHasContent = true;
+			WriteEscapedText(sText);
+		}
+
+		public InternalString GetOutput()
+		{
+			return m_sOutput;
+		}
+
+		private void WriteIndent()
+		{
+			for (int i = 0; i < m_nIndentLevel; i++)
+			{
+				m_sOutput.AppendString("    ");
+			}
+		}
+
+		private void WriteEscapedText(string sText)
+		{
+			InternalString* sTemp = own new InternalString(sText);
+
+			for (int i = 0; i < sTemp.GetLength(); i++)
+			{
+				UniChar c = sTemp.GetChar(i);
+				switch (c)
+				{
+					case '<':
+					{
+						m_sOutput.AppendString("&lt;");
+						break;
+					}
+					case '>':
+					{
+						m_sOutput.AppendString("&gt;");
+						break;
+					}
+					case '&':
+					{
+						m_sOutput.AppendString("&amp;");
+						break;
+					}
+					default:
+					{
+						m_sOutput.AppendChar(c);
+						break;
+					}
+				}
+			}
+		}
+
+		private void WriteEscapedAttribute(string sValue)
+		{
+			InternalString* sTemp = own new InternalString(sValue);
+
+			for (int i = 0; i < sTemp.GetLength(); i++)
+			{
+				UniChar c = sTemp.GetChar(i);
+				switch (c)
+				{
+					case '<':
+					{
+						m_sOutput.AppendString("&lt;");
+						break;
+					}
+					case '>':
+					{
+						m_sOutput.AppendString("&gt;");
+						break;
+					}
+					case '&':
+					{
+						m_sOutput.AppendString("&amp;");
+						break;
+					}
+					case '"':
+					{
+						m_sOutput.AppendString("&quot;");
+						break;
+					}
+					case '\'':
+					{
+						m_sOutput.AppendString("&apos;");
+						break;
+					}
+					default:
+					{
+						m_sOutput.AppendChar(c);
+						break;
+					}
+				}
+			}
+		}
+	}
+} 
