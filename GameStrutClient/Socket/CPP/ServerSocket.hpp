@@ -21,6 +21,7 @@ namespace NumbatLogic
             void Send(Blob* pBlob, unsigned int clientSocketId);
 
         protected:
+            using Socket::Send;
             int m_nSocket;
 			int m_nPort;
             unsigned int m_nNextClientId;
