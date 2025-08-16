@@ -1,0 +1,100 @@
+namespace NumbatLogic
+{
+	class gsServer
+	{
+		private InternalString* m_sAddress;
+		private Uint16 m_nPort;
+		private Uint16 m_nVersion;
+
+		private ServerSocket* m_pServerSocket;
+		private OwnedVector<gsServerClient>* m_pServerClientVector;
+		private OwnedVector<gsServerRoom>* m_pServerRoomVector;
+
+        public construct(string sxAddress, Uint16 nPort, Uint16 nVersion, string sxDatabasePath)
+		{
+			m_sAddress = own new InternalString(sxAddress);
+			m_nPort = nPort;
+			m_nVersion = nVersion;
+
+			m_pServerSocket = own new ServerSocket();
+			m_pServerSocket.Start(m_nPort);
+
+			m_pServerRoomVector = own new OwnedVector<gsServerRoom>();
+			m_pServerClientVector = own new OwnedVector<gsServerClient>();
+		}
+
+		public destruct()
+		{
+			m_pServerSocket.Stop();
+		}
+
+		public void Update()
+		{
+			m_pServerSocket.Update();
+
+			{
+				ClientSocket pClientSocket = m_pServerSocket.Accept();
+				if (pClientSocket)
+				{
+					Console::Log("Accept!");
+
+					gsServerClient* pServerClient = own CreateServerClient(pClientSocket);
+					Assert::Plz(pServerClient != null);
+					m_pServerClientVector.PushBack(disown pServerClient);
+				}
+			}
+
+			int i;
+			for (int i = 0; i < m_pServerClientVector.GetSize(); i++)
+			{
+				gsServerClient pServerClient = m_pServerClientVector.Get(i);
+
+				pServerClient.Update();
+
+				switch (pServerClient.m_eState)
+				{
+					case gsClient::State::CONNECT:
+					{
+						//if (nbClientSocket_GetConnected(pClient->pClientSocket))
+							pServerClient.m_eState = gsClient::State::HANDSHAKE;
+						break;
+					}
+					case gsClient::State::HANDSHAKE:
+					{
+						Blob* pReceiveBlob = own pServerClient.m_pClientSocket.Receive();
+						if (pReceiveBlob)
+						{
+							if (pReceiveBlob.GetSize() > 0)
+							{
+							}
+							Console::Log("Server - Blob!");
+						}
+						break;
+					}
+					case gsClient::State::CONNECTED:
+					{
+						break;
+					}
+					case gsClient::State::DISCONNECTED:
+					{
+						break;
+					}
+					default:
+					{
+						Assert::Plz(false);
+					}
+				}
+			}
+		}
+
+		public bool Pending()
+		{
+			return m_pServerSocket.Pending();
+		}
+
+		public virtual gsServerClient** CreateServerClient(ClientSocket pClientSocket)
+		{
+			return new gsServerClient(this, pClientSocket);
+		}
+	}
+}

@@ -1,0 +1,75 @@
+namespace NumbatLogic
+{
+	class gsClient
+	{
+		private ClientSocket* m_pClientSocket;
+		private Uint16 m_nVersion;
+
+		public enum State {
+			CONNECT,
+			HANDSHAKE,
+			CONNECTED,
+			DISCONNECTED
+		}
+		public State m_eState;
+
+		public construct(string sxAddress, Uint16 nPort, Uint16 nVersion)
+		{
+			m_pClientSocket = own new ClientSocket();
+			m_pClientSocket.Connect(sxAddress, nPort);
+			m_nVersion = nVersion;
+			m_eState = CONNECT;
+		}
+
+		public destruct()
+		{
+			m_pClientSocket.Disconnect();
+		}
+
+		public void Update()
+		{
+			m_pClientSocket.Update();
+
+			switch (m_eState)
+			{
+				case State::CONNECT:
+				{
+					if (!m_pClientSocket.Pending())
+					{
+						m_eState = State::HANDSHAKE;
+						
+						Blob* pSendBlob = own new Blob(true);
+						BlobView pBlobView = pSendBlob.GetBlobView();
+						pBlobView.PackUint16(619);
+						pBlobView.PackUint16(m_nVersion);
+						m_pClientSocket.Send(pSendBlob);
+
+						Console::Log("client send!");
+					}
+					break;
+				}
+				case State::HANDSHAKE:
+				{
+					break;
+				}
+				case State::CONNECTED:
+				{
+					break;
+				}
+				case State::DISCONNECTED:
+				{
+					break;
+				}
+				default:
+				{
+					Assert::Plz(false);
+				}
+			}
+		}
+
+		public bool Pending()
+		{
+			return m_pClientSocket.Pending();
+		}
+	}
+}

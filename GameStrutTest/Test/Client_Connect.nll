@@ -1,0 +1,20 @@
+namespace NumbatLogic
+{
+	class Client_Connect
+	{
+        public static void Run()
+		{
+			gsServer* pServer = own new gsServer("localhost", 9876, 0, "");
+			gsClient* pClient = own new gsClient("localhost", 9876, 0);
+
+			GameStrutTestUtil::Update(pServer, pClient);
+			GameStrutTestUtil::Update(pServer, pClient);
+			GameStrutTestUtil::Update(pServer, pClient);
+			GameStrutTestUtil::Update(pServer, pClient);
+			GameStrutTestUtil::Update(pServer, pClient);
+			GameStrutTestUtil::Update(pServer, pClient);
+
+			//Assert::Plz(pServerClientSocket != null);
+		}
+	}
+}

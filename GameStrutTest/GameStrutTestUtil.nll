@@ -13,5 +13,17 @@ namespace NumbatLogic
 					break;
 			}
 		}
+
+		public static void Update(gsServer pServer, gsClient pClient)
+		{
+			while (true)
+			{
+				pServer.Update();
+				pClient.Update();
+				
+				if (!pServer.Pending() && !pClient.Pending())
+					break;
+			}
+		}
 	}
 }
