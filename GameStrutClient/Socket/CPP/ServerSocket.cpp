@@ -95,10 +95,22 @@ namespace NumbatLogic
 			if (setsockopt(m_nSocket, SOL_SOCKET, SO_REUSEADDR, (const char*)&yes, sizeof(int)) == -1)
 				Assert::Plz(false);		// todo: cleanup
 
-			if (bind(m_nSocket, (struct sockaddr*) &address, sizeof(address)) < 0)
-				Assert::Plz(false);		// todo: cleanup
+					if (bind(m_nSocket, (struct sockaddr*) &address, sizeof(address)) < 0)
+			Assert::Plz(false);		// todo: cleanup
 
-			listen(m_nSocket, 5);
+		// Set server socket to non-blocking mode
+		#ifdef NB_WINDOWS
+			u_long mode = 1;
+			ioctlsocket(m_nSocket, FIONBIO, &mode);
+		#else
+			int flags = fcntl(m_nSocket, F_GETFL, 0);
+			if (flags != -1)
+			{
+				fcntl(m_nSocket, F_SETFL, flags | O_NONBLOCK);
+			}
+		#endif
+
+		listen(m_nSocket, 5);
 		}
 	}
 
