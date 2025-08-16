@@ -1,0 +1,37 @@
+namespace NumbatLogic
+{
+	class gsServerClient
+	{
+		private gsServer m_pServer;
+		public ClientSocket m_pClientSocket;
+		public gsClient::State m_eState;
+
+		public construct(gsServer pServer, ClientSocket pClientSocket)
+		{
+			m_pServer = pServer;
+			m_pClientSocket = pClientSocket;
+			m_eState = gsClient::State::CONNECT;
+		}
+
+		public void Update()
+		{
+			m_pClientSocket.Update();
+
+
+		}
+
+		/*Uint8 nState;
+
+		Uint16 nNettleVersion;
+		Uint16 nVersion;
+
+		Uint32 nClientId;
+		//Uint32 nReconnectToken;
+
+		nbVector* pRoomVector;
+
+		Uint32 nLastSyncId;
+
+		void* pPointer;*/
+	}
+}
