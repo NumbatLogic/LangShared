@@ -2,72 +2,108 @@ namespace NumbatLogic
 {
 	class gsServer
 	{
-		private InternalString* m_sAddress;
-		private Uint16 m_nPort;
-		private Uint16 m_nVersion;
-
-		private ServerSocket* m_pServerSocket;
-		private OwnedVector<gsServerClient>* m_pServerClientVector;
-		private OwnedVector<gsServerRoom>* m_pServerRoomVector;
-
+		public gsServerImplementation* m_pImpl;
+		
         public construct(string sxAddress, Uint16 nPort, Uint16 nVersion, string sxDatabasePath)
 		{
-			m_sAddress = own new InternalString(sxAddress);
-			m_nPort = nPort;
-			m_nVersion = nVersion;
+			m_pImpl = own new gsServerImplementation();
 
-			m_pServerSocket = own new ServerSocket();
-			m_pServerSocket.Start(m_nPort);
+			m_pImpl.m_sAddress = own new InternalString(sxAddress);
+			m_pImpl.m_nPort = nPort;
+			m_pImpl.m_nVersion = nVersion;
 
-			m_pServerRoomVector = own new OwnedVector<gsServerRoom>();
-			m_pServerClientVector = own new OwnedVector<gsServerClient>();
+			m_pImpl.m_pServerSocket = own new ServerSocket();
+			m_pImpl.m_pServerSocket.Start(m_pImpl.m_nPort);
+
+			m_pImpl.m_pServerRoomVector = own new OwnedVector<gsServerRoom>();
+			m_pImpl.m_pServerClientVector = own new OwnedVector<gsServerClient>();
 		}
 
 		public destruct()
 		{
-			m_pServerSocket.Stop();
+			m_pImpl.m_pServerSocket.Stop();
 		}
 
 		public void Update()
 		{
-			m_pServerSocket.Update();
+			m_pImpl.m_pServerSocket.Update();
 
 			{
-				ClientSocket pClientSocket = m_pServerSocket.Accept();
+				ClientSocket pClientSocket = m_pImpl.m_pServerSocket.Accept();
 				if (pClientSocket)
 				{
 					Console::Log("Accept!");
 
 					gsServerClient* pServerClient = own CreateServerClient(pClientSocket);
 					Assert::Plz(pServerClient != null);
-					m_pServerClientVector.PushBack(disown pServerClient);
+					m_pImpl.m_pServerClientVector.PushBack(disown pServerClient);
 				}
 			}
 
-			int i;
-			for (int i = 0; i < m_pServerClientVector.GetSize(); i++)
+			for (int i = 0; i < m_pImpl.m_pServerClientVector.GetSize(); i++)
 			{
-				gsServerClient pServerClient = m_pServerClientVector.Get(i);
+				gsServerClient pServerClient = m_pImpl.m_pServerClientVector.Get(i);
 
 				pServerClient.Update();
 
-				switch (pServerClient.m_eState)
+				switch (pServerClient.m_pImpl.m_eState)
 				{
 					case gsClient::State::CONNECT:
 					{
 						//if (nbClientSocket_GetConnected(pClient->pClientSocket))
-							pServerClient.m_eState = gsClient::State::HANDSHAKE;
+							pServerClient.m_pImpl.m_eState = gsClient::State::HANDSHAKE;
 						break;
 					}
 					case gsClient::State::HANDSHAKE:
 					{
-						Blob* pReceiveBlob = own pServerClient.m_pClientSocket.Receive();
-						if (pReceiveBlob)
+						Blob* pReceiveBlob = own pServerClient.m_pImpl.m_pClientSocket.Receive();
+						if (pReceiveBlob != null)
 						{
-							if (pReceiveBlob.GetSize() > 0)
+							const int INITIAL_SIZE = 2 + 2 + 1;
+							if (pReceiveBlob.GetSize() > INITIAL_SIZE)
 							{
+								BlobView pRecieveBlobView = pReceiveBlob.GetBlobView();
+
+								Uint16 nMagic = pRecieveBlobView.UnpackUint16();
+								Uint16 nVersion = pRecieveBlobView.UnpackUint16();
+								Uint8 nAuthMode = pRecieveBlobView.UnpackUint8();
+								
+								if (nMagic == gsClientImplementation::MAGIC_WORD && nVersion == m_pImpl.m_nVersion)
+								{
+									// success, move to room or auth or something
+									if (nAuthMode == 0)
+									{
+										InternalString* sName = own new InternalString("");
+										InternalString* sPassword = own new InternalString("");
+
+										if (pRecieveBlobView.UnpackInternalString(sName))
+										{
+											if (pRecieveBlobView.UnpackInternalString(sPassword))
+											{
+												pServerClient.m_pImpl.m_eState = gsClient::State::CONNECTED;
+
+												// move to room
+
+												//Console::Log(sName.GetExternalString());
+												//Console::Log(sPassword.GetExternalString());
+												break;
+											}
+										}
+									}
+								}
 							}
-							Console::Log("Server - Blob!");
+							
+							{
+								Console::Log("Bad handshake, disconnecting");
+								Blob* pResponseBlob = own new Blob(true);
+								BlobView pResponseBlobView = pResponseBlob.GetBlobView();
+								pResponseBlobView.PackUint8(gsError::Error::BAD_HANDSHAKE);
+								pServerClient.m_pImpl.m_pClientSocket.Disconnect();
+							}
+						}
+						else
+						{
+							// timeout kick
 						}
 						break;
 					}
@@ -85,16 +121,61 @@ namespace NumbatLogic
 					}
 				}
 			}
+
+			// cleanup
+			{
+				int i = 0;
+				while (i < m_pImpl.m_pServerClientVector.GetSize())
+				{
+					gsServerClient pServerClient = m_pImpl.m_pServerClientVector.Get(i);
+					if (!pServerClient.m_pImpl.m_pClientSocket.GetConnected())
+					{
+						/*while (nbVector_GetSize(pClient->pRoomVector) > 0)
+							{
+								nbNettle_ServerRoom* pRoom = nbVector_Get(pClient->pRoomVector, 0);
+								nbNettle_ServerRoom_ClientLeave(pRoom, pClient);
+							}
+				
+							if (pServer->pClientDestroy)
+								pServer->pClientDestroy(pClient, pServer->pDatabase);
+				
+							nbClientSocket_Destroy(pClient->pClientSocket);
+				
+							nbAssert(nbVector_GetSize(pClient->pRoomVector) == 0);
+							nbVector_Destroy(pClient->pRoomVector);
+				
+							nbFree(pClient);// todo: stop doing this in two places
+				
+							nbVector_Erase(pServer->pClientVector, i);*/
+						
+							m_pImpl.m_pServerClientVector.Erase(i);
+						
+						continue;
+					}
+					i++;
+				}
+			}
 		}
 
 		public bool Pending()
 		{
-			return m_pServerSocket.Pending();
+			return m_pImpl.m_pServerSocket.Pending();
 		}
 
 		public virtual gsServerClient** CreateServerClient(ClientSocket pClientSocket)
 		{
 			return new gsServerClient(this, pClientSocket);
 		}
+	}
+
+	class gsServerImplementation
+	{
+		public InternalString* m_sAddress;
+		public Uint16 m_nPort;
+		public Uint16 m_nVersion;
+
+		public ServerSocket* m_pServerSocket;
+		public OwnedVector<gsServerClient>* m_pServerClientVector;
+		public OwnedVector<gsServerRoom>* m_pServerRoomVector;
 	}
 }
