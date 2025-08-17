@@ -14,6 +14,7 @@ namespace NumbatLogic
             void Disconnect();
             void Update();
             bool Pending();
+            bool GetConnected();
 
             virtual bool Send(Blob* pBlob) override;
             virtual Blob* Receive() override;

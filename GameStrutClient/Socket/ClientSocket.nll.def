@@ -12,6 +12,7 @@ namespace NumbatLogic
 
 		public void Update();
 		public bool Pending();
+		public bool GetConnected();
 
 
 		
