@@ -1,5 +1,6 @@
 #include "Blob.hpp"
 #include "../../Assert/CPP/Assert.hpp"
+#include "../../InternalString/CPP/InternalString.hpp"
 
 #ifdef _WIN32
 	#include <string>
@@ -295,6 +296,12 @@ namespace NumbatLogic
 		PackData((unsigned char*)&n, 8);
 	}
 
+	void BlobView::PackInternalString(InternalString* sString)
+	{
+		PackInt32(sString->GetByteLength());
+		PackData((unsigned char*)sString->GetExternalString(), sString->GetLength());	
+	}
+
 	unsigned char BlobView::UnpackUint8()
 	{
 		unsigned char n = 0;
@@ -342,6 +349,29 @@ namespace NumbatLogic
 		double n = 0;
 		UnpackData((unsigned char*)&n, 8);
 		return n;
+	}
+
+	bool BlobView::UnpackInternalString(InternalString* sString)
+	{
+		signed int nByteLength = 0;
+		UnpackData((unsigned char*)&nByteLength, 4);
+
+		if (nByteLength == 0)
+		{
+			sString->Set("");
+			return true;
+		}
+
+		if (nByteLength > 0 && nByteLength < 1024)
+		{
+			unsigned char* pBuffer = (unsigned char*)malloc(nByteLength+1);
+			UnpackData(pBuffer, nByteLength);
+			pBuffer[nByteLength] = 0;
+			sString->Set((char*)pBuffer);
+			return true;
+		}
+
+		return false;
 	}
 
 	signed int BlobView::UnpackInt32At(int nOffset)

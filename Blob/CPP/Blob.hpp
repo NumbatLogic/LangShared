@@ -2,6 +2,7 @@
 
 namespace NumbatLogic
 {
+	class InternalString;
 	class BlobView;
 
 	class Blob
@@ -61,6 +62,8 @@ namespace NumbatLogic
 
 			void PackDouble(double n);
 
+			void PackInternalString(InternalString* sString);
+
 			unsigned char UnpackUint8();
 			unsigned short UnpackUint16();
 			unsigned int UnpackUint32();
@@ -70,6 +73,8 @@ namespace NumbatLogic
 			signed int UnpackInt32();
 
 			double UnpackDouble();
+
+			bool UnpackInternalString(InternalString* sString);
 
 			signed int UnpackInt32At(int nOffset);
 
