@@ -51,10 +51,19 @@ namespace NumbatLogic
 		public void PackUint16(Uint16 val);
 		public void PackUint32(Uint32 val);
 		public void PackDouble(double val);
+
+		public void PackInternalString(InternalString sString);
+
+
+
 		public void Unpack(BlobView pBlobView, int nSize);
 		public void UnpackAt(int nOffset, BlobView pBlobView, int nSize);
 		//public void UnpackData(byte[] pData, int nSize);
 		//public void UnpackDataAt(int nOffset, byte[] pData, int nSize);
+
+
+
+
 
 		public Int16 UnpackInt16();
 		public Int32 UnpackInt32();
@@ -65,6 +74,11 @@ namespace NumbatLogic
 		public Uint16 UnpackUint16();
 		public Uint32 UnpackUint32();
 		public double UnpackDouble();
+
+		public bool UnpackInternalString(InternalString sString);
+
+
+		//public bool TryUnpackUint16(ref Uint16 nValue);
 
 		public Uint8 GetChecksum();
 	}
