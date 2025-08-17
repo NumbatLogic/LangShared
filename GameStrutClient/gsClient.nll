@@ -2,47 +2,56 @@ namespace NumbatLogic
 {
 	class gsClient
 	{
-		private ClientSocket* m_pClientSocket;
-		private Uint16 m_nVersion;
-
 		public enum State {
 			CONNECT,
 			HANDSHAKE,
 			CONNECTED,
 			DISCONNECTED
 		}
-		public State m_eState;
 
+		public gsClientImplementation* m_pImpl;
+		
 		public construct(string sxAddress, Uint16 nPort, Uint16 nVersion)
 		{
-			m_pClientSocket = own new ClientSocket();
-			m_pClientSocket.Connect(sxAddress, nPort);
-			m_nVersion = nVersion;
-			m_eState = CONNECT;
+			m_pImpl = own new gsClientImplementation();
+
+			m_pImpl.m_pClientSocket = own new ClientSocket();
+			m_pImpl.m_pClientSocket.Connect(sxAddress, nPort);
+			m_pImpl.m_nVersion = nVersion;
+			m_pImpl.m_eState = CONNECT;
 		}
 
 		public destruct()
 		{
-			m_pClientSocket.Disconnect();
+			m_pImpl.m_pClientSocket.Disconnect();
 		}
 
 		public void Update()
 		{
-			m_pClientSocket.Update();
+			m_pImpl.m_pClientSocket.Update();
 
-			switch (m_eState)
+			switch (m_pImpl.m_eState)
 			{
 				case State::CONNECT:
 				{
-					if (!m_pClientSocket.Pending())
+					if (!m_pImpl.m_pClientSocket.Pending())
 					{
-						m_eState = State::HANDSHAKE;
+						m_pImpl.m_eState = State::HANDSHAKE;
 						
 						Blob* pSendBlob = own new Blob(true);
 						BlobView pBlobView = pSendBlob.GetBlobView();
-						pBlobView.PackUint16(619);
-						pBlobView.PackUint16(m_nVersion);
-						m_pClientSocket.Send(pSendBlob);
+						pBlobView.PackUint16(gsClientImplementation::MAGIC_WORD);
+						pBlobView.PackUint16(m_pImpl.m_nVersion);
+
+						pBlobView.PackUint8(0); // auth mode
+
+						InternalString* sName = own new InternalString("cliffya");
+						pBlobView.PackInternalString(sName);
+
+						InternalString* sPassword = own new InternalString("password");
+						pBlobView.PackInternalString(sPassword);
+
+						m_pImpl.m_pClientSocket.Send(pSendBlob);
 
 						Console::Log("client send!");
 					}
@@ -69,7 +78,17 @@ namespace NumbatLogic
 
 		public bool Pending()
 		{
-			return m_pClientSocket.Pending();
+			return m_pImpl.m_pClientSocket.Pending();
 		}
+	}
+
+	class gsClientImplementation
+	{
+		public static const Uint16 MAGIC_WORD = 619;
+
+		public ClientSocket* m_pClientSocket;
+		public Uint16 m_nVersion;
+
+		public gsClient::State m_eState;
 	}
 }
