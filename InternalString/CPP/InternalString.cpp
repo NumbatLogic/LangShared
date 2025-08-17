@@ -325,6 +325,11 @@ namespace NumbatLogic
 		return m_nCharLength;
 	}
 
+	int InternalString::GetByteLength()
+	{
+		return m_nByteLength;
+	}
+
 	unsigned short InternalString::GetChar(int nIndex)
 	{
 		Assert::Plz(nIndex >= 0);
