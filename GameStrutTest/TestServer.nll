@@ -1,0 +1,14 @@
+namespace NumbatLogic
+{
+	class TestServer : gsServer
+	{
+		public construct(string sxAddress, Uint16 nPort, Uint16 nVersion, string sxDatabasePath) : base (sxAddress, nPort, nVersion, sxDatabasePath)
+		{
+		}
+
+		/*public virtual void Auth(Blob pAuthBlob)
+		{
+
+		}*/
+	}
+}

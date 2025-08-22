@@ -4,21 +4,12 @@ namespace NumbatLogic
 	{
 		public gsServerClientImplementation* m_pImpl;
 
+		public construct(Uint16 nClientId, gsServer pServer, ClientSocket pClientSocket)
+		{
+			m_pImpl = own new gsServerClientImplementation(this, nClientId, pServer, pClientSocket);
+		}
+
 		
-
-		public construct(gsServer pServer, ClientSocket pClientSocket)
-		{
-			m_pImpl = own new gsServerClientImplementation();
-
-			m_pImpl.m_pServer = pServer;
-			m_pImpl.m_pClientSocket = pClientSocket;
-			m_pImpl.m_eState = gsClient::State::CONNECT;
-		}
-
-		public void Update()
-		{
-			m_pImpl.m_pClientSocket.Update();
-		}
 
 		/*Uint8 nState;
 
@@ -37,8 +28,109 @@ namespace NumbatLogic
 
 	class gsServerClientImplementation
 	{
+		public gsServerClient m_pThis;
+		public Uint16 m_nClientId;
 		public gsServer m_pServer;
 		public ClientSocket m_pClientSocket;
 		public gsClient::State m_eState;
+		public Vector<gsServerRoom>* m_pServerRoomVector;
+
+		public construct (gsServerClient pThis, Uint16 nClientId, gsServer pServer, ClientSocket pClientSocket)
+		{
+			m_pThis = pThis;
+			m_nClientId = nClientId;
+			m_pServer = pServer;
+			m_pClientSocket = pClientSocket;
+			m_eState = gsClient::State::CONNECT;
+			m_pServerRoomVector = own new Vector<gsServerRoom>();
+		}
+
+		public void Update()
+		{
+			m_pClientSocket.Update();
+
+			switch (m_eState)
+			{
+				case gsClient::State::CONNECT:
+				{
+					//if (nbClientSocket_GetConnected(pClient->pClientSocket))
+						m_eState = gsClient::State::HANDSHAKE;
+					break;
+				}
+				case gsClient::State::HANDSHAKE:
+				{
+					Blob* pReceiveBlob = own m_pClientSocket.Receive();
+					if (pReceiveBlob != null)
+					{
+						const int INITIAL_SIZE = 2 + 2 + 1;
+						if (pReceiveBlob.GetSize() > INITIAL_SIZE)
+						{
+							BlobView pRecieveBlobView = pReceiveBlob.GetBlobView();
+
+							Uint16 nMagic = pRecieveBlobView.UnpackUint16();
+							Uint16 nVersion = pRecieveBlobView.UnpackUint16();
+							Uint8 nAuthMode = pRecieveBlobView.UnpackUint8();
+							
+							if (nMagic == gsClientImplementation::MAGIC_WORD && nVersion == m_pServer.m_pImpl.m_nVersion)
+							{
+								// success, move to room or auth or something
+								if (nAuthMode == 0)
+								{
+									InternalString* sName = own new InternalString("");
+									InternalString* sPassword = own new InternalString("");
+
+									if (pRecieveBlobView.UnpackInternalString(sName))
+									{
+										if (pRecieveBlobView.UnpackInternalString(sPassword))
+										{
+											m_eState = gsClient::State::CONNECTED;
+
+											gsServerRoom* pOwnedServerRoom = own new gsServerRoom(m_pServer);
+											gsServerRoom pServerRoom = pOwnedServerRoom;
+											m_pServer.m_pImpl.m_pServerRoomVector.PushBack(disown pOwnedServerRoom);
+
+											m_pServer.ClientJoin(m_pThis, pServerRoom);
+
+											Console::Log("!!!!");
+											
+
+											//transition user to room
+											break;
+										}
+									}
+								}
+							}
+						}
+						
+						{
+							Console::Log("Bad handshake, disconnecting");
+							Blob* pResponseBlob = own new Blob(true);
+							BlobView pResponseBlobView = pResponseBlob.GetBlobView();
+							pResponseBlobView.PackUint8(gsError::Error::BAD_HANDSHAKE);
+							m_pClientSocket.Disconnect();
+							return;
+						}
+					}
+					else
+					{
+						// timeout kick
+					}
+					break;
+				}
+				case gsClient::State::CONNECTED:
+				{
+					break;
+				}
+				case gsClient::State::DISCONNECTED:
+				{
+					break;
+				}
+				default:
+				{
+					Assert::Plz(false);
+				}
+			}
+		}
 	}
+	
 }

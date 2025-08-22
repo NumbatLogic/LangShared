@@ -44,82 +44,9 @@ namespace NumbatLogic
 			{
 				gsServerClient pServerClient = m_pImpl.m_pServerClientVector.Get(i);
 
-				pServerClient.Update();
+				pServerClient.m_pImpl.Update();
 
-				switch (pServerClient.m_pImpl.m_eState)
-				{
-					case gsClient::State::CONNECT:
-					{
-						//if (nbClientSocket_GetConnected(pClient->pClientSocket))
-							pServerClient.m_pImpl.m_eState = gsClient::State::HANDSHAKE;
-						break;
-					}
-					case gsClient::State::HANDSHAKE:
-					{
-						Blob* pReceiveBlob = own pServerClient.m_pImpl.m_pClientSocket.Receive();
-						if (pReceiveBlob != null)
-						{
-							const int INITIAL_SIZE = 2 + 2 + 1;
-							if (pReceiveBlob.GetSize() > INITIAL_SIZE)
-							{
-								BlobView pRecieveBlobView = pReceiveBlob.GetBlobView();
-
-								Uint16 nMagic = pRecieveBlobView.UnpackUint16();
-								Uint16 nVersion = pRecieveBlobView.UnpackUint16();
-								Uint8 nAuthMode = pRecieveBlobView.UnpackUint8();
-								
-								if (nMagic == gsClientImplementation::MAGIC_WORD && nVersion == m_pImpl.m_nVersion)
-								{
-									// success, move to room or auth or something
-									if (nAuthMode == 0)
-									{
-										InternalString* sName = own new InternalString("");
-										InternalString* sPassword = own new InternalString("");
-
-										if (pRecieveBlobView.UnpackInternalString(sName))
-										{
-											if (pRecieveBlobView.UnpackInternalString(sPassword))
-											{
-												pServerClient.m_pImpl.m_eState = gsClient::State::CONNECTED;
-
-												// move to room
-
-												//Console::Log(sName.GetExternalString());
-												//Console::Log(sPassword.GetExternalString());
-												break;
-											}
-										}
-									}
-								}
-							}
-							
-							{
-								Console::Log("Bad handshake, disconnecting");
-								Blob* pResponseBlob = own new Blob(true);
-								BlobView pResponseBlobView = pResponseBlob.GetBlobView();
-								pResponseBlobView.PackUint8(gsError::Error::BAD_HANDSHAKE);
-								pServerClient.m_pImpl.m_pClientSocket.Disconnect();
-							}
-						}
-						else
-						{
-							// timeout kick
-						}
-						break;
-					}
-					case gsClient::State::CONNECTED:
-					{
-						break;
-					}
-					case gsClient::State::DISCONNECTED:
-					{
-						break;
-					}
-					default:
-					{
-						Assert::Plz(false);
-					}
-				}
+				
 			}
 
 			// cleanup
@@ -164,7 +91,27 @@ namespace NumbatLogic
 
 		public virtual gsServerClient** CreateServerClient(ClientSocket pClientSocket)
 		{
-			return new gsServerClient(this, pClientSocket);
+			return new gsServerClient(m_pImpl.m_nLastClientId++, this, pClientSocket);
+		}
+
+		public virtual void Auth(Blob pAuthBlob, ClientSocket pClientSocket)
+		{
+			Assert::Plz(false);
+		}
+
+		public void ClientJoin(gsServerClient pServerClient, gsServerRoom pServerRoom)
+		{
+			// TODO: load transition from DB
+			// TODO: process id check
+			
+			// TODO: only kick from primary room
+			while (pServerClient.m_pImpl.m_pServerRoomVector.GetSize())
+			{
+				gsServerRoom pCurrentServerRoom = pServerClient.m_pImpl.m_pServerRoomVector.Get(0);
+				pCurrentServerRoom.m_pImpl.ClientLeave(pServerClient);
+			}
+
+			pServerRoom.m_pImpl.ClientJoin(pServerClient);
 		}
 	}
 
@@ -177,5 +124,7 @@ namespace NumbatLogic
 		public ServerSocket* m_pServerSocket;
 		public OwnedVector<gsServerClient>* m_pServerClientVector;
 		public OwnedVector<gsServerRoom>* m_pServerRoomVector;
+
+		public Uint16 m_nLastClientId;
 	}
 }

@@ -2,6 +2,39 @@ namespace NumbatLogic
 {
 	class gsServerRoom
 	{
-		
+		public gsServerRoomImplementation* m_pImpl;
+		public construct(gsServer pServer)
+		{
+			m_pImpl = own new gsServerRoomImplementation(this, pServer);
+		}
+
+		public GetClientByClientId(Uint16 nClient)
 	}
+
+	class gsServerRoomImplementation
+	{
+		public gsServerRoom m_pThis;
+		public gsServer m_pServer;
+		public Vector<gsServerClient>* m_pServerClientVector;
+
+		public construct(gsServerRoom pThis, gsServer pServer)
+		{
+			m_pThis = pThis;
+			m_pServer = pServer;
+			m_pServerClientVector = own new Vector<gsServerClient>();
+		}
+
+		public void ClientJoin(gsServerClient pServerClient)
+		{
+
+			
+		}
+
+		public void ClientLeave(gsServerClient pServerClient)
+		{
+			
+		}
+	}
+
+
 }
