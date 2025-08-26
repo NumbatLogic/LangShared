@@ -2,14 +2,22 @@ namespace NumbatLogic
 {
 	class gsServerClient
 	{
-		public gsServerClientImplementation* m_pImpl;
-
-		public construct(Uint16 nClientId, gsServer pServer, ClientSocket pClientSocket)
+		public void Send(gsServerRoom pRoom, string sxMessageType, Blob pBlob)
 		{
-			m_pImpl = own new gsServerClientImplementation(this, nClientId, pServer, pClientSocket);
+			Blob* pSendBlob = own new Blob(true);
+			BlobView pSendBlobView = pSendBlob.GetBlobView();
+
+			Uint32 nSyncId = __nLastSyncId++;
+
+			pSendBlobView.PackUint32(nSyncId);
+
+			Console::Log("gsServerClient::Send");
+			__pClientSocket.Send(pSendBlob);
 		}
 
-		
+
+		// SEKRIT
+
 
 		/*Uint8 nState;
 
@@ -24,42 +32,39 @@ namespace NumbatLogic
 		Uint32 nLastSyncId;
 
 		void* pPointer;*/
-	}
+	
+		public Uint32 __nClientId;
+		public gsServer __pServer;
+		public ClientSocket __pClientSocket;
+		public gsClient::State __eState;
+		public Vector<gsServerRoom>* __pRoomVector;
 
-	class gsServerClientImplementation
-	{
-		public gsServerClient m_pThis;
-		public Uint16 m_nClientId;
-		public gsServer m_pServer;
-		public ClientSocket m_pClientSocket;
-		public gsClient::State m_eState;
-		public Vector<gsServerRoom>* m_pServerRoomVector;
+		public Uint32 __nLastSyncId;
 
-		public construct (gsServerClient pThis, Uint16 nClientId, gsServer pServer, ClientSocket pClientSocket)
+		public construct(Uint32 nClientId, gsServer pServer, ClientSocket pClientSocket)
 		{
-			m_pThis = pThis;
-			m_nClientId = nClientId;
-			m_pServer = pServer;
-			m_pClientSocket = pClientSocket;
-			m_eState = gsClient::State::CONNECT;
-			m_pServerRoomVector = own new Vector<gsServerRoom>();
+			__nClientId = nClientId;
+			__pServer = pServer;
+			__pClientSocket = pClientSocket;
+			__eState = gsClient::State::CONNECT;
+			__pRoomVector = own new Vector<gsServerRoom>();
 		}
 
-		public void Update()
+		public void __Update()
 		{
-			m_pClientSocket.Update();
+			__pClientSocket.Update();
 
-			switch (m_eState)
+			switch (__eState)
 			{
 				case gsClient::State::CONNECT:
 				{
 					//if (nbClientSocket_GetConnected(pClient->pClientSocket))
-						m_eState = gsClient::State::HANDSHAKE;
+						__eState = gsClient::State::HANDSHAKE;
 					break;
 				}
 				case gsClient::State::HANDSHAKE:
 				{
-					Blob* pReceiveBlob = own m_pClientSocket.Receive();
+					Blob* pReceiveBlob = own __pClientSocket.Receive();
 					if (pReceiveBlob != null)
 					{
 						const int INITIAL_SIZE = 2 + 2 + 1;
@@ -71,7 +76,7 @@ namespace NumbatLogic
 							Uint16 nVersion = pRecieveBlobView.UnpackUint16();
 							Uint8 nAuthMode = pRecieveBlobView.UnpackUint8();
 							
-							if (nMagic == gsClientImplementation::MAGIC_WORD && nVersion == m_pServer.m_pImpl.m_nVersion)
+							if (nMagic == gsClient::MAGIC_WORD && nVersion == __pServer.__nVersion)
 							{
 								// success, move to room or auth or something
 								if (nAuthMode == 0)
@@ -83,13 +88,32 @@ namespace NumbatLogic
 									{
 										if (pRecieveBlobView.UnpackInternalString(sPassword))
 										{
-											m_eState = gsClient::State::CONNECTED;
 
-											gsServerRoom* pOwnedServerRoom = own new gsServerRoom(m_pServer);
+											// TODO: validate
+
+
+											Console::Log("server send");
+											Blob* pSendBlob = own new Blob(true);
+											BlobView pBlobView = pSendBlob.GetBlobView();
+											pBlobView.PackUint16(gsClient::MAGIC_WORD);
+											pBlobView.PackUint16(__pServer.__nVersion);
+											pBlobView.PackBool(true);
+											pBlobView.PackUint32(__nClientId);
+
+											__pClientSocket.Send(pSendBlob);
+
+
+
+
+											__eState = gsClient::State::CONNECTED;
+
+
+											// todo: move to some create calback
+											gsServerRoom* pOwnedServerRoom = own new gsServerRoom(__pServer.__nLastRoomId++, "test", __pServer);
 											gsServerRoom pServerRoom = pOwnedServerRoom;
-											m_pServer.m_pImpl.m_pServerRoomVector.PushBack(disown pOwnedServerRoom);
+											__pServer.__pRoomVector.PushBack(disown pOwnedServerRoom);
 
-											m_pServer.ClientJoin(m_pThis, pServerRoom);
+											__pServer.__ClientJoin(this, pServerRoom);
 
 											Console::Log("!!!!");
 											
@@ -107,7 +131,7 @@ namespace NumbatLogic
 							Blob* pResponseBlob = own new Blob(true);
 							BlobView pResponseBlobView = pResponseBlob.GetBlobView();
 							pResponseBlobView.PackUint8(gsError::Error::BAD_HANDSHAKE);
-							m_pClientSocket.Disconnect();
+							__pClientSocket.Disconnect();
 							return;
 						}
 					}

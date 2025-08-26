@@ -2,60 +2,54 @@ namespace NumbatLogic
 {
 	class gsServer
 	{
-		public gsServerImplementation* m_pImpl;
-		
-        public construct(string sxAddress, Uint16 nPort, Uint16 nVersion, string sxDatabasePath)
+		public construct(string sxAddress, Uint16 nPort, Uint16 nVersion, string sxDatabasePath)
 		{
-			m_pImpl = own new gsServerImplementation();
+			__sAddress = own new InternalString(sxAddress);
+			__nPort = nPort;
+			__nVersion = nVersion;
 
-			m_pImpl.m_sAddress = own new InternalString(sxAddress);
-			m_pImpl.m_nPort = nPort;
-			m_pImpl.m_nVersion = nVersion;
+			__pServerSocket = own new ServerSocket();
+			__pServerSocket.Start(__nPort);
 
-			m_pImpl.m_pServerSocket = own new ServerSocket();
-			m_pImpl.m_pServerSocket.Start(m_pImpl.m_nPort);
-
-			m_pImpl.m_pServerRoomVector = own new OwnedVector<gsServerRoom>();
-			m_pImpl.m_pServerClientVector = own new OwnedVector<gsServerClient>();
+			__pRoomVector = own new OwnedVector<gsServerRoom>();
+			__pClientVector = own new OwnedVector<gsServerClient>();
 		}
 
 		public destruct()
 		{
-			m_pImpl.m_pServerSocket.Stop();
+			__pServerSocket.Stop();
 		}
 
 		public void Update()
 		{
-			m_pImpl.m_pServerSocket.Update();
+			__pServerSocket.Update();
 
 			{
-				ClientSocket pClientSocket = m_pImpl.m_pServerSocket.Accept();
+				ClientSocket pClientSocket = __pServerSocket.Accept();
 				if (pClientSocket)
 				{
 					Console::Log("Accept!");
 
 					gsServerClient* pServerClient = own CreateServerClient(pClientSocket);
 					Assert::Plz(pServerClient != null);
-					m_pImpl.m_pServerClientVector.PushBack(disown pServerClient);
+					__pClientVector.PushBack(disown pServerClient);
 				}
 			}
 
-			for (int i = 0; i < m_pImpl.m_pServerClientVector.GetSize(); i++)
+			for (int i = 0; i < __pClientVector.GetSize(); i++)
 			{
-				gsServerClient pServerClient = m_pImpl.m_pServerClientVector.Get(i);
+				gsServerClient pServerClient = __pClientVector.Get(i);
 
-				pServerClient.m_pImpl.Update();
-
-				
+				pServerClient.__Update();
 			}
 
 			// cleanup
 			{
 				int i = 0;
-				while (i < m_pImpl.m_pServerClientVector.GetSize())
+				while (i < __pClientVector.GetSize())
 				{
-					gsServerClient pServerClient = m_pImpl.m_pServerClientVector.Get(i);
-					if (!pServerClient.m_pImpl.m_pClientSocket.GetConnected())
+					gsServerClient pServerClient = __pClientVector.Get(i);
+					if (!pServerClient.__pClientSocket.GetConnected())
 					{
 						/*while (nbVector_GetSize(pClient->pRoomVector) > 0)
 							{
@@ -75,7 +69,7 @@ namespace NumbatLogic
 				
 							nbVector_Erase(pServer->pClientVector, i);*/
 						
-							m_pImpl.m_pServerClientVector.Erase(i);
+							__pClientVector.Erase(i);
 						
 						continue;
 					}
@@ -86,12 +80,12 @@ namespace NumbatLogic
 
 		public bool Pending()
 		{
-			return m_pImpl.m_pServerSocket.Pending();
+			return __pServerSocket.Pending();
 		}
 
 		public virtual gsServerClient** CreateServerClient(ClientSocket pClientSocket)
 		{
-			return new gsServerClient(m_pImpl.m_nLastClientId++, this, pClientSocket);
+			return new gsServerClient(__nLastClientId++, this, pClientSocket);
 		}
 
 		public virtual void Auth(Blob pAuthBlob, ClientSocket pClientSocket)
@@ -99,32 +93,35 @@ namespace NumbatLogic
 			Assert::Plz(false);
 		}
 
-		public void ClientJoin(gsServerClient pServerClient, gsServerRoom pServerRoom)
+
+
+		// SEKRIT - Double underscores are internal implementation, no promises!
+		// *******
+		public InternalString* __sAddress;
+		public Uint16 __nPort;
+		public Uint16 __nVersion;
+
+		public ServerSocket* __pServerSocket;
+		public OwnedVector<gsServerClient>* __pClientVector;
+		public OwnedVector<gsServerRoom>* __pRoomVector;
+
+		public Uint32 __nLastClientId;
+		public Uint32 __nLastRoomId;
+
+
+		public void __ClientJoin(gsServerClient pClient, gsServerRoom pRoom)
 		{
 			// TODO: load transition from DB
 			// TODO: process id check
 			
 			// TODO: only kick from primary room
-			while (pServerClient.m_pImpl.m_pServerRoomVector.GetSize())
+			while (pClient.__pRoomVector.GetSize())
 			{
-				gsServerRoom pCurrentServerRoom = pServerClient.m_pImpl.m_pServerRoomVector.Get(0);
-				pCurrentServerRoom.m_pImpl.ClientLeave(pServerClient);
+				gsServerRoom pCurrentRoom = pClient.__pRoomVector.Get(0);
+				pCurrentRoom.__ClientLeave(pClient);
 			}
 
-			pServerRoom.m_pImpl.ClientJoin(pServerClient);
+			pRoom.__ClientJoin(pClient);
 		}
-	}
-
-	class gsServerImplementation
-	{
-		public InternalString* m_sAddress;
-		public Uint16 m_nPort;
-		public Uint16 m_nVersion;
-
-		public ServerSocket* m_pServerSocket;
-		public OwnedVector<gsServerClient>* m_pServerClientVector;
-		public OwnedVector<gsServerRoom>* m_pServerRoomVector;
-
-		public Uint16 m_nLastClientId;
 	}
 }

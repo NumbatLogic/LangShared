@@ -2,39 +2,74 @@ namespace NumbatLogic
 {
 	class gsServerRoom
 	{
-		public gsServerRoomImplementation* m_pImpl;
-		public construct(gsServer pServer)
+		public gsServerClient GetClientByClientId(Uint16 nClientId)
 		{
-			m_pImpl = own new gsServerRoomImplementation(this, pServer);
+			for (int i = 0; i < __pClientVector.GetSize(); i++)
+			{
+				gsServerClient pClient = __pClientVector.Get(i);
+				if (pClient.__nClientId == nClientId)
+					return pClient;
+			}
+			return null;
 		}
 
-		public GetClientByClientId(Uint16 nClient)
+		private virtual Blob** OnClientJoin(gsServerClient pClient)
+		{
+			return new Blob(true);
+		}
+
+		private virtual void OnClientLeave(gsServerClient pClient)
+		{
+
+		}
+
+		// SEKRIT
+		public Uint32 __nRoomId;
+		public InternalString* __sRoomType;
+		public bool __bPrimary;
+		public gsServer __pServer;
+		public Vector<gsServerClient>* __pClientVector;
+
+		public construct(Uint32 nRoomId, string sxRoomType, gsServer pServer)
+		{
+			__nRoomId = nRoomId;
+			__sRoomType = own new InternalString(sxRoomType);
+			__pServer = pServer;
+			__pClientVector = own new Vector<gsServerClient>();
+		}
+		
+		public void __ClientJoin(gsServerClient pClient)
+		{
+			Assert::Plz(GetClientByClientId(pClient.__nClientId) == null);
+
+			__pClientVector.PushBack(pClient);
+			pClient.__pRoomVector.PushBack(this);
+			Blob* pJoinBlob = own OnClientJoin(pClient);
+
+			Blob* pBlob = own new Blob(true);
+			BlobView pBlobView = pBlob.GetBlobView();
+			pBlobView.PackUint32(__nRoomId);
+			pBlobView.PackInternalString(__sRoomType);
+			pBlobView.PackBool(__bPrimary);
+			pBlobView.PackBlob(pJoinBlob);
+
+			pClient.Send(null, "RoomJoin", pBlob);
+		}
+
+		public void __ClientLeave(gsServerClient pClient)
+		{
+			for (int i = 0; i < __pClientVector.GetSize(); i++)
+			{
+				if (__pClientVector.Get(i) == pClient)
+				{
+					OnClientLeave(pClient);
+					__pClientVector.Erase(i);
+					return;
+				}
+			}
+
+			// client not in this room!
+			Assert::Plz(false);
+		}
 	}
-
-	class gsServerRoomImplementation
-	{
-		public gsServerRoom m_pThis;
-		public gsServer m_pServer;
-		public Vector<gsServerClient>* m_pServerClientVector;
-
-		public construct(gsServerRoom pThis, gsServer pServer)
-		{
-			m_pThis = pThis;
-			m_pServer = pServer;
-			m_pServerClientVector = own new Vector<gsServerClient>();
-		}
-
-		public void ClientJoin(gsServerClient pServerClient)
-		{
-
-			
-		}
-
-		public void ClientLeave(gsServerClient pServerClient)
-		{
-			
-		}
-	}
-
-
 }
