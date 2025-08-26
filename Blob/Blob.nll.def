@@ -45,6 +45,10 @@ namespace NumbatLogic
 		public void PackAt(int nOffset, BlobView pBlobView, int nSize);
 		//public void PackDataAt(int nOffset, byte[] pData, int nSize);
 		//public void Pack(byte[] pData, int nDataSize);
+
+
+		public void PackBool(bool val);
+
 		public void PackInt16(Int16 val);
 		public void PackInt32(Int32 val);
 		public void PackUint8(Uint8 val);
@@ -53,6 +57,7 @@ namespace NumbatLogic
 		public void PackDouble(double val);
 
 		public void PackInternalString(InternalString sString);
+		public void PackBlob(Blob pBlob);
 
 
 
@@ -63,7 +68,7 @@ namespace NumbatLogic
 
 
 
-
+		public bool UnpackBool();
 
 		public Int16 UnpackInt16();
 		public Int32 UnpackInt32();
@@ -76,6 +81,7 @@ namespace NumbatLogic
 		public double UnpackDouble();
 
 		public bool UnpackInternalString(InternalString sString);
+		public bool UnpackBlob(Blob pBlob);
 
 
 		//public bool TryUnpackUint16(ref Uint16 nValue);

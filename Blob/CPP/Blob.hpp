@@ -52,6 +52,8 @@ namespace NumbatLogic
 
 			int GetSize();
 
+			void PackBool(bool b);
+
 			void PackUint8(unsigned char n);
 			void PackUint16(unsigned short n);
 			void PackUint32(unsigned int n);
@@ -63,6 +65,9 @@ namespace NumbatLogic
 			void PackDouble(double n);
 
 			void PackInternalString(InternalString* sString);
+			void PackBlob(Blob* pBlob);
+
+			bool UnpackBool();
 
 			unsigned char UnpackUint8();
 			unsigned short UnpackUint16();
@@ -75,6 +80,7 @@ namespace NumbatLogic
 			double UnpackDouble();
 
 			bool UnpackInternalString(InternalString* sString);
+			bool UnpackBlob(Blob* pBlob);
 
 			signed int UnpackInt32At(int nOffset);
 

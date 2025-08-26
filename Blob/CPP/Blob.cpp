@@ -258,6 +258,11 @@ namespace NumbatLogic
 		return (remainder);
 	}
 
+	void BlobView::PackBool(bool b)
+	{
+		PackUint8(b ? 1 : 0);
+	}
+
 	// todo: this is probably wrong on different endians and stuff?
 	// casting values weirdly with 64bit ints...
 	// maybe we should shift and & 0xFF etc
@@ -300,6 +305,18 @@ namespace NumbatLogic
 	{
 		PackInt32(sString->GetByteLength());
 		PackData((unsigned char*)sString->GetExternalString(), sString->GetLength());	
+	}
+
+	void BlobView::PackBlob(Blob* pBlob)
+	{
+		PackInt32(pBlob->m_nSize);
+		PackData(pBlob->m_pBuffer, pBlob->m_nSize);
+	}
+
+	bool BlobView::UnpackBool()
+	{
+		unsigned char n = UnpackUint8();
+		return n == 1;
 	}
 
 	unsigned char BlobView::UnpackUint8()
@@ -372,6 +389,18 @@ namespace NumbatLogic
 		}
 
 		return false;
+	}
+
+	bool BlobView::UnpackBlob(Blob* pBlob)
+	{
+		signed int nSize = UnpackInt32();
+		pBlob->Resize(nSize, true);
+
+		if (nSize == 0)
+			return true;
+
+		UnpackData(pBlob->m_pBuffer, nSize);
+		return true;
 	}
 
 	signed int BlobView::UnpackInt32At(int nOffset)
