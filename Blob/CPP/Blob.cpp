@@ -1,5 +1,6 @@
 #include "Blob.hpp"
 #include "../../Assert/CPP/Assert.hpp"
+#include "../../ExternalString/CPP/ExternalString.hpp"
 #include "../../InternalString/CPP/InternalString.hpp"
 
 #ifdef _WIN32
@@ -301,10 +302,17 @@ namespace NumbatLogic
 		PackData((unsigned char*)&n, 8);
 	}
 
+	void BlobView::PackExternalString(const char* sxString)
+	{
+		int nByteLength = ExternalString::GetByteLength(sxString);
+		PackInt32(nByteLength);
+		PackData((unsigned char*)sxString, nByteLength);	
+	}
+
 	void BlobView::PackInternalString(InternalString* sString)
 	{
 		PackInt32(sString->GetByteLength());
-		PackData((unsigned char*)sString->GetExternalString(), sString->GetLength());	
+		PackData((unsigned char*)sString->GetExternalString(), sString->GetLength());
 	}
 
 	void BlobView::PackBlob(Blob* pBlob)

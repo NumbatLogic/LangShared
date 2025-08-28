@@ -64,6 +64,7 @@ namespace NumbatLogic
 
 			void PackDouble(double n);
 
+			void PackExternalString(const char* sxString);
 			void PackInternalString(InternalString* sString);
 			void PackBlob(Blob* pBlob);
 

@@ -56,6 +56,7 @@ namespace NumbatLogic
 		public void PackUint32(Uint32 val);
 		public void PackDouble(double val);
 
+		public void PackExternalString(string sxString);
 		public void PackInternalString(InternalString sString);
 		public void PackBlob(Blob pBlob);
 
