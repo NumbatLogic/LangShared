@@ -13,5 +13,8 @@ namespace NumbatLogic
 
 			static double atof(const char* szString);
 			static long atol(const char* szString);
+
+
+			static int GetByteLength(const char* sxString);
 	};
 }
