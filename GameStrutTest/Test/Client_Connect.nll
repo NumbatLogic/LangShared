@@ -1,11 +1,51 @@
 namespace NumbatLogic
 {
+	class Client_Connect_Server : gsServer
+	{
+		public construct(string sxAddress, Uint16 nPort, Uint16 nVersion, string sxDatabasePath) : base (sxAddress, nPort, nVersion, sxDatabasePath)
+		{
+		}
+
+		public virtual gsServerClient** OnCreateServerClient(Uint32 nClientId, ClientSocket pClientSocket, gsServer pServer)
+		{
+			return new Client_Connect_ServerClient(nClientId, pClientSocket, pServer);
+		}
+	}
+
+	class Client_Connect_ServerClient : gsServerClient
+	{
+		public construct(Uint32 nClientId, ClientSocket pClientSocket, gsServer pServer) : base (nClientId, pClientSocket, pServer)
+		{
+		}
+
+		public virtual void OnInitialJoin()
+		{
+			gsServerRoom* pOwnedServerRoom = own new gsServerRoom(__pServer.__nLastRoomId++, "Client_Connect_Room", __pServer);
+			gsServerRoom pServerRoom = pOwnedServerRoom;
+			__pServer.__pRoomVector.PushBack(disown pOwnedServerRoom);
+			__pServer.__ClientJoin(this, pServerRoom);
+		}
+	}
+
+	class Client_Connect_Client : gsClient
+	{
+		public construct(string sxAddress, Uint16 nPort, Uint16 nVersion) : base (sxAddress, nPort, nVersion)
+		{
+		}
+
+		public virtual gsClientRoom** OnRoomJoin(Uint32 nRoomId, Int32 nRoomTypeHash, bool bPrimary, Blob pJoinBlob)
+		{
+			return base.OnRoomJoin(nRoomId, nRoomTypeHash, bPrimary, pJoinBlob);
+		}
+	}
+
+		
 	class Client_Connect
 	{
         public static void Run()
 		{
-			gsServer* pServer = own new TestServer("localhost", 9876, 0, "");
-			gsClient* pClient = own new gsClient("localhost", 9876, 0);
+			gsServer* pServer = own new Client_Connect_Server("localhost", 9876, 0, "");
+			gsClient* pClient = own new Client_Connect_Client("localhost", 9876, 0);
 
 			Assert::Plz(pServer.__pRoomVector.GetSize() == 0);
 
@@ -26,7 +66,9 @@ namespace NumbatLogic
 			Assert::Plz(pServerClient.__nClientId == pClient.__nClientId);
 
 			// room!
-			
+			Assert::Plz(pClient.__pRoomVector.GetSize() == 1);
+			gsClientRoom pClientRoom = pClient.__pRoomVector.Get(0);
+			Assert::Plz(pServerRoom.__nRoomId == pClientRoom.__nRoomId);
 		}
 	}
 }

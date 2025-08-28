@@ -28,9 +28,7 @@ namespace NumbatLogic
 				ClientSocket pClientSocket = __pServerSocket.Accept();
 				if (pClientSocket)
 				{
-					Console::Log("Accept!");
-
-					gsServerClient* pServerClient = own CreateServerClient(pClientSocket);
+					gsServerClient* pServerClient = own OnCreateServerClient(__nLastClientId++, pClientSocket, this);
 					Assert::Plz(pServerClient != null);
 					__pClientVector.PushBack(disown pServerClient);
 				}
@@ -83,16 +81,15 @@ namespace NumbatLogic
 			return __pServerSocket.Pending();
 		}
 
-		public virtual gsServerClient** CreateServerClient(ClientSocket pClientSocket)
+		public virtual gsServerClient** OnCreateServerClient(Uint32 nClientId, ClientSocket pClientSocket, gsServer pServer)
 		{
-			return new gsServerClient(__nLastClientId++, this, pClientSocket);
+			return new gsServerClient(__nLastClientId++, pClientSocket, this);
 		}
 
 		public virtual void Auth(Blob pAuthBlob, ClientSocket pClientSocket)
 		{
 			Assert::Plz(false);
 		}
-
 
 
 		// SEKRIT - Double underscores are internal implementation, no promises!
