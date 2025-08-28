@@ -65,7 +65,6 @@ namespace NumbatLogic
 			Assert::Plz(pClient.__eState == gsClient::CONNECTED);
 			Assert::Plz(pServerClient.__nClientId == pClient.__nClientId);
 
-			// room!
 			Assert::Plz(pClient.__pRoomVector.GetSize() == 1);
 			gsClientRoom pClientRoom = pClient.__pRoomVector.Get(0);
 			Assert::Plz(pServerRoom.__nRoomId == pClientRoom.__nRoomId);
