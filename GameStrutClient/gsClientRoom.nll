@@ -1,0 +1,31 @@
+namespace NumbatLogic
+{
+	class gsClientRoom
+	{
+		public construct(Uint32 nRoomId, string sxRoomType, Int32 nRoomType, bool bPrimary)
+		{
+			__nRoomId = nRoomId;
+			if (sxRoomType == null)
+			{
+				__sRoomType = own new InternalString("");
+			}
+			else
+			{
+				__sRoomType = own new InternalString(sxRoomType);
+				Int32 nTestChecksum = ExternalString::GetChecksum(sxRoomType);
+				Assert::Plz(nTestChecksum == nRoomType);
+			}
+			__nRoomTypeHash = nRoomType;
+			__bPrimary = bPrimary;
+		}
+
+
+		// SEKRIT
+
+		public Uint32 __nRoomId;
+		public InternalString* __sRoomType;
+		public Int32 __nRoomTypeHash;
+		public bool __bPrimary;
+		
+	}
+}

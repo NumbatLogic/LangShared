@@ -11,10 +11,14 @@ namespace NumbatLogic
 
 		public construct(string sxAddress, Uint16 nPort, Uint16 nVersion)
 		{
+			__pRoomVector = own new OwnedVector<gsClientRoom>();
+
 			__pClientSocket = own new ClientSocket();
 			__pClientSocket.Connect(sxAddress, nPort);
 			__nVersion = nVersion;
 			__eState = CONNECT;
+
+			__JoinRoomHash = ExternalString::GetChecksum("__RoomJoin");
 		}
 
 		public destruct()
@@ -58,8 +62,6 @@ namespace NumbatLogic
 					Blob* pReceiveBlob = own __pClientSocket.Receive();
 					if (pReceiveBlob != null)
 					{
-						Console::Log("client recieve!");
-
 						const int INITIAL_SIZE = 2 + 2 + 1 + 4;
 						if (pReceiveBlob.GetSize() == INITIAL_SIZE)
 						{
@@ -72,8 +74,6 @@ namespace NumbatLogic
 							if (nMagic == gsClient::MAGIC_WORD && bSuccess)
 							{
 								__nClientId = pRecieveBlobView.UnpackUint32();
-
-								Console::Log("good handshake!!!!!");
 								__eState = State::CONNECTED;
 								break;
 							}
@@ -87,6 +87,43 @@ namespace NumbatLogic
 				}
 				case State::CONNECTED:
 				{
+					Blob* pReceiveBlob = own __pClientSocket.Receive();
+					if (pReceiveBlob != null)
+					{
+						BlobView pReceiveBlobView = pReceiveBlob.GetBlobView();
+
+						Uint32 nSyncId = pReceiveBlobView.UnpackUint32();
+						Uint32 nRoomId = pReceiveBlobView.UnpackUint32();
+						Int32 nMessageType = pReceiveBlobView.UnpackInt32();
+						Blob* pMessageBlob = own new Blob(true);
+						if (!pReceiveBlobView.UnpackBlob(pMessageBlob))
+							Assert::Plz(false);
+						BlobView pMessageBlobView = pMessageBlob.GetBlobView();
+						
+						if (nRoomId == 0)
+						{
+							if (nMessageType == __JoinRoomHash)
+							{
+								Uint32 nRoomId = pMessageBlobView.UnpackUint32();
+								Int32 nRoomType = pMessageBlobView.UnpackInt32();
+								bool bPrimary = pMessageBlobView.UnpackBool();
+								Blob* pJoinBlob = own new Blob(true);
+								if (!pMessageBlobView.UnpackBlob(pJoinBlob))
+									Assert::Plz(false);
+								
+
+								gsClientRoom* pRoom = own OnRoomJoin(nRoomId, nRoomType, bPrimary, pJoinBlob);
+								Assert::Plz(pRoom != null);
+								__pRoomVector.PushBack(disown pRoom);
+							}
+							else
+							{
+								Console::Log("unknown hash");
+								Assert::Plz(false);
+							}
+						}
+					}
+
 					break;
 				}
 				case State::DISCONNECTED:
@@ -104,17 +141,28 @@ namespace NumbatLogic
 		{
 			return __pClientSocket.Pending();
 		}
+
+		public virtual gsClientRoom** OnRoomJoin(Uint32 nRoomId, Int32 nRoomType, bool bPrimary, Blob pJoinBlob)
+		{
+			return new gsClientRoom(nRoomId, null, nRoomType, bPrimary);
+		}
 	
 		
 		// SEKRIT
 
 		public static const Uint16 MAGIC_WORD = 619;
 
+		public OwnedVector<gsClientRoom>* __pRoomVector;
+
 		public ClientSocket* __pClientSocket;
 		public Uint16 __nVersion;
 
 		public Uint32 __nClientId;
 
+		
+
 		public State __eState;
+
+		public Uint32 __JoinRoomHash;
 	}
 }

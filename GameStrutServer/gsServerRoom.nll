@@ -25,6 +25,7 @@ namespace NumbatLogic
 
 		// SEKRIT
 		public Uint32 __nRoomId;
+		public Int32 __nRoomType;
 		public InternalString* __sRoomType;
 		public bool __bPrimary;
 		public gsServer __pServer;
@@ -33,6 +34,7 @@ namespace NumbatLogic
 		public construct(Uint32 nRoomId, string sxRoomType, gsServer pServer)
 		{
 			__nRoomId = nRoomId;
+			__nRoomType = ExternalString::GetChecksum(sxRoomType);
 			__sRoomType = own new InternalString(sxRoomType);
 			__pServer = pServer;
 			__pClientVector = own new Vector<gsServerClient>();
@@ -49,11 +51,11 @@ namespace NumbatLogic
 			Blob* pBlob = own new Blob(true);
 			BlobView pBlobView = pBlob.GetBlobView();
 			pBlobView.PackUint32(__nRoomId);
-			pBlobView.PackInternalString(__sRoomType);
+			pBlobView.PackInt32(__nRoomType);
 			pBlobView.PackBool(__bPrimary);
 			pBlobView.PackBlob(pJoinBlob);
 
-			pClient.Send(null, "RoomJoin", pBlob);
+			pClient.Send(null, "__RoomJoin", pBlob);
 		}
 
 		public void __ClientLeave(gsServerClient pClient)

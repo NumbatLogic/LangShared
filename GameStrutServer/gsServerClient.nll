@@ -8,11 +8,21 @@ namespace NumbatLogic
 			BlobView pSendBlobView = pSendBlob.GetBlobView();
 
 			Uint32 nSyncId = __nLastSyncId++;
+			Int32 nMessageTypeHash = ExternalString::GetChecksum(sxMessageType);
 
 			pSendBlobView.PackUint32(nSyncId);
-
-			Console::Log("gsServerClient::Send");
+			pSendBlobView.PackUint32(pRoom == null ? 0 : pRoom.__nRoomId);
+			pSendBlobView.PackInt32(nMessageTypeHash);
+			pSendBlobView.PackBlob(pBlob);
+			
 			__pClientSocket.Send(pSendBlob);
+		}
+
+
+		// The new client has completed authentication, now what?
+		// Perhaps do any additional fetching, and sned them to their room!
+		public virtual void OnInitialJoin()
+		{
 		}
 
 
@@ -41,7 +51,7 @@ namespace NumbatLogic
 
 		public Uint32 __nLastSyncId;
 
-		public construct(Uint32 nClientId, gsServer pServer, ClientSocket pClientSocket)
+		public construct(Uint32 nClientId, ClientSocket pClientSocket, gsServer pServer)
 		{
 			__nClientId = nClientId;
 			__pServer = pServer;
@@ -58,8 +68,7 @@ namespace NumbatLogic
 			{
 				case gsClient::State::CONNECT:
 				{
-					//if (nbClientSocket_GetConnected(pClient->pClientSocket))
-						__eState = gsClient::State::HANDSHAKE;
+					__eState = gsClient::State::HANDSHAKE;
 					break;
 				}
 				case gsClient::State::HANDSHAKE:
@@ -88,37 +97,19 @@ namespace NumbatLogic
 									{
 										if (pRecieveBlobView.UnpackInternalString(sPassword))
 										{
-
 											// TODO: validate
 
-
-											Console::Log("server send");
 											Blob* pSendBlob = own new Blob(true);
 											BlobView pBlobView = pSendBlob.GetBlobView();
 											pBlobView.PackUint16(gsClient::MAGIC_WORD);
 											pBlobView.PackUint16(__pServer.__nVersion);
 											pBlobView.PackBool(true);
 											pBlobView.PackUint32(__nClientId);
-
 											__pClientSocket.Send(pSendBlob);
-
-
-
 
 											__eState = gsClient::State::CONNECTED;
 
-
-											// todo: move to some create calback
-											gsServerRoom* pOwnedServerRoom = own new gsServerRoom(__pServer.__nLastRoomId++, "test", __pServer);
-											gsServerRoom pServerRoom = pOwnedServerRoom;
-											__pServer.__pRoomVector.PushBack(disown pOwnedServerRoom);
-
-											__pServer.__ClientJoin(this, pServerRoom);
-
-											Console::Log("!!!!");
-											
-
-											//transition user to room
+											OnInitialJoin();
 											break;
 										}
 									}
