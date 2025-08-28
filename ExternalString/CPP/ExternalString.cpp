@@ -40,4 +40,10 @@ namespace NumbatLogic
 	{
 		return ::atol(szString);
 	}
+
+	int ExternalString::GetByteLength(const char* sxString)
+	{
+		return strlen(sxString);
+	}
+
 }

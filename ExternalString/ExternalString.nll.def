@@ -8,5 +8,6 @@ namespace NumbatLogic
 		public static int atoi(string szString);
 		public static Uint64 atol(string szString);
 		public static double atof(string szString);
+		public static int GetByteLength(string sxString);
 	}
 }
