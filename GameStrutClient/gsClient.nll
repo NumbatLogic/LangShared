@@ -18,7 +18,7 @@ namespace NumbatLogic
 			__nVersion = nVersion;
 			__eState = CONNECT;
 
-			__JoinRoomHash = ExternalString::GetChecksum("__RoomJoin");
+			__ROOM_JOIN_HASH = ExternalString::GetChecksum("__RoomJoin");
 		}
 
 		public destruct()
@@ -102,7 +102,7 @@ namespace NumbatLogic
 						
 						if (nRoomId == 0)
 						{
-							if (nMessageType == __JoinRoomHash)
+							if (nMessageType == __ROOM_JOIN_HASH)
 							{
 								Uint32 nRoomId = pMessageBlobView.UnpackUint32();
 								Int32 nRoomType = pMessageBlobView.UnpackInt32();
@@ -163,6 +163,6 @@ namespace NumbatLogic
 
 		public State __eState;
 
-		public Uint32 __JoinRoomHash;
+		public Uint32 __ROOM_JOIN_HASH;
 	}
 }
