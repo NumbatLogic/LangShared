@@ -86,6 +86,12 @@ namespace NumbatLogic
 			return new gsServerClient(__nLastClientId++, pClientSocket, this);
 		}
 
+		public virtual gsServerRoom** OnCreateRoom(Uint32 nRoomId, Int32 nRoomType, Blob pCreateBlob)
+		{
+			return null;
+		}
+
+
 		public virtual void Auth(Blob pAuthBlob, ClientSocket pClientSocket)
 		{
 			Assert::Plz(false);
@@ -119,6 +125,20 @@ namespace NumbatLogic
 			}
 
 			pRoom.__ClientJoin(pClient);
+		}
+
+		public gsServerRoom __CreateRoom(string sxRoomType, Blob pCreateBlob)
+		{
+			// hax probably not needed once we are DB based...
+			BlobView pCreateBlobView = pCreateBlob.GetBlobView();
+			pCreateBlobView.SetOffset(0);
+
+			Int32 nRoomType = ExternalString::GetChecksum(sxRoomType);
+			gsServerRoom* pOwnedRoom = own OnCreateRoom(__nLastRoomId++, nRoomType, pCreateBlob);
+			Assert::Plz(pOwnedRoom != null);
+			gsServerRoom pRoom = pOwnedRoom;
+			__pRoomVector.PushBack(disown pOwnedRoom);
+			return pRoom;
 		}
 	}
 }

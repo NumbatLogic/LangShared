@@ -23,6 +23,11 @@ namespace NumbatLogic
 
 		}
 
+		public virtual Blob** OnSync(Blob pInBlob)
+		{
+			return null;
+		}
+
 		// SEKRIT
 		public Uint32 __nRoomId;
 		public Int32 __nRoomType;

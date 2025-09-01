@@ -26,6 +26,39 @@ namespace NumbatLogic
 		}
 
 
+		// 
+
+		public gsServerRoom GetRoomByRoomId(Uint32 nRoomId)
+		{
+			for (int i = 0; i < __pRoomVector.GetSize(); i++)
+			{
+				gsServerRoom pRoom = __pRoomVector.Get(i);
+				if (pRoom.__nRoomId == nRoomId)
+					return pRoom;
+			}
+			return null;
+		}
+
+
+
+		public void SyncRespond(Uint32 nSyncId, Blob pBlob)
+		{
+			Blob* pRespondBlob = own new Blob(false);
+			BlobView pRespondBlobView = pRespondBlob.GetBlobView();
+
+			need to clean up code to be aware of packing response blob flag before sync id...
+			pRespondBlobView.PackUint8(1);
+			pRespondBlobView.PackUint32(nSyncId);
+			pRespondBlobView.PackBlob(pBlob);
+
+			__pClientSocket.Send(pRespondBlob);
+		}
+
+
+			
+
+
+
 		// SEKRIT
 
 
@@ -134,6 +167,51 @@ namespace NumbatLogic
 				}
 				case gsClient::State::CONNECTED:
 				{
+					Blob* pReceiveBlob = own __pClientSocket.Receive();
+					if (pReceiveBlob != null)
+					{
+						Console::Log("blob get!");
+
+						BlobView pReceiveBlobView = pReceiveBlob.GetBlobView();
+
+						Uint32 nSyncId;
+						Uint32 nLastSyncId;
+						Uint32 nRoomId;
+						Int32 nSyncType;
+						Blob* pSyncBlob = own new Blob(true);
+						
+						if (pReceiveBlobView.SafeUnpackUint32(nSyncId)
+							&& pReceiveBlobView.SafeUnpackUint32(nLastSyncId)
+							&& pReceiveBlobView.SafeUnpackUint32(nRoomId)
+							&& pReceiveBlobView.SafeUnpackInt32(nSyncType)
+							&& pReceiveBlobView.UnpackBlob(pSyncBlob))
+						{
+							if (nRoomId > 0)
+							{
+								gsServerRoom pRoom = GetRoomByRoomId(nRoomId);
+
+								if (!pRoom)
+									Assert::Plz(false);
+
+								pRoom.OnSync(pSyncBlob);
+
+
+								
+							}
+							else
+							{
+
+							}
+
+
+							
+						}
+						else
+						{
+							// todo: yeet client
+							Assert::Plz(false);
+						}
+					}
 					break;
 				}
 				case gsClient::State::DISCONNECTED:

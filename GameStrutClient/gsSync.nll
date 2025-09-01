@@ -1,0 +1,51 @@
+namespace NumbatLogic
+{
+	class gsSync
+	{
+		public construct()
+		{
+		}
+
+		public bool GetComplete()
+		{
+			//return __pSyncInner != null ? __pSyncInner.__bComplete : false;
+			return false;
+		}
+
+		public bool GetError()
+		{
+			//return __pSyncInner != null ? __pSyncInner.__bError : false;
+			return false;
+		}
+
+		public virtual void OnComplete(Blob pBlob)
+		{
+
+		}
+
+		// SEKRIT
+		public gsSyncInner __pSyncInner;
+	}
+
+
+	class gsSyncInner
+	{
+		public construct(gsSync** pSync, Uint32 nSyncId, string sxSyncType, gsClientRoom pRoom, gsClient pClient)
+		{
+			__pSync = own pSync;
+			__nSyncId = nSyncId;
+			__sSyncType = own new InternalString(sxSyncType);
+			__nSyncType = ExternalString::GetChecksum(sxSyncType);
+		}
+
+
+
+		public gsSync* __pSync;
+
+		public Uint32 __nSyncId;
+		public InternalString* __sSyncType;
+		public Int32 __nSyncType;
+
+		public bool __bError;
+	}
+}

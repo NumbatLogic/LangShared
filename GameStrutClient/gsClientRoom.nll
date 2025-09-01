@@ -2,7 +2,7 @@ namespace NumbatLogic
 {
 	class gsClientRoom
 	{
-		public construct(Uint32 nRoomId, string sxRoomType, Int32 nRoomType, bool bPrimary)
+		public construct(Uint32 nRoomId, string sxRoomType, Int32 nRoomType, bool bPrimary, gsClient pClient)
 		{
 			__nRoomId = nRoomId;
 			if (sxRoomType == null)
@@ -17,6 +17,7 @@ namespace NumbatLogic
 			}
 			__nRoomTypeHash = nRoomType;
 			__bPrimary = bPrimary;
+			__pClient = pClient;
 		}
 
 
@@ -26,6 +27,7 @@ namespace NumbatLogic
 		public InternalString* __sRoomType;
 		public Int32 __nRoomTypeHash;
 		public bool __bPrimary;
+		public gsClient __pClient;
 		
 	}
 }
