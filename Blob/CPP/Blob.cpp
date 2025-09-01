@@ -376,6 +376,12 @@ namespace NumbatLogic
 		return n;
 	}
 
+
+	bool BlobView::SafeUnpackInt32(int& nVal) { return SafeUnpackData((unsigned char*)&nVal, sizeof(nVal)); }
+
+	bool BlobView::SafeUnpackUint8(unsigned char& nVal) { return SafeUnpackData(&nVal, 1); }
+	bool BlobView::SafeUnpackUint32(unsigned int& nVal) { return SafeUnpackData((unsigned char*)&nVal, sizeof(nVal)); }
+
 	bool BlobView::UnpackInternalString(InternalString* sString)
 	{
 		signed int nByteLength = 0;
@@ -497,6 +503,14 @@ namespace NumbatLogic
 	{
 		UnpackDataAt(m_nOffset, pData, nSize);
 		m_nOffset += nSize;
+	}
+
+	bool BlobView::SafeUnpackData(unsigned char* pData, int nSize)
+	{
+		if (m_nStart + m_nOffset + nSize > m_nEnd)
+			return false;
+		UnpackData(pData, nSize);
+		return true;
 	}
 
 	// Single Blob View

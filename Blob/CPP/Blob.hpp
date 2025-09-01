@@ -80,6 +80,11 @@ namespace NumbatLogic
 
 			double UnpackDouble();
 
+			bool SafeUnpackInt32(int& nVal);
+
+			bool SafeUnpackUint8(unsigned char& nVal);
+			bool SafeUnpackUint32(unsigned int& nVal);
+
 			bool UnpackInternalString(InternalString* sString);
 			bool UnpackBlob(Blob* pBlob);
 
@@ -98,7 +103,7 @@ namespace NumbatLogic
 
 			void Unpack(BlobView* pBlobView, int nSize);
 			void UnpackAt(int nOffset, BlobView* pBlobView, int nSize);
-
+			
 			Blob* GetBlob();
 
 			//protected:
@@ -109,6 +114,8 @@ namespace NumbatLogic
 
 			void PackDataAt(int nOffset, unsigned char* pData, int nSize);
 			void UnpackDataAt(int nOffset, unsigned char* pData, int nSize);
+
+			bool SafeUnpackData(unsigned char* pData, int nSize);
 
 		protected:
 			int m_nStart;
