@@ -18,6 +18,8 @@ namespace NumbatLogic
 			__nVersion = nVersion;
 			__eState = CONNECT;
 
+			__pSyncInnerVector = own new OwnedVector<gsSyncInner>();
+
 			__ROOM_JOIN_HASH = ExternalString::GetChecksum("__RoomJoin");
 		}
 
@@ -52,8 +54,6 @@ namespace NumbatLogic
 						pBlobView.PackInternalString(sPassword);
 
 						__pClientSocket.Send(pSendBlob);
-
-						Console::Log("client send!");
 					}
 					break;
 				}
@@ -137,14 +137,40 @@ namespace NumbatLogic
 			}
 		}
 
-		public bool Pending()
+		public delegate void CompleteCallback();
+		public void SyncSend(gsSync** pSync, string sxSyncType, Blob pBlob, bool mayChangeRoom, gsClientRoom pRoom)
+		{
+			gsSync* pOwnedSync = own pSync;
+
+			gsSyncInner* pSyncInner = own new gsSyncInner(disown pOwnedSync, ++__nLastSyncId, sxSyncType, pRoom, this);
+
+			Blob* pSendBlob = own new Blob(true);
+			BlobView pSendBlobView = pSendBlob.GetBlobView();
+			pSendBlobView.PackUint32(pSyncInner.__nSyncId);
+			pSendBlobView.PackUint32(0); // last accepted
+			if (pRoom != null)
+				pSendBlobView.PackUint32(pRoom.__nRoomId);
+			else
+				pSendBlobView.PackUint32(0);
+			pSendBlobView.PackInt32(pSyncInner.__nSyncType);
+			pSendBlobView.PackBlob(pBlob);
+
+			__pClientSocket.Send(pSendBlob);
+
+
+			pSyncInner.__pSync.__pSyncInner = pSyncInner;
+
+			__pSyncInnerVector.PushBack(disown pSyncInner);
+		}
+
+		public bool GetPending()
 		{
 			return __pClientSocket.Pending();
 		}
 
 		public virtual gsClientRoom** OnRoomJoin(Uint32 nRoomId, Int32 nRoomType, bool bPrimary, Blob pJoinBlob)
 		{
-			return new gsClientRoom(nRoomId, null, nRoomType, bPrimary);
+			return new gsClientRoom(nRoomId, null, nRoomType, bPrimary, this);
 		}
 	
 		
@@ -154,11 +180,14 @@ namespace NumbatLogic
 
 		public OwnedVector<gsClientRoom>* __pRoomVector;
 
+
 		public ClientSocket* __pClientSocket;
 		public Uint16 __nVersion;
 
 		public Uint32 __nClientId;
 
+		public Uint32 __nLastSyncId;
+		public OwnedVector<gsSyncInner>* __pSyncInnerVector;
 		
 
 		public State __eState;

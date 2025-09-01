@@ -25,7 +25,7 @@ namespace NumbatLogic
 				pServer.Update();
 				pClient.Update();
 
-				if (pServer.Pending() || pClient.Pending())
+				if (pServer.Pending() || pClient.GetPending())
 					nNotPendingCount = 0;
 				else
 					nNotPendingCount++;
