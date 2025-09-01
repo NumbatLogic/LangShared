@@ -81,8 +81,17 @@ namespace NumbatLogic
 		public Uint32 UnpackUint32();
 		public double UnpackDouble();
 
+
+		public bool SafeUnpackInt32(ref Uint8 nVal);
+
+		public bool SafeUnpackUint8(ref Uint8 nVal);
+		public bool SafeUnpackUint32(ref Uint8 nVal);
+
 		public bool UnpackInternalString(InternalString sString);
 		public bool UnpackBlob(Blob pBlob);
+
+
+
 
 
 		//public bool TryUnpackUint16(ref Uint16 nValue);
