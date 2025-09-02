@@ -134,7 +134,7 @@ namespace NumbatLogic
 			pCreateBlobView.SetOffset(0);
 
 			Int32 nRoomType = ExternalString::GetChecksum(sxRoomType);
-			gsServerRoom* pOwnedRoom = own OnCreateRoom(__nLastRoomId++, nRoomType, pCreateBlob);
+			gsServerRoom* pOwnedRoom = own OnCreateRoom(++__nLastRoomId, nRoomType, pCreateBlob);
 			Assert::Plz(pOwnedRoom != null);
 			gsServerRoom pRoom = pOwnedRoom;
 			__pRoomVector.PushBack(disown pOwnedRoom);

@@ -10,6 +10,7 @@ namespace NumbatLogic
 			Uint32 nSyncId = __nLastSyncId++;
 			Int32 nMessageTypeHash = ExternalString::GetChecksum(sxMessageType);
 
+			pSendBlobView.PackBool(false);
 			pSendBlobView.PackUint32(nSyncId);
 			pSendBlobView.PackUint32(pRoom == null ? 0 : pRoom.__nRoomId);
 			pSendBlobView.PackInt32(nMessageTypeHash);
@@ -43,11 +44,10 @@ namespace NumbatLogic
 
 		public void SyncRespond(Uint32 nSyncId, Blob pBlob)
 		{
-			Blob* pRespondBlob = own new Blob(false);
+			Blob* pRespondBlob = own new Blob(true);
 			BlobView pRespondBlobView = pRespondBlob.GetBlobView();
 
-			need to clean up code to be aware of packing response blob flag before sync id...
-			pRespondBlobView.PackUint8(1);
+			pRespondBlobView.PackBool(true);
 			pRespondBlobView.PackUint32(nSyncId);
 			pRespondBlobView.PackBlob(pBlob);
 
@@ -186,14 +186,18 @@ namespace NumbatLogic
 							&& pReceiveBlobView.SafeUnpackInt32(nSyncType)
 							&& pReceiveBlobView.UnpackBlob(pSyncBlob))
 						{
+							Console::Log("A");
 							if (nRoomId > 0)
 							{
+								Console::Log("B");
 								gsServerRoom pRoom = GetRoomByRoomId(nRoomId);
 
 								if (!pRoom)
 									Assert::Plz(false);
 
-								pRoom.OnSync(pSyncBlob);
+								pRoom.OnSync(nSyncId, nSyncType, pSyncBlob, this);
+
+								//Uint32 nSyncId, Blob pInBlob, gsServerClient pServerClient
 
 
 								

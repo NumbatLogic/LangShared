@@ -92,34 +92,57 @@ namespace NumbatLogic
 					{
 						BlobView pReceiveBlobView = pReceiveBlob.GetBlobView();
 
+						bool bSyncResponse = pReceiveBlobView.UnpackBool();
 						Uint32 nSyncId = pReceiveBlobView.UnpackUint32();
-						Uint32 nRoomId = pReceiveBlobView.UnpackUint32();
-						Int32 nMessageType = pReceiveBlobView.UnpackInt32();
-						Blob* pMessageBlob = own new Blob(true);
-						if (!pReceiveBlobView.UnpackBlob(pMessageBlob))
-							Assert::Plz(false);
-						BlobView pMessageBlobView = pMessageBlob.GetBlobView();
-						
-						if (nRoomId == 0)
-						{
-							if (nMessageType == __ROOM_JOIN_HASH)
-							{
-								Uint32 nRoomId = pMessageBlobView.UnpackUint32();
-								Int32 nRoomType = pMessageBlobView.UnpackInt32();
-								bool bPrimary = pMessageBlobView.UnpackBool();
-								Blob* pJoinBlob = own new Blob(true);
-								if (!pMessageBlobView.UnpackBlob(pJoinBlob))
-									Assert::Plz(false);
-								
 
-								gsClientRoom* pRoom = own OnRoomJoin(nRoomId, nRoomType, bPrimary, pJoinBlob);
-								Assert::Plz(pRoom != null);
-								__pRoomVector.PushBack(disown pRoom);
-							}
-							else
-							{
-								Console::Log("unknown hash");
+						Console::Log("blob!");
+						if (bSyncResponse)
+						{
+							//
+							Console::Log("response!");
+							gsSyncInner pSyncInner = GetSyncInnerBySyncId(nSyncId);
+							Assert::Plz(pSyncInner != null);
+
+
+							Blob* pSyncBlob = own new Blob(true);
+							if (!pReceiveBlobView.UnpackBlob(pSyncBlob))
 								Assert::Plz(false);
+
+
+							if (pSyncInner.__pSync != null)
+								pSyncInner.__pSync.OnComplete(pSyncBlob);
+
+						}
+						else
+						{
+							Uint32 nRoomId = pReceiveBlobView.UnpackUint32();
+							Int32 nMessageType = pReceiveBlobView.UnpackInt32();
+							Blob* pMessageBlob = own new Blob(true);
+							if (!pReceiveBlobView.UnpackBlob(pMessageBlob))
+								Assert::Plz(false);
+							BlobView pMessageBlobView = pMessageBlob.GetBlobView();
+							
+							if (nRoomId == 0)
+							{
+								if (nMessageType == __ROOM_JOIN_HASH)
+								{
+									Uint32 nRoomId = pMessageBlobView.UnpackUint32();
+									Int32 nRoomType = pMessageBlobView.UnpackInt32();
+									bool bPrimary = pMessageBlobView.UnpackBool();
+									Blob* pJoinBlob = own new Blob(true);
+									if (!pMessageBlobView.UnpackBlob(pJoinBlob))
+										Assert::Plz(false);
+									
+
+									gsClientRoom* pRoom = own OnRoomJoin(nRoomId, nRoomType, bPrimary, pJoinBlob);
+									Assert::Plz(pRoom != null);
+									__pRoomVector.PushBack(disown pRoom);
+								}
+								else
+								{
+									Console::Log("unknown hash");
+									Assert::Plz(false);
+								}
 							}
 						}
 					}
@@ -143,7 +166,7 @@ namespace NumbatLogic
 			gsSync* pOwnedSync = own pSync;
 
 			gsSyncInner* pSyncInner = own new gsSyncInner(disown pOwnedSync, ++__nLastSyncId, sxSyncType, pRoom, this);
-
+Console::Log("send");
 			Blob* pSendBlob = own new Blob(true);
 			BlobView pSendBlobView = pSendBlob.GetBlobView();
 			pSendBlobView.PackUint32(pSyncInner.__nSyncId);
@@ -193,5 +216,18 @@ namespace NumbatLogic
 		public State __eState;
 
 		public Uint32 __ROOM_JOIN_HASH;
+
+
+
+		public gsSyncInner GetSyncInnerBySyncId(Uint32 nSyncId)
+		{
+			for (int i = 0; i < __pSyncInnerVector.GetSize(); i++)
+			{
+				gsSyncInner pSyncInner = __pSyncInnerVector.Get(i);
+				if (nSyncId == pSyncInner.__nSyncId)
+					return pSyncInner;
+			}
+			return null;
+		}
 	}
 }
