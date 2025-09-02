@@ -23,9 +23,9 @@ namespace NumbatLogic
 
 		}
 
-		public virtual Blob** OnSync(Blob pInBlob)
+		public virtual void OnSync(Uint32 nSyncId, Int32 nSyncType, Blob pInBlob, gsServerClient pServerClient)
 		{
-			return null;
+			///return null;
 		}
 
 		// SEKRIT

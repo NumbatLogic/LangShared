@@ -6,6 +6,12 @@ namespace NumbatLogic
 		{
 		}
 
+		public destruct()
+		{
+			if (__pSyncInner != null)
+				__pSyncInner.__pSync = null;
+		}
+
 		public bool GetComplete()
 		{
 			//return __pSyncInner != null ? __pSyncInner.__bComplete : false;
@@ -18,10 +24,7 @@ namespace NumbatLogic
 			return false;
 		}
 
-		public virtual void OnComplete(Blob pBlob)
-		{
-
-		}
+		public virtual void OnComplete(Blob pBlob) { }
 
 		// SEKRIT
 		public gsSyncInner __pSyncInner;
