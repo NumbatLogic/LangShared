@@ -1,0 +1,17 @@
+namespace NumbatLogic
+{
+	class HttpGet
+	{
+		public construct(string sUrl);
+		public void AddHeader(string sName, string sValue);
+		public string Execute();
+	}
+	
+	class HttpPost
+	{
+		public construct(string sUrl);
+		public void AddHeader(string sName, string sValue);
+		public void SetBody(string sBody);
+		public string Execute();
+	}
+} 
