@@ -8,6 +8,13 @@
 			$sAllowedDirectoryArray = file($sPackageList, FILE_IGNORE_NEW_LINES);
 			//$this->m_xFileArray = ProjectGen_ParseDirectory(dirname(__FILE__), "/\.hpp|\.cpp/",  $sAllowedDirectoryArray);
 
+			if ($sAction == ACTION_ESP_IDF)
+			{
+				$sAllowedDirectoryArray = array_diff($sAllowedDirectoryArray, ["Http"]);
+
+			}
+			
+
 			$this->m_xFileArray = array_merge(
 				ProjectGen_ParseDirectory(dirname(__FILE__), "/\.hpp$|\.cpp$|\.h$|\.c$/",  $sAllowedDirectoryArray),
 				ProjectGen_ParseDirectory($sTranspiledDirectory, "/\.hpp|\.cpp/"));
