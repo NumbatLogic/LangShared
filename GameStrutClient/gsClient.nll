@@ -103,15 +103,12 @@ namespace NumbatLogic
 							gsSyncInner pSyncInner = GetSyncInnerBySyncId(nSyncId);
 							Assert::Plz(pSyncInner != null);
 
-
 							Blob* pSyncBlob = own new Blob(true);
 							if (!pReceiveBlobView.UnpackBlob(pSyncBlob))
 								Assert::Plz(false);
 
-
 							if (pSyncInner.__pSync != null)
-								pSyncInner.__pSync.OnComplete(pSyncBlob);
-
+								pSyncInner.OnComplete(pSyncBlob);
 						}
 						else
 						{
