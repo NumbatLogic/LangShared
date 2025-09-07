@@ -1,0 +1,24 @@
+namespace NumbatLogic
+{
+	class Json
+	{
+		public construct();
+
+		public bool LoadFromExternalString(string sxIn);
+		
+		public Json GetNext();
+		public Json GetChild();
+
+		public bool IsString();
+		public bool IsNumber();
+		public bool IsBool();
+		public bool IsObject();
+		public bool IsArray();
+
+		public string GetString();
+		public double GetNumber();
+		public bool GetBool();
+
+		public Json GetField(string sxName);
+	}
+}
