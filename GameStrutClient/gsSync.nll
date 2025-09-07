@@ -14,14 +14,12 @@ namespace NumbatLogic
 
 		public bool GetComplete()
 		{
-			//return __pSyncInner != null ? __pSyncInner.__bComplete : false;
-			return false;
+			return __pSyncInner != null ? __pSyncInner.__bComplete : false;
 		}
 
 		public bool GetError()
 		{
-			//return __pSyncInner != null ? __pSyncInner.__bError : false;
-			return false;
+			return __pSyncInner != null ? __pSyncInner.__bError : false;
 		}
 
 		public virtual void OnComplete(Blob pBlob) { }
@@ -41,7 +39,12 @@ namespace NumbatLogic
 			__nSyncType = ExternalString::GetChecksum(sxSyncType);
 		}
 
-
+		public virtual void OnComplete(Blob pBlob)
+		{
+			if (__pSync != null)
+				__pSync.OnComplete(pBlob);
+			__bComplete = true;
+		}
 
 		public gsSync* __pSync;
 
@@ -49,6 +52,7 @@ namespace NumbatLogic
 		public InternalString* __sSyncType;
 		public Int32 __nSyncType;
 
+		public bool __bComplete;
 		public bool __bError;
 	}
 }

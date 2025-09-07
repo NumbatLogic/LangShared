@@ -17,6 +17,7 @@
 	#include <sys/socket.h>
 	#include <sys/time.h>
 	#include <unistd.h>
+	#include <fcntl.h>
 #endif
 
 #ifdef NB_WINDOWS
@@ -86,8 +87,42 @@ namespace NumbatLogic
 		m_nSocket = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
 		Assert::Plz(m_nSocket >= 0);
 
+		// Set socket to non-blocking mode
+		#ifdef NB_WINDOWS
+			u_long mode = 1; // 1 to enable non-blocking socket
+			int result_ioctl = ioctlsocket(m_nSocket, FIONBIO, &mode);
+			if (result_ioctl != NO_ERROR) {
+				printf("Unable to set socket non blocking\n");
+				Assert::Plz(false);
+			}
+		#else
+			int flags = fcntl(m_nSocket, F_GETFL);
+			if (fcntl(m_nSocket, F_SETFL, flags | O_NONBLOCK) == -1) {
+				printf("Unable to set socket non blocking\n");
+				Assert::Plz(false);
+			}
+		#endif
+
 		status = connect(m_nSocket, result->ai_addr, (int)result->ai_addrlen);
-		Assert::Plz(status == 0);
+		
+		#ifdef NB_WINDOWS
+			if (status == SOCKET_ERROR) {
+				int error = WSAGetLastError();
+				if (error != WSAEWOULDBLOCK) {
+					printf("Connect failed with error: %d\n", error);
+					Assert::Plz(false);
+				}
+			}
+		#else
+			if (status < 0) {
+				if (errno != EINPROGRESS) {
+					printf("Connect failed with error: %s\n", strerror(errno));
+					Assert::Plz(false);
+				}
+			}
+		#endif
+
+		printf("socket id %d\n", m_nSocket);
 
 		freeaddrinfo(result);
 		m_bConnected = true;
@@ -140,16 +175,39 @@ namespace NumbatLogic
 				}
 				m_nWriteDataSize -= bytesSent;
 			}
+			else if (bytesSent < 0)
+			{
+				#ifdef NB_WINDOWS
+					int error = WSAGetLastError();
+					if (error != WSAEWOULDBLOCK) {
+						printf("Send error: %d\n", error);
+						// Handle send error appropriately
+					}
+				#else
+					if (errno != EAGAIN && errno != EWOULDBLOCK) {
+						printf("Send error: %s\n", strerror(errno));
+						// Handle send error appropriately
+					}
+				#endif
+			}
 		}
 
 		// Process read buffer
-		int bytesAvailable = 0;
+		/*int bytesAvailable = 0;
 		#ifdef NB_WINDOWS
 			ioctlsocket(m_nSocket, FIONREAD, (u_long*)&bytesAvailable);
 		#else
-			ioctl(m_nSocket, FIONREAD, &bytesAvailable);
+			int x = ioctl(m_nSocket, FIONREAD, &bytesAvailable);
+			if (x < 0)
+			{
+				if (errno != EAGAIN && errno != EWOULDBLOCK) {
+					printf("ioctl error %d - %d - %s\n", m_nSocket, errno, strerror(errno));
+				}
+			}
 		#endif
+*/
 
+int bytesAvailable = 200;
 		if (bytesAvailable > 0)
 		{
 			// Ensure buffer is large enough
@@ -170,6 +228,21 @@ namespace NumbatLogic
 			if (bytesRead > 0)
 			{
 				m_nReadDataSize += bytesRead;
+			}
+			else if (bytesRead < 0)
+			{
+				#ifdef NB_WINDOWS
+					int error = WSAGetLastError();
+					if (error != WSAEWOULDBLOCK) {
+						printf("Recv error: %d\n", error);
+						// Handle recv error appropriately
+					}
+				#else
+					if (errno != EAGAIN && errno != EWOULDBLOCK) {
+						printf("Recv error: %s\n", strerror(errno));
+						// Handle recv error appropriately
+					}
+				#endif
 			}
 		}
 	}
@@ -241,7 +314,6 @@ namespace NumbatLogic
 		if (m_nReadDataSize > 0)
 			memmove(m_pReadBuffer, m_pReadBuffer + nSize + sizeof(unsigned short), m_nReadDataSize);
 		
-		//m_nReadDataSize = 0;  // Clear the read buffer
 		return pBlob;
 	}
 
@@ -250,4 +322,4 @@ namespace NumbatLogic
 		m_nSocket = socket;
 		m_bConnected = true;
 	}
-} 
+}
