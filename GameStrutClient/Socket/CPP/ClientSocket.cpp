@@ -121,9 +121,7 @@ namespace NumbatLogic
 				}
 			}
 		#endif
-
-		printf("socket id %d\n", m_nSocket);
-
+		
 		freeaddrinfo(result);
 		m_bConnected = true;
 	}

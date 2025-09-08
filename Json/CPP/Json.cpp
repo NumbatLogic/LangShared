@@ -1,6 +1,7 @@
 #include "../../Assert/CPP/Assert.hpp"
 #include "../../InternalString/CPP/InternalString.hpp"
 #include "../../ExternalString/CPP/ExternalString.hpp"
+#include "../../Blob/CPP/Blob.hpp"
 #include "Json.hpp"
 
 #include <cstdio>
@@ -45,7 +46,24 @@ namespace NumbatLogic
 		return false;
 	}
 
+	bool Json::LoadFromPath(const char* sxPath)
+	{
+		bool bSuccess = false;
+		Blob* pBlob = new Blob(true);
+		
+		if (!pBlob->Load(sxPath))
+			goto Cleanup;
+		
+		if (!LoadFromExternalString((const char*)pBlob->GetData()))
+			goto Cleanup;
 
+		bSuccess = true;
+		goto Cleanup;
+		
+		Cleanup:
+			delete pBlob;
+			return bSuccess;
+	}
 
 	Json* Json::GetNext()
 	{
