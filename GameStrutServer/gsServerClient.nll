@@ -170,8 +170,6 @@ namespace NumbatLogic
 					Blob* pReceiveBlob = own __pClientSocket.Receive();
 					if (pReceiveBlob != null)
 					{
-						Console::Log("blob get!");
-
 						BlobView pReceiveBlobView = pReceiveBlob.GetBlobView();
 
 						Uint32 nSyncId;
@@ -186,29 +184,19 @@ namespace NumbatLogic
 							&& pReceiveBlobView.SafeUnpackInt32(nSyncType)
 							&& pReceiveBlobView.UnpackBlob(pSyncBlob))
 						{
-							Console::Log("A");
 							if (nRoomId > 0)
 							{
-								Console::Log("B");
 								gsServerRoom pRoom = GetRoomByRoomId(nRoomId);
 
 								if (!pRoom)
 									Assert::Plz(false);
 
 								pRoom.OnSync(nSyncId, nSyncType, pSyncBlob, this);
-
-								//Uint32 nSyncId, Blob pInBlob, gsServerClient pServerClient
-
-
-								
 							}
 							else
 							{
 
 							}
-
-
-							
 						}
 						else
 						{

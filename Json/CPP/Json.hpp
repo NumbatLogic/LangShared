@@ -12,6 +12,7 @@ namespace NumbatLogic
 			~Json();
 
 			bool LoadFromExternalString(const char* szIn);
+			bool LoadFromPath(const char* sxPath);
 		
 			Json* GetNext();
 			Json* GetChild();

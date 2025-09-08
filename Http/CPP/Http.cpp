@@ -1,4 +1,7 @@
 #include "Http.hpp"
+
+#include "../../InternalString/CPP/InternalString.hpp"
+
 #include <curl/curl.h>
 #include <cstring>
 #include <iostream>
@@ -79,10 +82,16 @@ namespace NumbatLogic
 	{
 		m_sUrl = sUrl ? sUrl : "";
 		m_sBody = "";
+		m_sUsername = 0;
+		m_sPassword = 0;
 	}
 
 	HttpPost::~HttpPost()
 	{
+		if (m_sUsername)
+			delete m_sUsername;
+		if (m_sPassword)
+			delete m_sPassword;
 	}
 
 	void HttpPost::AddHeader(const char* sName, const char* sValue)
@@ -96,6 +105,41 @@ namespace NumbatLogic
 	void HttpPost::SetBody(const char* sBody)
 	{
 		m_sBody = sBody ? sBody : "";
+	}
+
+	void HttpPost::SetUsername(const char* sxUsername)
+	{
+		if (sxUsername)
+		{
+			if (m_sUsername)
+			{
+				m_sUsername->Set(sxUsername);
+			}
+			else
+			{
+				m_sUsername = new InternalString(sxUsername);
+			}
+		}
+	}
+
+	void HttpPost::SetPassword(const char* sxPassword)
+	{
+		if (sxPassword)
+		{
+			if (m_sPassword)
+			{
+				m_sPassword->Set(sxPassword);
+			}
+			else
+			{
+				m_sPassword = new InternalString(sxPassword);
+			}
+		}
+	}
+
+	void SetPassword(const char* sxPassword)
+	{
+
 	}
 
 	const char* HttpPost::Execute()
@@ -124,6 +168,11 @@ namespace NumbatLogic
 		curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
 		curl_easy_setopt(curl, CURLOPT_TIMEOUT, 30L); // 30 second timeout
 		curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L); // Follow redirects
+
+		if (m_sUsername)
+			curl_easy_setopt(curl, CURLOPT_USERNAME, m_sUsername->GetExternalString());
+		if (m_sPassword)
+    		curl_easy_setopt(curl, CURLOPT_PASSWORD, m_sPassword->GetExternalString());
 
 		CURLcode res = curl_easy_perform(curl);
 		

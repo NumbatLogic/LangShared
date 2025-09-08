@@ -95,11 +95,8 @@ namespace NumbatLogic
 						bool bSyncResponse = pReceiveBlobView.UnpackBool();
 						Uint32 nSyncId = pReceiveBlobView.UnpackUint32();
 
-						Console::Log("blob!");
 						if (bSyncResponse)
 						{
-							//
-							Console::Log("response!");
 							gsSyncInner pSyncInner = GetSyncInnerBySyncId(nSyncId);
 							Assert::Plz(pSyncInner != null);
 
@@ -163,7 +160,7 @@ namespace NumbatLogic
 			gsSync* pOwnedSync = own pSync;
 
 			gsSyncInner* pSyncInner = own new gsSyncInner(disown pOwnedSync, ++__nLastSyncId, sxSyncType, pRoom, this);
-Console::Log("send");
+			
 			Blob* pSendBlob = own new Blob(true);
 			BlobView pSendBlobView = pSendBlob.GetBlobView();
 			pSendBlobView.PackUint32(pSyncInner.__nSyncId);
