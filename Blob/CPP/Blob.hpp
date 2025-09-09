@@ -33,7 +33,7 @@ namespace NumbatLogic
 		protected:
 			friend class BlobView;
 
-			static const int DEFAULT_SIZE = 1024 * 32;
+			static const int DEFAULT_SIZE = 64;// 1024 * 32;
 
 			int m_nBufferSize;
 			unsigned char* m_pBuffer;
@@ -123,5 +123,71 @@ namespace NumbatLogic
 			int m_nOffset;
 
 			Blob* m_pBlob;
+	};
+
+
+
+
+	class BlobX
+	{
+		public:
+			BlobX();
+			~BlobX();
+
+			bool Load(const char* szFileName);
+			bool Save(const char* szFileName);
+	
+			bool IsEqual(BlobX* pOther);
+			unsigned char GetChecksum();
+			BlobX* Clone();
+			
+			int GetSize();
+			int GetOffset();
+			void SetOffset(int nOffset);
+			void Reset();
+
+			// Pack
+			void PackBool(bool val);
+
+			void PackInt8(signed char val);
+			void PackInt16(signed short val);
+			void PackInt32(signed int val);
+			
+			void PackUint8(unsigned char val);
+			void PackUint16(unsigned short val);
+			void PackUint32(unsigned int val);
+			void PackDouble(double val);
+
+			void PackExternalString(const char* sxString);
+			void PackInternalString(InternalString* sString);
+			void PackBlob(BlobX* pBlob);
+
+			// Unpack
+			bool UnpackBool(bool& val);
+
+			bool UnpackInt8(signed char& val);
+			bool UnpackInt16(signed short& val);
+			bool UnpackInt32(signed int& val);
+
+			bool UnpackUint8(unsigned char& val);
+			bool UnpackUint16(unsigned short& val);
+			bool UnpackUint32(unsigned int& val);
+			bool UnpackDouble(double& val);
+
+			bool UnpackInternalString(InternalString* sString);
+			bool UnpackBlob(BlobX* pBlob);
+
+		protected:
+			static const int DEFAULT_SIZE = 64;
+
+			int m_nBufferSize;
+			unsigned char* m_pBuffer;
+			int m_nSize;
+			int m_nOffset;
+			BlobView* m_pBlobView;
+
+			bool Resize(int nSize);
+			bool PackData(const unsigned char* pData, int nSize);
+			bool UnpackData(unsigned char* pData, int nSize);
 	};
 }

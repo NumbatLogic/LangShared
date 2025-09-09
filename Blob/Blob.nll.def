@@ -98,4 +98,59 @@ namespace NumbatLogic
 
 		public Uint8 GetChecksum();
 	}
+
+
+
+
+
+
+
+
+	class BlobX
+	{
+		public construct();
+		public bool Load(string fileName);
+		public bool Save(string fileName);
+	    
+		public int GetSize();
+		public int GetOffset();
+		public void SetOffset(int nOffset);
+		
+		public bool IsEqual(Blob pOther);
+		public Blob** Clone();
+		public void Reset();
+
+		public Uint8 GetChecksum();
+
+		// Pack
+		public void PackBool(bool val);
+
+		public void PackInt16(Int8 val);
+		public void PackInt16(Int16 val);
+		public void PackInt32(Int32 val);
+		
+		public void PackUint8(Uint8 val);
+		public void PackUint16(Uint16 val);
+		public void PackUint32(Uint32 val);
+		public void PackDouble(double val);
+
+		public void PackExternalString(string sxString);
+		public void PackInternalString(InternalString sString);
+		public void PackBlob(Blob pBlob);
+
+		// Unpack
+		public bool UnpackBool(ref bool val);
+
+		public bool UnpackInt8(ref Int8 val);
+		public bool UnpackInt16(ref Int16 val);
+		public bool UnpackInt32(ref Int32 val);
+
+		public bool UnpackUint8(ref Uint8 val);
+		public bool UnpackUint16(ref Uint16 val);
+		public bool UnpackUint32(ref Uint32 val);
+		public bool UnpackDouble(ref double val);
+
+		public bool UnpackInternalString(InternalString sString);
+		public bool UnpackBlob(Blob pBlob);
+	}
 }

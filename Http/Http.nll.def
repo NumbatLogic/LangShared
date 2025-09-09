@@ -12,8 +12,8 @@ namespace NumbatLogic
 		public construct(string sUrl);
 		public void AddHeader(string sName, string sValue);
 		public void SetBody(string sBody);
-		public void SetUsername(string sUsername);
-		public void SetPassword(string sPassword);
+		public void SetUsername(string sxUsername);
+		public void SetPassword(string sxPassword);
 		public string Execute();
 	}
 } 
