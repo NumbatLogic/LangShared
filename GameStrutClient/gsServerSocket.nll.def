@@ -1,12 +1,12 @@
 namespace NumbatLogic
 {
-	class ServerSocket : Socket
+	class gsServerSocket : gsSocket
 	{
 		public void Start(int port);
 		public void Stop();
 		public void Update();
 		public bool Pending();
-		public ClientSocket Accept();
+		public gsClientSocket Accept();
 
 		public bool Send(Blob pBlob, int nClientSocketId);
 		//public virtual Blob** Receive();

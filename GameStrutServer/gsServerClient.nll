@@ -78,13 +78,13 @@ namespace NumbatLogic
 	
 		public Uint32 __nClientId;
 		public gsServer __pServer;
-		public ClientSocket __pClientSocket;
+		public gsClientSocket __pClientSocket;
 		public gsClient::State __eState;
 		public Vector<gsServerRoom>* __pRoomVector;
 
 		public Uint32 __nLastSyncId;
 
-		public construct(Uint32 nClientId, ClientSocket pClientSocket, gsServer pServer)
+		public construct(Uint32 nClientId, gsClientSocket pClientSocket, gsServer pServer)
 		{
 			__nClientId = nClientId;
 			__pServer = pServer;

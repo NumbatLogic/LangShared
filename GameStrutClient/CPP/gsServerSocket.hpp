@@ -1,31 +1,31 @@
 #pragma once
-#include "../../../Vector/CPP/Vector.hpp"
-#include "Socket.hpp"
-//#include "ClientSocket.hpp"
+
+#include "../../Vector/CPP/Vector.hpp"
+#include "gsSocket.hpp"
 
 namespace NumbatLogic
 {
-    class ClientSocket;
-	class ServerSocket : Socket
+    class gsClientSocket;
+	class gsServerSocket : gsSocket
 	{
 		public:
-			ServerSocket();
-			virtual ~ServerSocket();
+			gsServerSocket();
+			virtual ~gsServerSocket();
 			
 		    void Start(int port);
             void Stop();
             void Update();
             bool Pending();
-            ClientSocket* Accept();
+            gsClientSocket* Accept();
 
             void Send(Blob* pBlob, unsigned int clientSocketId);
 
         protected:
-            using Socket::Send;
+            using gsSocket::Send;
             int m_nSocket;
 			int m_nPort;
             unsigned int m_nNextClientId;
 
-            Vector<ClientSocket*>* m_pClientSocketVector;
+            Vector<gsClientSocket*>* m_pClientSocketVector;
 	};
 }

@@ -6,7 +6,7 @@ namespace NumbatLogic
 		{
 		}
 
-		public virtual gsServerClient** OnCreateServerClient(Uint32 nClientId, ClientSocket pClientSocket, gsServer pServer)
+		public virtual gsServerClient** OnCreateServerClient(Uint32 nClientId, gsClientSocket pClientSocket, gsServer pServer)
 		{
 			return new Client_Connect_ServerClient(nClientId, pClientSocket, pServer);
 		}
@@ -14,7 +14,7 @@ namespace NumbatLogic
 
 	class Client_Connect_ServerClient : gsServerClient
 	{
-		public construct(Uint32 nClientId, ClientSocket pClientSocket, gsServer pServer) : base (nClientId, pClientSocket, pServer)
+		public construct(Uint32 nClientId, gsClientSocket pClientSocket, gsServer pServer) : base (nClientId, pClientSocket, pServer)
 		{
 		}
 

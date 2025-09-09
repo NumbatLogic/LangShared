@@ -1,13 +1,9 @@
 #pragma once
 
-#include <vector>
-//#include "../../Blob/CPP/Blob.hpp"
-
-
 namespace NumbatLogic
 {
     class Blob;
-	class Socket
+	class gsSocket
 	{
 		public:
 			virtual bool Send(Blob* pBlob);

@@ -13,7 +13,7 @@ namespace NumbatLogic
 		{
 			__pRoomVector = own new OwnedVector<gsClientRoom>();
 
-			__pClientSocket = own new ClientSocket();
+			__pClientSocket = own new gsClientSocket();
 			__pClientSocket.Connect(sxAddress, nPort);
 			__nVersion = nVersion;
 			__eState = CONNECT;
@@ -198,7 +198,7 @@ namespace NumbatLogic
 		public OwnedVector<gsClientRoom>* __pRoomVector;
 
 
-		public ClientSocket* __pClientSocket;
+		public gsClientSocket* __pClientSocket;
 		public Uint16 __nVersion;
 
 		public Uint32 __nClientId;

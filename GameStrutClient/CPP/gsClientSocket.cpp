@@ -1,6 +1,6 @@
-#include "ClientSocket.hpp"
-#include "../../../Assert/CPP/Assert.hpp"
-#include "../../../Blob/CPP/Blob.hpp"
+#include "gsClientSocket.hpp"
+#include "../../Assert/CPP/Assert.hpp"
+#include "../../Blob/CPP/Blob.hpp"
 
 #include <cstring>
 #include <string>
@@ -26,7 +26,7 @@
 
 namespace NumbatLogic
 {
-	ClientSocket::ClientSocket()
+	gsClientSocket::gsClientSocket()
 	{
 		m_nSocket = -1;
 		m_nPort = -1;
@@ -44,7 +44,7 @@ namespace NumbatLogic
 		m_pReadBuffer = new unsigned char[m_nReadBufferSize];
 	}
 
-	ClientSocket::~ClientSocket()
+	gsClientSocket::~gsClientSocket()
 	{
 		Assert::Plz(m_nSocket == -1);
 		Assert::Plz(!m_bConnected);
@@ -54,7 +54,7 @@ namespace NumbatLogic
 		delete[] m_pReadBuffer;
 	}
 
-	void ClientSocket::Connect(const char* host, int port)
+	void gsClientSocket::Connect(const char* host, int port)
 	{
 		Assert::Plz(m_nSocket == -1);
 		Assert::Plz(!m_bConnected);
@@ -126,7 +126,7 @@ namespace NumbatLogic
 		m_bConnected = true;
 	}
 
-	void ClientSocket::Disconnect()
+	void gsClientSocket::Disconnect()
 	{
 		if (!m_bConnected)
 			return;
@@ -155,7 +155,7 @@ namespace NumbatLogic
 		#endif
 	}
 
-	void ClientSocket::Update()
+	void gsClientSocket::Update()
 	{
 		if (!m_bConnected || m_nSocket < 0)
 			return;
@@ -245,7 +245,7 @@ int bytesAvailable = 200;
 		}
 	}
 
-	bool ClientSocket::Pending()
+	bool gsClientSocket::Pending()
 	{
 		if (!m_bConnected || m_nSocket < 0)
 			return false;
@@ -253,12 +253,12 @@ int bytesAvailable = 200;
 		return m_nWriteDataSize > 0; // || m_nReadDataSize > 0;
 	}
 
-	bool ClientSocket::GetConnected()
+	bool gsClientSocket::GetConnected()
 	{
 		return m_bConnected && m_nSocket > 0;
 	}
 
-	bool ClientSocket::Send(Blob* pBlob)
+	bool gsClientSocket::Send(Blob* pBlob)
 	{
 		if (!m_bConnected || m_nSocket < 0 || !pBlob)
 			return false;
@@ -287,7 +287,7 @@ int bytesAvailable = 200;
 		return true;
 	}
 
-	Blob* ClientSocket::Receive()
+	Blob* gsClientSocket::Receive()
 	{
 		if (!m_bConnected || m_nSocket < 0)
 			return NULL;
@@ -315,7 +315,7 @@ int bytesAvailable = 200;
 		return pBlob;
 	}
 
-	void ClientSocket::SetAcceptedSocket(int socket)
+	void gsClientSocket::SetAcceptedSocket(int socket)
 	{
 		m_nSocket = socket;
 		m_bConnected = true;

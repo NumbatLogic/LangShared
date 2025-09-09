@@ -1,6 +1,6 @@
 namespace NumbatLogic
 {
-	class Socket
+	class gsSocket
 	{
 		//public virtual bool Send(Blob pBlob);
 		//public virtual Blob** Receive();
