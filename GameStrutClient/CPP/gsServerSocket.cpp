@@ -1,7 +1,7 @@
-#include "ServerSocket.hpp"
-#include "../../../Assert/CPP/Assert.hpp"
-#include "../../../Blob/CPP/Blob.hpp"
-#include "ClientSocket.hpp"
+#include "gsServerSocket.hpp"
+#include "../../Assert/CPP/Assert.hpp"
+#include "../../Blob/CPP/Blob.hpp"
+#include "gsClientSocket.hpp"
 
 #include <cstring>
 
@@ -25,22 +25,22 @@
 
 namespace NumbatLogic
 {
-	ServerSocket::ServerSocket()
+	gsServerSocket::gsServerSocket()
 	{
 		m_nSocket = -1;
 		m_nPort = -1;
 		m_nNextClientId = 1;  // Start client IDs at 1 (0 is reserved for broadcast)
-		m_pClientSocketVector = new Vector<ClientSocket*>();
+		m_pClientSocketVector = new Vector<gsClientSocket*>();
 	}
 
-	ServerSocket::~ServerSocket()
+	gsServerSocket::~gsServerSocket()
 	{
 		Assert::Plz(m_nSocket == -1);
 		Assert::Plz(m_nPort == -1);
 		// Clean up client connections if any remain
 		for (unsigned int i = 0; i < m_pClientSocketVector->GetSize(); ++i)
 		{
-			ClientSocket* pClientSocket = m_pClientSocketVector->Get(i);
+			gsClientSocket* pClientSocket = m_pClientSocketVector->Get(i);
 			if (pClientSocket)
 			{
 				pClientSocket->Disconnect();
@@ -51,7 +51,7 @@ namespace NumbatLogic
 		Assert::Plz(m_pClientSocketVector->GetSize() == 0);
 	}
 
-	void ServerSocket::Start(int port)
+	void gsServerSocket::Start(int port)
 	{
 		Assert::Plz(m_nSocket == -1);
 		Assert::Plz(m_nPort == -1);
@@ -114,7 +114,7 @@ namespace NumbatLogic
 		}
 	}
 
-	void ServerSocket::Stop()
+	void gsServerSocket::Stop()
 	{
 		Assert::Plz(m_nPort != -1);
 		Assert::Plz(m_nSocket != -1);
@@ -126,7 +126,7 @@ namespace NumbatLogic
 		// Clean up client connections
 		for (unsigned int i = 0; i < m_pClientSocketVector->GetSize(); ++i)
 		{
-			ClientSocket* pClientSocket = m_pClientSocketVector->Get(i);
+			gsClientSocket* pClientSocket = m_pClientSocketVector->Get(i);
 			if (pClientSocket)
 			{
 				pClientSocket->Disconnect();
@@ -136,7 +136,7 @@ namespace NumbatLogic
 		m_pClientSocketVector->Clear();
 	}
 
-	void ServerSocket::Update()
+	void gsServerSocket::Update()
 	{
 		if (m_nSocket == -1)
 			return;
@@ -144,7 +144,7 @@ namespace NumbatLogic
 		// Process all client connections
 		for (unsigned int i = 0; i < m_pClientSocketVector->GetSize(); ++i)
 		{
-			ClientSocket* pClientSocket = m_pClientSocketVector->Get(i);
+			gsClientSocket* pClientSocket = m_pClientSocketVector->Get(i);
 			if (pClientSocket)
 			{
 				// Update client socket to process any pending data
@@ -153,7 +153,7 @@ namespace NumbatLogic
 		}
 	}
 
-	bool ServerSocket::Pending()
+	bool gsServerSocket::Pending()
 	{
 		if (m_nSocket == -1)
 			return false;
@@ -161,7 +161,7 @@ namespace NumbatLogic
 		// Check all clients for pending data
 		for (unsigned int i = 0; i < m_pClientSocketVector->GetSize(); i++)
 		{
-			ClientSocket* pClientSocket = m_pClientSocketVector->Get(i);
+			gsClientSocket* pClientSocket = m_pClientSocketVector->Get(i);
 			if (pClientSocket)
 			{
 				// Check if client has pending data to receive or send
@@ -174,7 +174,7 @@ namespace NumbatLogic
 		return false;
 	}
 
-	ClientSocket* ServerSocket::Accept()
+	gsClientSocket* gsServerSocket::Accept()
 	{
 		Assert::Plz(m_nSocket != -1);
 
@@ -189,7 +189,7 @@ namespace NumbatLogic
 		}
 
 		// Create new client socket
-		ClientSocket* pNewClient = new ClientSocket();
+		gsClientSocket* pNewClient = new gsClientSocket();
 		Assert::Plz(pNewClient != NULL);
 		pNewClient->SetAcceptedSocket(clientSocket);
 		pNewClient->SetClientSocketId(m_nNextClientId++);  // Assign and increment client socket ID
@@ -211,7 +211,7 @@ namespace NumbatLogic
 		return pNewClient;
 	}
 
-	void ServerSocket::Send(Blob* pBlob, unsigned int clientSocketId)
+	void gsServerSocket::Send(Blob* pBlob, unsigned int clientSocketId)
 	{
 		Assert::Plz(pBlob != NULL);
 		Assert::Plz(m_nSocket != -1);
@@ -224,7 +224,7 @@ namespace NumbatLogic
 		{
 			for (unsigned int i = 0; i < m_pClientSocketVector->GetSize(); i++)
 			{
-				ClientSocket* pClientSocket = m_pClientSocketVector->Get(i);
+				gsClientSocket* pClientSocket = m_pClientSocketVector->Get(i);
 				if (pClientSocket)
 				{
 					if (!pClientSocket->Send(pClientBlob))
@@ -240,7 +240,7 @@ namespace NumbatLogic
 		{
 			for (unsigned int i = 0; i < m_pClientSocketVector->GetSize(); i++)
 			{
-				ClientSocket* pClientSocket = m_pClientSocketVector->Get(i);
+				gsClientSocket* pClientSocket = m_pClientSocketVector->Get(i);
 				if (pClientSocket && pClientSocket->GetClientSocketId() == clientSocketId)
 				{
 					pClientSocket->Send(pClientBlob);

@@ -2,7 +2,7 @@ namespace NumbatLogic
 {
 	class GameStrutTestUtil
 	{
-        public static void Update(ServerSocket pServerSocket, ClientSocket pClientSocket)
+        public static void Update(gsServerSocket pServerSocket, gsClientSocket pClientSocket)
 		{
 			int nNotPendingCount = 0;
 			while (nNotPendingCount < 5)

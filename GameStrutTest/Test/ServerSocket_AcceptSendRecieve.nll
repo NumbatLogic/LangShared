@@ -4,15 +4,15 @@ namespace NumbatLogic
 	{
         public static void Run()
 		{
-			ServerSocket* pServerSocket = own new ServerSocket();
+			gsServerSocket* pServerSocket = own new gsServerSocket();
 			pServerSocket.Start(9876);
 
-			ClientSocket* pClientSocket = own new ClientSocket();
+			gsClientSocket* pClientSocket = own new gsClientSocket();
 			pClientSocket.Connect("localhost", 9876);
 
 			GameStrutTestUtil::Update(pServerSocket, pClientSocket);
 
-			ClientSocket pServerClientSocket = pServerSocket.Accept();
+			gsClientSocket pServerClientSocket = pServerSocket.Accept();
 			Assert::Plz(pServerClientSocket != null);
 
 			{

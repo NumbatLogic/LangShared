@@ -1,0 +1,15 @@
+namespace NumbatLogic
+{
+	class gsClientSocket : gsSocket
+	{
+		public void Connect(string host, int port);
+		public void Disconnect();
+		
+		public virtual bool Send(Blob pBlob);
+		public virtual Blob** Receive();
+
+		public void Update();
+		public bool Pending();
+		public bool GetConnected();
+	}
+} 

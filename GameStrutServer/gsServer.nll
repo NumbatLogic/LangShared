@@ -8,7 +8,7 @@ namespace NumbatLogic
 			__nPort = nPort;
 			__nVersion = nVersion;
 
-			__pServerSocket = own new ServerSocket();
+			__pServerSocket = own new gsServerSocket();
 			__pServerSocket.Start(__nPort);
 
 			__pRoomVector = own new OwnedVector<gsServerRoom>();
@@ -25,7 +25,7 @@ namespace NumbatLogic
 			__pServerSocket.Update();
 
 			{
-				ClientSocket pClientSocket = __pServerSocket.Accept();
+				gsClientSocket pClientSocket = __pServerSocket.Accept();
 				if (pClientSocket)
 				{
 					gsServerClient* pServerClient = own OnCreateServerClient(__nLastClientId++, pClientSocket, this);
@@ -81,7 +81,7 @@ namespace NumbatLogic
 			return __pServerSocket.Pending();
 		}
 
-		public virtual gsServerClient** OnCreateServerClient(Uint32 nClientId, ClientSocket pClientSocket, gsServer pServer)
+		public virtual gsServerClient** OnCreateServerClient(Uint32 nClientId, gsClientSocket pClientSocket, gsServer pServer)
 		{
 			return new gsServerClient(__nLastClientId++, pClientSocket, this);
 		}
@@ -92,7 +92,7 @@ namespace NumbatLogic
 		}
 
 
-		public virtual void Auth(Blob pAuthBlob, ClientSocket pClientSocket)
+		public virtual void Auth(Blob pAuthBlob, gsClientSocket pClientSocket)
 		{
 			Assert::Plz(false);
 		}
@@ -104,7 +104,7 @@ namespace NumbatLogic
 		public Uint16 __nPort;
 		public Uint16 __nVersion;
 
-		public ServerSocket* __pServerSocket;
+		public gsServerSocket* __pServerSocket;
 		public OwnedVector<gsServerClient>* __pClientVector;
 		public OwnedVector<gsServerRoom>* __pRoomVector;
 

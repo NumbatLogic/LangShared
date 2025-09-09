@@ -1,14 +1,14 @@
 #pragma once
-#include "Socket.hpp"
-#include "../../../InternalString/CPP/InternalString.hpp"
+#include "gsSocket.hpp"
+#include "../../InternalString/CPP/InternalString.hpp"
 
 namespace NumbatLogic
 {
-    class ClientSocket : public Socket
+    class gsClientSocket : public gsSocket
     {
         public:
-            ClientSocket();
-            virtual ~ClientSocket();
+            gsClientSocket();
+            virtual ~gsClientSocket();
             
             void Connect(const char* host, int port);
             void Disconnect();
