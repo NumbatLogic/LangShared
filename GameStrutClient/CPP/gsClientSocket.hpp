@@ -16,8 +16,8 @@ namespace NumbatLogic
             bool Pending();
             bool GetConnected();
 
-            virtual bool Send(Blob* pBlob) override;
-            virtual Blob* Receive() override;
+            virtual bool Send(gsBlob* pBlob) override;
+            virtual gsBlob* Receive() override;
 
             void SetAcceptedSocket(int socket);
             unsigned int GetClientSocketId() const { return m_nClientSocketId; }

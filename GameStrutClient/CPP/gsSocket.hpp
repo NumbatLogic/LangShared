@@ -2,11 +2,11 @@
 
 namespace NumbatLogic
 {
-    class Blob;
+    class gsBlob;
 	class gsSocket
 	{
 		public:
-			virtual bool Send(Blob* pBlob);
-			virtual Blob* Receive();
+			virtual bool Send(gsBlob* pBlob);
+			virtual gsBlob* Receive();
 	};
 }

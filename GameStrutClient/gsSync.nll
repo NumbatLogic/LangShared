@@ -22,7 +22,7 @@ namespace NumbatLogic
 			return __pSyncInner != null ? __pSyncInner.__bError : false;
 		}
 
-		public virtual void OnComplete(Blob pBlob) { }
+		public virtual void OnComplete(gsBlob pBlob) { }
 
 		// SEKRIT
 		public gsSyncInner __pSyncInner;
@@ -39,7 +39,7 @@ namespace NumbatLogic
 			__nSyncType = ExternalString::GetChecksum(sxSyncType);
 		}
 
-		public virtual void OnComplete(Blob pBlob)
+		public virtual void OnComplete(gsBlob pBlob)
 		{
 			if (__pSync != null)
 				__pSync.OnComplete(pBlob);

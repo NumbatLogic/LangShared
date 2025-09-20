@@ -33,7 +33,7 @@ namespace NumbatLogic
 		{
 		}
 
-		public virtual gsClientRoom** OnRoomJoin(Uint32 nRoomId, Int32 nRoomTypeHash, bool bPrimary, Blob pJoinBlob)
+		public virtual gsClientRoom** OnRoomJoin(Uint32 nRoomId, Int32 nRoomTypeHash, bool bPrimary, gsBlob pJoinBlob)
 		{
 			return base.OnRoomJoin(nRoomId, nRoomTypeHash, bPrimary, pJoinBlob);
 		}

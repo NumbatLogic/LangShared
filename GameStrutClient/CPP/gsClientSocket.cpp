@@ -258,7 +258,7 @@ int bytesAvailable = 200;
 		return m_bConnected && m_nSocket > 0;
 	}
 
-	bool gsClientSocket::Send(Blob* pBlob)
+	bool gsClientSocket::Send(gsBlob* pBlob)
 	{
 		if (!m_bConnected || m_nSocket < 0 || !pBlob)
 			return false;
@@ -279,7 +279,8 @@ int bytesAvailable = 200;
 		
 		*((unsigned short*)(m_pWriteBuffer + m_nWriteDataSize)) = pBlob->GetSize();
 		m_nWriteDataSize += sizeof(unsigned short);
-		memcpy(m_pWriteBuffer + m_nWriteDataSize, pBlob->GetData(), pBlob->GetSize());
+		pBlob->SetOffset(0);
+		pBlob->UnpackData(m_pWriteBuffer + m_nWriteDataSize, pBlob->GetSize());
 		m_nWriteDataSize += pBlob->GetSize();
 
 		// Try to send immediately
@@ -287,7 +288,7 @@ int bytesAvailable = 200;
 		return true;
 	}
 
-	Blob* gsClientSocket::Receive()
+	gsBlob* gsClientSocket::Receive()
 	{
 		if (!m_bConnected || m_nSocket < 0)
 			return NULL;
@@ -304,14 +305,14 @@ int bytesAvailable = 200;
 			return NULL;
 
 		// Create new blob with available data
-		Blob* pBlob = new Blob(false);
-		pBlob->Resize(nSize, false);
-		pBlob->PackData(m_pReadBuffer + sizeof(unsigned short), 0, nSize);
+		gsBlob* pBlob = new gsBlob();
+		pBlob->PackData(m_pReadBuffer + sizeof(unsigned short), nSize);
 
 		m_nReadDataSize -= nSize + sizeof(unsigned short);
 		if (m_nReadDataSize > 0)
 			memmove(m_pReadBuffer, m_pReadBuffer + nSize + sizeof(unsigned short), m_nReadDataSize);
 		
+		pBlob->SetOffset(0);
 		return pBlob;
 	}
 

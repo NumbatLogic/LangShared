@@ -5,8 +5,8 @@ namespace NumbatLogic
 		public void Connect(string host, int port);
 		public void Disconnect();
 		
-		public virtual bool Send(Blob pBlob);
-		public virtual Blob** Receive();
+		public virtual bool Send(gsBlob pBlob);
+		public virtual gsBlob** Receive();
 
 		public void Update();
 		public bool Pending();

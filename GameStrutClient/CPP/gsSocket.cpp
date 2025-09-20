@@ -3,12 +3,12 @@
 
 namespace NumbatLogic
 {
-    bool gsSocket::Send(Blob* pBlob)
+    bool gsSocket::Send(gsBlob* pBlob)
     {
         return false;
     }
 
-    Blob* gsSocket::Receive()
+    gsBlob* gsSocket::Receive()
     {
         return 0;
     }

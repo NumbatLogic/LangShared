@@ -553,7 +553,7 @@ namespace NumbatLogic
 
 
 	/// --------------------
-	BlobX::BlobX()
+	gsBlob::gsBlob()
 	{
 		m_nBufferSize = DEFAULT_SIZE;
 		m_pBuffer = (unsigned char*)malloc(m_nBufferSize);
@@ -562,11 +562,11 @@ namespace NumbatLogic
 		m_nOffset = 0;
 	}
 
-	BlobX::~BlobX()
+	gsBlob::~gsBlob()
 	{
 	}
 
-	bool BlobX::Load(const char* szFileName)
+	bool gsBlob::Load(const char* szFileName)
 	{
 		#ifdef _WIN32
 			int size_needed = MultiByteToWideChar(CP_UTF8, 0, szFileName, (int)strlen(szFileName), NULL, 0);
@@ -606,7 +606,7 @@ namespace NumbatLogic
 		return false;
 	}
 
-	bool BlobX::Save(const char* szFileName)
+	bool gsBlob::Save(const char* szFileName)
 	{
 		#ifdef _WIN32
 			int size_needed = MultiByteToWideChar(CP_UTF8, 0, szFileName, (int)strlen(szFileName), NULL, 0);
@@ -626,7 +626,7 @@ namespace NumbatLogic
 		return false;
 	}
 
-	bool BlobX::IsEqual(BlobX* pOther)
+	bool gsBlob::IsEqual(gsBlob* pOther)
 	{
 		if (m_nSize != pOther->m_nSize)
 			return false;
@@ -637,7 +637,7 @@ namespace NumbatLogic
 	#define _TOPBIT (1 << (_WIDTH - 1))
 	#define _POLYNOMIAL 0xD8		/* 11011 followed by 0's */
 
-	unsigned char BlobX::GetChecksum()
+	unsigned char gsBlob::GetChecksum()
 	{
 		unsigned char remainder = 0;
 		for (int byte = 0; byte < m_nSize; byte++)
@@ -658,9 +658,9 @@ namespace NumbatLogic
 		return (remainder);
 	}
 	
-	BlobX* BlobX::Clone()
+	gsBlob* gsBlob::Clone()
 	{
-		BlobX* pClone = new BlobX();
+		gsBlob* pClone = new gsBlob();
 		pClone->m_nBufferSize = m_nBufferSize;
 		pClone->m_nSize = m_nSize;
 		
@@ -674,23 +674,23 @@ namespace NumbatLogic
 		return pClone;
 	}
 
-	int BlobX::GetSize()
+	int gsBlob::GetSize()
 	{
 		return m_nSize;
 	}
 
-	int BlobX::GetOffset()
+	int gsBlob::GetOffset()
 	{
 		return m_nOffset;
 	}
 
-	void BlobX::SetOffset(int nOffset)
+	void gsBlob::SetOffset(int nOffset)
 	{
 		Assert::Plz(nOffset < m_nSize);
 		m_nOffset = nOffset;
 	}
 
-	void BlobX::Reset()
+	void gsBlob::Reset()
 	{
 		m_nSize = 0;
 		m_nOffset = 0;
@@ -703,33 +703,33 @@ namespace NumbatLogic
 	// maybe we should shift and & 0xFF etc
 
 	// Pack
-	void BlobX::PackBool(bool val) { PackUint8(val ? 1 : 0); }
+	void gsBlob::PackBool(bool val) { PackUint8(val ? 1 : 0); }
 	
-	void BlobX::PackUint8(unsigned char val) { PackData(&val, 1); }
-	void BlobX::PackUint16(unsigned short val) { PackData((unsigned char*)&val, 2); }
-	void BlobX::PackUint32(unsigned int val) { PackData((unsigned char*)&val, 4); }
+	void gsBlob::PackUint8(unsigned char val) { PackData(&val, 1); }
+	void gsBlob::PackUint16(unsigned short val) { PackData((unsigned char*)&val, 2); }
+	void gsBlob::PackUint32(unsigned int val) { PackData((unsigned char*)&val, 4); }
 
-	void BlobX::PackInt8(signed char val) { PackData((unsigned char*)&val, 1); }
-	void BlobX::PackInt16(signed short val) { PackData((unsigned char*)&val, 2); }
-	void BlobX::PackInt32(signed int val) { PackData((unsigned char*)&val, 4); }
+	void gsBlob::PackInt8(signed char val) { PackData((unsigned char*)&val, 1); }
+	void gsBlob::PackInt16(signed short val) { PackData((unsigned char*)&val, 2); }
+	void gsBlob::PackInt32(signed int val) { PackData((unsigned char*)&val, 4); }
 
-	void BlobX::PackDouble(double val) { PackData((unsigned char*)&val, 8); }
+	void gsBlob::PackDouble(double val) { PackData((unsigned char*)&val, 8); }
 
-	void BlobX::PackExternalString(const char* sxString)
+	void gsBlob::PackExternalString(const char* sxString)
 	{
 		int nByteLength = ExternalString::GetByteLength(sxString);
 		PackInt32(nByteLength);
 		PackData((unsigned char*)sxString, nByteLength);	
 	}
 
-	void BlobX::PackInternalString(InternalString* sString)
+	void gsBlob::PackInternalString(InternalString* sString)
 	{
 		int nByteLength = sString->GetByteLength();
 		PackInt32(nByteLength);
 		PackData((unsigned char*)sString->GetExternalString(), nByteLength);
 	}
 
-	void BlobX::PackBlob(BlobX* pBlob)
+	void gsBlob::PackBlob(gsBlob* pBlob)
 	{
 		PackInt32(pBlob->m_nSize);
 		PackData(pBlob->m_pBuffer, pBlob->m_nSize);
@@ -737,7 +737,7 @@ namespace NumbatLogic
 
 
 	// Unpack
-	bool BlobX::UnpackBool(bool& val)
+	bool gsBlob::UnpackBool(bool& val)
 	{
 		unsigned char n;
 		if (!UnpackUint8(n))
@@ -746,17 +746,17 @@ namespace NumbatLogic
 		return true;
 	}
 
-	bool BlobX::UnpackUint8(unsigned char& val) { return UnpackData((unsigned char*)&val, sizeof(val)); }
-	bool BlobX::UnpackUint16(unsigned short& val) { return UnpackData((unsigned char*)&val, sizeof(val)); }
-	bool BlobX::UnpackUint32(unsigned int& val) { return UnpackData((unsigned char*)&val, sizeof(val)); }
+	bool gsBlob::UnpackUint8(unsigned char& val) { return UnpackData((unsigned char*)&val, sizeof(val)); }
+	bool gsBlob::UnpackUint16(unsigned short& val) { return UnpackData((unsigned char*)&val, sizeof(val)); }
+	bool gsBlob::UnpackUint32(unsigned int& val) { return UnpackData((unsigned char*)&val, sizeof(val)); }
 
-	bool BlobX::UnpackInt8(signed char& val) { return UnpackData((unsigned char*)&val, sizeof(val)); }
-	bool BlobX::UnpackInt16(signed short& val) { return UnpackData((unsigned char*)&val, sizeof(val)); }
-	bool BlobX::UnpackInt32(signed int& val) { return UnpackData((unsigned char*)&val, sizeof(val)); }
+	bool gsBlob::UnpackInt8(signed char& val) { return UnpackData((unsigned char*)&val, sizeof(val)); }
+	bool gsBlob::UnpackInt16(signed short& val) { return UnpackData((unsigned char*)&val, sizeof(val)); }
+	bool gsBlob::UnpackInt32(signed int& val) { return UnpackData((unsigned char*)&val, sizeof(val)); }
 
-	bool BlobX::UnpackDouble(double& val) { return UnpackData((unsigned char*)&val, sizeof(val)); }
+	bool gsBlob::UnpackDouble(double& val) { return UnpackData((unsigned char*)&val, sizeof(val)); }
 
-	bool BlobX::UnpackInternalString(InternalString* sString)
+	bool gsBlob::UnpackInternalString(InternalString* sString)
 	{
 		signed int nByteLength = 0;
 		if (!UnpackInt32(nByteLength))
@@ -784,7 +784,7 @@ namespace NumbatLogic
 		return false;
 	}
 
-	bool BlobX::UnpackBlob(BlobX* pBlob)
+	bool gsBlob::UnpackBlob(gsBlob* pBlob)
 	{
 		signed int nSize = 0;
 		if (!UnpackInt32(nSize))
@@ -798,7 +798,7 @@ namespace NumbatLogic
 		return UnpackData(pBlob->m_pBuffer, nSize);
 	}
 
-	bool BlobX::Resize(int nSize)
+	bool gsBlob::Resize(int nSize)
 	{
 		if (nSize > m_nBufferSize)
 		{
@@ -821,7 +821,7 @@ namespace NumbatLogic
 		return true;
 	}
 
-	bool BlobX::PackData(const unsigned char* pData, int nSize)
+	bool gsBlob::PackData(const unsigned char* pData, int nSize)
 	{
 		if (m_nOffset + nSize > m_nSize)
 			if (!Resize(m_nOffset + nSize))
@@ -831,7 +831,7 @@ namespace NumbatLogic
 		return true;
 	}
 
-	bool BlobX::UnpackData(unsigned char* pData, int nSize)
+	bool gsBlob::UnpackData(unsigned char* pData, int nSize)
 	{
 		if (m_nOffset + nSize > m_nSize)
 			return false;

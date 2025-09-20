@@ -106,7 +106,7 @@ namespace NumbatLogic
 
 
 
-	class BlobX
+	class gsBlob
 	{
 		public construct();
 		public bool Load(string fileName);
@@ -117,7 +117,7 @@ namespace NumbatLogic
 		public void SetOffset(int nOffset);
 		
 		public bool IsEqual(Blob pOther);
-		public Blob** Clone();
+		public gsBlob** Clone();
 		public void Reset();
 
 		public Uint8 GetChecksum();
@@ -136,7 +136,7 @@ namespace NumbatLogic
 
 		public void PackExternalString(string sxString);
 		public void PackInternalString(InternalString sString);
-		public void PackBlob(Blob pBlob);
+		public void PackBlob(gsBlob pBlob);
 
 		// Unpack
 		public bool UnpackBool(ref bool val);
@@ -151,6 +151,6 @@ namespace NumbatLogic
 		public bool UnpackDouble(ref double val);
 
 		public bool UnpackInternalString(InternalString sString);
-		public bool UnpackBlob(Blob pBlob);
+		public bool UnpackBlob(gsBlob pBlob);
 	}
 }
