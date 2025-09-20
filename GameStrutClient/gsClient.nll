@@ -40,18 +40,17 @@ namespace NumbatLogic
 					{
 						__eState = State::HANDSHAKE;
 						
-						Blob* pSendBlob = own new Blob(true);
-						BlobView pBlobView = pSendBlob.GetBlobView();
-						pBlobView.PackUint16(MAGIC_WORD);
-						pBlobView.PackUint16(__nVersion);
+						gsBlob* pSendBlob = own new gsBlob();
+						pSendBlob.PackUint16(MAGIC_WORD);
+						pSendBlob.PackUint16(__nVersion);
 
-						pBlobView.PackUint8(0); // auth mode
+						pSendBlob.PackUint8(0); // auth mode
 
 						InternalString* sName = own new InternalString("cliffya");
-						pBlobView.PackInternalString(sName);
+						pSendBlob.PackInternalString(sName);
 
 						InternalString* sPassword = own new InternalString("password");
-						pBlobView.PackInternalString(sPassword);
+						pSendBlob.PackInternalString(sPassword);
 
 						__pClientSocket.Send(pSendBlob);
 					}
@@ -59,23 +58,26 @@ namespace NumbatLogic
 				}
 				case State::HANDSHAKE:
 				{
-					Blob* pReceiveBlob = own __pClientSocket.Receive();
+					gsBlob* pReceiveBlob = own __pClientSocket.Receive();
 					if (pReceiveBlob != null)
 					{
+						// can remove size check
 						const int INITIAL_SIZE = 2 + 2 + 1 + 4;
 						if (pReceiveBlob.GetSize() == INITIAL_SIZE)
 						{
-							BlobView pRecieveBlobView = pReceiveBlob.GetBlobView();
+							Uint16 nMagic;
+							Uint16 nVersion;
+							bool bSuccess;
 
-							Uint16 nMagic = pRecieveBlobView.UnpackUint16();
-							Uint16 nVersion = pRecieveBlobView.UnpackUint16();
-							bool bSuccess = pRecieveBlobView.UnpackBool();
-							
-							if (nMagic == gsClient::MAGIC_WORD && bSuccess)
+							if (pReceiveBlob.UnpackUint16(nMagic) && pReceiveBlob.UnpackUint16(nVersion) && pReceiveBlob.UnpackBool(bSuccess))
 							{
-								__nClientId = pRecieveBlobView.UnpackUint32();
-								__eState = State::CONNECTED;
-								break;
+								if (nMagic == gsClient::MAGIC_WORD && bSuccess)
+								{
+									if (!pReceiveBlob.UnpackUint32(__nClientId))
+										Assert::Plz(false);
+									__eState = State::CONNECTED;
+									break;
+								}
 							}
 						}
 						
@@ -87,21 +89,25 @@ namespace NumbatLogic
 				}
 				case State::CONNECTED:
 				{
-					Blob* pReceiveBlob = own __pClientSocket.Receive();
+					gsBlob* pReceiveBlob = own __pClientSocket.Receive();
 					if (pReceiveBlob != null)
 					{
-						BlobView pReceiveBlobView = pReceiveBlob.GetBlobView();
+						bool bSyncResponse;
+						Uint32 nSyncId;
 
-						bool bSyncResponse = pReceiveBlobView.UnpackBool();
-						Uint32 nSyncId = pReceiveBlobView.UnpackUint32();
+						if (!pReceiveBlob.UnpackBool(bSyncResponse) || !pReceiveBlob.UnpackUint32(nSyncId))
+						{
+							Console::Log("bad blob?");
+							Assert::Plz(false);
+						}
 
 						if (bSyncResponse)
 						{
 							gsSyncInner pSyncInner = GetSyncInnerBySyncId(nSyncId);
 							Assert::Plz(pSyncInner != null);
 
-							Blob* pSyncBlob = own new Blob(true);
-							if (!pReceiveBlobView.UnpackBlob(pSyncBlob))
+							gsBlob* pSyncBlob = own new gsBlob();
+							if (!pReceiveBlob.UnpackBlob(pSyncBlob))
 								Assert::Plz(false);
 
 							if (pSyncInner.__pSync != null)
@@ -109,22 +115,29 @@ namespace NumbatLogic
 						}
 						else
 						{
-							Uint32 nRoomId = pReceiveBlobView.UnpackUint32();
-							Int32 nMessageType = pReceiveBlobView.UnpackInt32();
-							Blob* pMessageBlob = own new Blob(true);
-							if (!pReceiveBlobView.UnpackBlob(pMessageBlob))
+							Uint32 nRoomId;
+							Int32 nMessageType;
+
+							if (!pReceiveBlob.UnpackUint32(nRoomId) || !pReceiveBlob.UnpackInt32(nMessageType))
 								Assert::Plz(false);
-							BlobView pMessageBlobView = pMessageBlob.GetBlobView();
+
+							gsBlob* pMessageBlob = own new gsBlob();
+							if (!pReceiveBlob.UnpackBlob(pMessageBlob))
+								Assert::Plz(false);
 							
 							if (nRoomId == 0)
 							{
 								if (nMessageType == __ROOM_JOIN_HASH)
 								{
-									Uint32 nRoomId = pMessageBlobView.UnpackUint32();
-									Int32 nRoomType = pMessageBlobView.UnpackInt32();
-									bool bPrimary = pMessageBlobView.UnpackBool();
-									Blob* pJoinBlob = own new Blob(true);
-									if (!pMessageBlobView.UnpackBlob(pJoinBlob))
+									Uint32 nRoomId;
+									Int32 nRoomType;
+									bool bPrimary;
+
+									if (!pMessageBlob.UnpackUint32(nRoomId) || !pMessageBlob.UnpackInt32(nRoomType) || !pMessageBlob.UnpackBool(bPrimary))
+										Assert::Plz(false);
+
+									gsBlob* pJoinBlob = own new gsBlob();
+									if (!pMessageBlob.UnpackBlob(pJoinBlob))
 										Assert::Plz(false);
 									
 
@@ -155,22 +168,21 @@ namespace NumbatLogic
 		}
 
 		public delegate void CompleteCallback();
-		public void SyncSend(gsSync** pSync, string sxSyncType, Blob pBlob, bool mayChangeRoom, gsClientRoom pRoom)
+		public void SyncSend(gsSync** pSync, string sxSyncType, gsBlob pBlob, bool mayChangeRoom, gsClientRoom pRoom)
 		{
 			gsSync* pOwnedSync = own pSync;
 
 			gsSyncInner* pSyncInner = own new gsSyncInner(disown pOwnedSync, ++__nLastSyncId, sxSyncType, pRoom, this);
 			
-			Blob* pSendBlob = own new Blob(true);
-			BlobView pSendBlobView = pSendBlob.GetBlobView();
-			pSendBlobView.PackUint32(pSyncInner.__nSyncId);
-			pSendBlobView.PackUint32(0); // last accepted
+			gsBlob* pSendBlob = own new gsBlob();
+			pSendBlob.PackUint32(pSyncInner.__nSyncId);
+			pSendBlob.PackUint32(0); // last accepted
 			if (pRoom != null)
-				pSendBlobView.PackUint32(pRoom.__nRoomId);
+				pSendBlob.PackUint32(pRoom.__nRoomId);
 			else
-				pSendBlobView.PackUint32(0);
-			pSendBlobView.PackInt32(pSyncInner.__nSyncType);
-			pSendBlobView.PackBlob(pBlob);
+				pSendBlob.PackUint32(0);
+				pSendBlob.PackInt32(pSyncInner.__nSyncType);
+				pSendBlob.PackBlob(pBlob);
 
 			__pClientSocket.Send(pSendBlob);
 
@@ -185,7 +197,7 @@ namespace NumbatLogic
 			return __pClientSocket.Pending();
 		}
 
-		public virtual gsClientRoom** OnRoomJoin(Uint32 nRoomId, Int32 nRoomType, bool bPrimary, Blob pJoinBlob)
+		public virtual gsClientRoom** OnRoomJoin(Uint32 nRoomId, Int32 nRoomType, bool bPrimary, gsBlob pJoinBlob)
 		{
 			return new gsClientRoom(nRoomId, null, nRoomType, bPrimary, this);
 		}

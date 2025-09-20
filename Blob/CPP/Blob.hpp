@@ -128,18 +128,18 @@ namespace NumbatLogic
 
 
 
-	class BlobX
+	class gsBlob
 	{
 		public:
-			BlobX();
-			~BlobX();
+			gsBlob();
+			~gsBlob();
 
 			bool Load(const char* szFileName);
 			bool Save(const char* szFileName);
 	
-			bool IsEqual(BlobX* pOther);
+			bool IsEqual(gsBlob* pOther);
 			unsigned char GetChecksum();
-			BlobX* Clone();
+			gsBlob* Clone();
 			
 			int GetSize();
 			int GetOffset();
@@ -160,7 +160,7 @@ namespace NumbatLogic
 
 			void PackExternalString(const char* sxString);
 			void PackInternalString(InternalString* sString);
-			void PackBlob(BlobX* pBlob);
+			void PackBlob(gsBlob* pBlob);
 
 			// Unpack
 			bool UnpackBool(bool& val);
@@ -175,7 +175,12 @@ namespace NumbatLogic
 			bool UnpackDouble(double& val);
 
 			bool UnpackInternalString(InternalString* sString);
-			bool UnpackBlob(BlobX* pBlob);
+			bool UnpackBlob(gsBlob* pBlob);
+
+		// sekrit:
+			bool Resize(int nSize);
+			bool PackData(const unsigned char* pData, int nSize);
+			bool UnpackData(unsigned char* pData, int nSize);
 
 		protected:
 			static const int DEFAULT_SIZE = 64;
@@ -185,9 +190,5 @@ namespace NumbatLogic
 			int m_nSize;
 			int m_nOffset;
 			BlobView* m_pBlobView;
-
-			bool Resize(int nSize);
-			bool PackData(const unsigned char* pData, int nSize);
-			bool UnpackData(unsigned char* pData, int nSize);
 	};
 }

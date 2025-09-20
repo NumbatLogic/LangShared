@@ -16,32 +16,34 @@ namespace NumbatLogic
 			Assert::Plz(pServerClientSocket != null);
 
 			{
-				Blob* pSendBlob = own new Blob(true);
-				pSendBlob.GetBlobView().PackInt32(619);
+				gsBlob* pSendBlob = own new gsBlob();
+				pSendBlob.PackInt32(619);
 				pServerSocket.Send(pSendBlob, 0);
 			}
 
 			GameStrutTestUtil::Update(pServerSocket, pClientSocket);
 
 			{
-				Blob* pReceiveBlob = own pClientSocket.Receive();
+				gsBlob* pReceiveBlob = own pClientSocket.Receive();
 				Assert::Plz(pReceiveBlob != null);
-				int nRecievedInt = pReceiveBlob.GetBlobView().UnpackInt32();
+				int nRecievedInt;
+				Assert::Plz(pReceiveBlob.UnpackInt32(nRecievedInt));
 				Assert::Plz(nRecievedInt == 619);
 			}
 
 			{
-				Blob* pClientResponseBlob = own new Blob(true);
-				pClientResponseBlob.GetBlobView().PackInt32(420);
+				gsBlob* pClientResponseBlob = own new gsBlob();
+				pClientResponseBlob.PackInt32(420);
 				pClientSocket.Send(pClientResponseBlob);
 			}
 
 			GameStrutTestUtil::Update(pServerSocket, pClientSocket);
 
 			{
-				Blob* pServerReceiveBlob = own pServerClientSocket.Receive();
+				gsBlob* pServerReceiveBlob = own pServerClientSocket.Receive();
 				Assert::Plz(pServerReceiveBlob != null);
-				int nServerReceivedInt = pServerReceiveBlob.GetBlobView().UnpackInt32();
+				int nServerReceivedInt;
+				Assert::Plz(pServerReceiveBlob.UnpackInt32(nServerReceivedInt));
 				Assert::Plz(nServerReceivedInt == 420);
 			}
 

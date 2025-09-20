@@ -13,9 +13,9 @@ namespace NumbatLogic
 			return null;
 		}
 
-		private virtual Blob** OnClientJoin(gsServerClient pClient)
+		private virtual gsBlob** OnClientJoin(gsServerClient pClient)
 		{
-			return new Blob(true);
+			return new gsBlob();
 		}
 
 		private virtual void OnClientLeave(gsServerClient pClient)
@@ -23,7 +23,7 @@ namespace NumbatLogic
 
 		}
 
-		public virtual void OnSync(Uint32 nSyncId, Int32 nSyncType, Blob pInBlob, gsServerClient pServerClient)
+		public virtual void OnSync(Uint32 nSyncId, Int32 nSyncType, gsBlob pInBlob, gsServerClient pServerClient)
 		{
 			///return null;
 		}
@@ -51,14 +51,13 @@ namespace NumbatLogic
 
 			__pClientVector.PushBack(pClient);
 			pClient.__pRoomVector.PushBack(this);
-			Blob* pJoinBlob = own OnClientJoin(pClient);
+			gsBlob* pJoinBlob = own OnClientJoin(pClient);
 
-			Blob* pBlob = own new Blob(true);
-			BlobView pBlobView = pBlob.GetBlobView();
-			pBlobView.PackUint32(__nRoomId);
-			pBlobView.PackInt32(__nRoomType);
-			pBlobView.PackBool(__bPrimary);
-			pBlobView.PackBlob(pJoinBlob);
+			gsBlob* pBlob = own new gsBlob();
+			pBlob.PackUint32(__nRoomId);
+			pBlob.PackInt32(__nRoomType);
+			pBlob.PackBool(__bPrimary);
+			pBlob.PackBlob(pJoinBlob);
 
 			pClient.Send(null, "__RoomJoin", pBlob);
 		}

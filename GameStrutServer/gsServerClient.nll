@@ -2,19 +2,18 @@ namespace NumbatLogic
 {
 	class gsServerClient
 	{
-		public void Send(gsServerRoom pRoom, string sxMessageType, Blob pBlob)
+		public void Send(gsServerRoom pRoom, string sxMessageType, gsBlob pBlob)
 		{
-			Blob* pSendBlob = own new Blob(true);
-			BlobView pSendBlobView = pSendBlob.GetBlobView();
-
+			gsBlob* pSendBlob = own new gsBlob();
+		
 			Uint32 nSyncId = __nLastSyncId++;
 			Int32 nMessageTypeHash = ExternalString::GetChecksum(sxMessageType);
 
-			pSendBlobView.PackBool(false);
-			pSendBlobView.PackUint32(nSyncId);
-			pSendBlobView.PackUint32(pRoom == null ? 0 : pRoom.__nRoomId);
-			pSendBlobView.PackInt32(nMessageTypeHash);
-			pSendBlobView.PackBlob(pBlob);
+			pSendBlob.PackBool(false);
+			pSendBlob.PackUint32(nSyncId);
+			pSendBlob.PackUint32(pRoom == null ? 0 : pRoom.__nRoomId);
+			pSendBlob.PackInt32(nMessageTypeHash);
+			pSendBlob.PackBlob(pBlob);
 			
 			__pClientSocket.Send(pSendBlob);
 		}
@@ -42,14 +41,13 @@ namespace NumbatLogic
 
 
 
-		public void SyncRespond(Uint32 nSyncId, Blob pBlob)
+		public void SyncRespond(Uint32 nSyncId, gsBlob pBlob)
 		{
-			Blob* pRespondBlob = own new Blob(true);
-			BlobView pRespondBlobView = pRespondBlob.GetBlobView();
-
-			pRespondBlobView.PackBool(true);
-			pRespondBlobView.PackUint32(nSyncId);
-			pRespondBlobView.PackBlob(pBlob);
+			gsBlob* pRespondBlob = own new gsBlob();
+			
+			pRespondBlob.PackBool(true);
+			pRespondBlob.PackUint32(nSyncId);
+			pRespondBlob.PackBlob(pBlob);
 
 			__pClientSocket.Send(pRespondBlob);
 		}
@@ -106,18 +104,15 @@ namespace NumbatLogic
 				}
 				case gsClient::State::HANDSHAKE:
 				{
-					Blob* pReceiveBlob = own __pClientSocket.Receive();
+					gsBlob* pReceiveBlob = own __pClientSocket.Receive();
 					if (pReceiveBlob != null)
 					{
-						const int INITIAL_SIZE = 2 + 2 + 1;
-						if (pReceiveBlob.GetSize() > INITIAL_SIZE)
-						{
-							BlobView pRecieveBlobView = pReceiveBlob.GetBlobView();
+						Uint16 nMagic;
+						Uint16 nVersion;
+						Uint8 nAuthMode;
 
-							Uint16 nMagic = pRecieveBlobView.UnpackUint16();
-							Uint16 nVersion = pRecieveBlobView.UnpackUint16();
-							Uint8 nAuthMode = pRecieveBlobView.UnpackUint8();
-							
+						if (pReceiveBlob.UnpackUint16(nMagic) && pReceiveBlob.UnpackUint16(nVersion) && pReceiveBlob.UnpackUint8(nAuthMode))
+						{
 							if (nMagic == gsClient::MAGIC_WORD && nVersion == __pServer.__nVersion)
 							{
 								// success, move to room or auth or something
@@ -126,18 +121,17 @@ namespace NumbatLogic
 									InternalString* sName = own new InternalString("");
 									InternalString* sPassword = own new InternalString("");
 
-									if (pRecieveBlobView.UnpackInternalString(sName))
+									if (pReceiveBlob.UnpackInternalString(sName))
 									{
-										if (pRecieveBlobView.UnpackInternalString(sPassword))
+										if (pReceiveBlob.UnpackInternalString(sPassword))
 										{
 											// TODO: validate
 
-											Blob* pSendBlob = own new Blob(true);
-											BlobView pBlobView = pSendBlob.GetBlobView();
-											pBlobView.PackUint16(gsClient::MAGIC_WORD);
-											pBlobView.PackUint16(__pServer.__nVersion);
-											pBlobView.PackBool(true);
-											pBlobView.PackUint32(__nClientId);
+											gsBlob* pSendBlob = own new gsBlob();
+											pSendBlob.PackUint16(gsClient::MAGIC_WORD);
+											pSendBlob.PackUint16(__pServer.__nVersion);
+											pSendBlob.PackBool(true);
+											pSendBlob.PackUint32(__nClientId);
 											__pClientSocket.Send(pSendBlob);
 
 											__eState = gsClient::State::CONNECTED;
@@ -152,9 +146,8 @@ namespace NumbatLogic
 						
 						{
 							Console::Log("Bad handshake, disconnecting");
-							Blob* pResponseBlob = own new Blob(true);
-							BlobView pResponseBlobView = pResponseBlob.GetBlobView();
-							pResponseBlobView.PackUint8(gsError::Error::BAD_HANDSHAKE);
+							gsBlob* pResponseBlob = own new gsBlob();
+							pResponseBlob.PackUint8(gsError::Error::BAD_HANDSHAKE); // todo: need some actual protocol here...
 							__pClientSocket.Disconnect();
 							return;
 						}
@@ -167,22 +160,20 @@ namespace NumbatLogic
 				}
 				case gsClient::State::CONNECTED:
 				{
-					Blob* pReceiveBlob = own __pClientSocket.Receive();
+					gsBlob* pReceiveBlob = own __pClientSocket.Receive();
 					if (pReceiveBlob != null)
 					{
-						BlobView pReceiveBlobView = pReceiveBlob.GetBlobView();
-
 						Uint32 nSyncId;
 						Uint32 nLastSyncId;
 						Uint32 nRoomId;
 						Int32 nSyncType;
-						Blob* pSyncBlob = own new Blob(true);
+						gsBlob* pSyncBlob = own new gsBlob();
 						
-						if (pReceiveBlobView.SafeUnpackUint32(nSyncId)
-							&& pReceiveBlobView.SafeUnpackUint32(nLastSyncId)
-							&& pReceiveBlobView.SafeUnpackUint32(nRoomId)
-							&& pReceiveBlobView.SafeUnpackInt32(nSyncType)
-							&& pReceiveBlobView.UnpackBlob(pSyncBlob))
+						if (pReceiveBlob.UnpackUint32(nSyncId)
+							&& pReceiveBlob.UnpackUint32(nLastSyncId)
+							&& pReceiveBlob.UnpackUint32(nRoomId)
+							&& pReceiveBlob.UnpackInt32(nSyncType)
+							&& pReceiveBlob.UnpackBlob(pSyncBlob))
 						{
 							if (nRoomId > 0)
 							{
