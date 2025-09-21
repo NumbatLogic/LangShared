@@ -1,0 +1,35 @@
+namespace NumbatLogic
+{
+	class GameStrutTestUtil
+	{
+		public static void Update(gsServerSocket pServerSocket, gsClientSocket pClientSocket)
+		{
+			int nNotPendingCount = 0;
+			while (nNotPendingCount < 5)
+			{
+				pServerSocket.Update();
+				pClientSocket.Update();
+				if (pServerSocket.Pending() || pClientSocket.Pending())
+					nNotPendingCount = 0;
+				else
+					nNotPendingCount++;
+			}
+		}
+
+		public static void Update(gsServer pServer, gsClient pClient)
+		{
+			int nNotPendingCount = 0;
+			while (nNotPendingCount < 5)
+			{
+				pServer.Update();
+				pClient.Update();
+				if (pServer.Pending() || pClient.GetPending())
+					nNotPendingCount = 0;
+				else
+					nNotPendingCount++;
+			}
+		}
+
+	}
+}
+
