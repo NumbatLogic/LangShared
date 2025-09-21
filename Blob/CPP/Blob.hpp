@@ -181,6 +181,7 @@ namespace NumbatLogic
 			bool Resize(int nSize);
 			bool PackData(const unsigned char* pData, int nSize);
 			bool UnpackData(unsigned char* pData, int nSize);
+			unsigned char* GetData();
 
 		protected:
 			static const int DEFAULT_SIZE = 64;

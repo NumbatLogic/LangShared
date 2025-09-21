@@ -6,6 +6,7 @@ namespace NumbatLogic
 
 		public bool LoadFromExternalString(string sxIn);
 		public bool LoadFromPath(string sxPath);
+		public bool LoadFromBlob(gsBlob pBlob);
 		
 		public Json GetNext();
 		public Json GetChild();

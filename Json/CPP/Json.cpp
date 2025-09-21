@@ -65,6 +65,13 @@ namespace NumbatLogic
 			return bSuccess;
 	}
 
+	bool Json::LoadFromBlob(gsBlob* pBlob)
+	{
+		if (!pBlob)
+			return false;
+		return LoadFromExternalString((const char*)pBlob->GetData());
+	}
+
 	Json* Json::GetNext()
 	{
 		return m_pNext;

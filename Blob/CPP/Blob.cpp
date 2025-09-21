@@ -839,4 +839,9 @@ namespace NumbatLogic
 		m_nOffset += nSize;
 		return true;
 	}
+
+	unsigned char* gsBlob::GetData()
+	{
+		return m_pBuffer;
+	}
 }
