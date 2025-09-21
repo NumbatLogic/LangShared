@@ -4,6 +4,7 @@
 
 namespace NumbatLogic
 {
+	class gsBlob;
 	class Json
 	{
 		public:
@@ -13,6 +14,7 @@ namespace NumbatLogic
 
 			bool LoadFromExternalString(const char* szIn);
 			bool LoadFromPath(const char* sxPath);
+			bool LoadFromBlob(gsBlob* pBlob);
 		
 			Json* GetNext();
 			Json* GetChild();
