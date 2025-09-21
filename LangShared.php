@@ -11,13 +11,13 @@
 			if ($sAction == ACTION_ESP_IDF)
 			{
 				$sAllowedDirectoryArray = array_diff($sAllowedDirectoryArray, ["Http"]);
-
 			}
 			
 
 			$this->m_xFileArray = array_merge(
 				ProjectGen_ParseDirectory(dirname(__FILE__), "/\.hpp$|\.cpp$|\.h$|\.c$/",  $sAllowedDirectoryArray),
-				ProjectGen_ParseDirectory($sTranspiledDirectory, "/\.hpp|\.cpp/"));
+				ProjectGen_ParseDirectory(dirname(__FILE__) . "/Transpiled", "/\.hpp|\.cpp/")
+            );
 		}
 
 		public function GetName() { return "LangShared"; }
