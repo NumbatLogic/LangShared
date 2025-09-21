@@ -1,7 +1,7 @@
 <?php
 	class LangShared_Config extends Project_Config
 	{	
-		public function __construct($sAction, $sPackageList, $sTranspiledDirectory)
+		public function __construct($sAction, $sPackageList)
 		{
 			parent::__construct($sAction);
 
