@@ -14,6 +14,7 @@ namespace NumbatLogic
 			static double Pow(double fbase, double fExponent);
 			static double Atan2(double fX, double fY);
 
+			static float FloorF(float fX);
 			static float SinF(float fAngle);
 			static float CosF(float fAngle);
 			static float SqrtF(float fX);

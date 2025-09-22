@@ -34,6 +34,11 @@ namespace NumbatLogic
 		return atan2(fX, fY);
 	}
 
+	float Math::FloorF(float fX)
+	{
+		return floorf(fX);
+	}
+
 	float Math::SinF(float fAngle)
 	{
 		return sinf(fAngle);

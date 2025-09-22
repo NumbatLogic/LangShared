@@ -9,6 +9,7 @@ namespace NumbatLogic
 		public static double Pow(double fbase, double fExponent);
 		public static double Atan2(double fX, double fY);
 
+		public static float FloorF(float fX);
 		public static float SinF(float fAngle);
 		public static float CosF(float fAngle);
 		public static float SqrtF(float fAngle);
