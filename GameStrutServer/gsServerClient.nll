@@ -20,7 +20,7 @@ namespace NumbatLogic
 
 
 		// The new client has completed authentication, now what?
-		// Perhaps do any additional fetching, and sned them to their room!
+		// Perhaps do any additional fetching, and send them to their room!
 		public virtual void OnInitialJoin()
 		{
 		}
