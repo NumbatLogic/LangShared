@@ -28,7 +28,7 @@
 		sort($g_sTestArray);
 	}
 
-	function Test_Output()
+	function Test_Output($bNamespace = false)
 	{	
 		global $g_sTestArray;
 
@@ -36,7 +36,10 @@
 		{
 			$sTest = $g_sTestArray[$i];
 			Output("\tConsole::Log(\"$sTest\");\n");
-			Output("\t$sTest::Run();\n");
+			if ($bNamespace)
+				Output("\t$sTest::Test::Run();\n");
+			else
+				Output("\t$sTest::Run();\n");
 		}
 		Output("\n");
 	}
