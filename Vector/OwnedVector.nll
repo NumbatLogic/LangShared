@@ -36,6 +36,14 @@ namespace NumbatLogic
 			return m_pVector.Get(nIndex);
 		}
 
+		public void Set(int nIndex, T** pObject)
+		{
+			T pTemp = m_pVector.Get(nIndex);
+			if (pTemp != null)
+				delete pTemp; // hax not actually owned...
+			m_pVector.Set(nIndex, own pObject);
+		}
+
 		public void Clear()
 		{
 			while (m_pVector.GetSize() > 0)
