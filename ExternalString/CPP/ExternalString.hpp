@@ -6,7 +6,17 @@ namespace NumbatLogic
 	{
 		public:
 			static bool Equal(const char* szA, const char* szB);
-			static int GetChecksum(const char* szString);
+		
+			// a bad checksum
+			static constexpr unsigned int GetChecksum(const char* szString)
+			{
+				unsigned int nResult = 0xABC123;
+				const char* p = szString;
+				while (*p)
+					nResult = (nResult ^ *(p++)) << 1;
+				return nResult;
+			}
+
 			static long hextol(const char* szString);
 
 			static int atoi(const char* szString);
