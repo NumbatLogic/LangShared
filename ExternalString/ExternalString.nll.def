@@ -3,7 +3,7 @@ namespace NumbatLogic
 	class ExternalString
 	{
 		public static bool Equal(string szA, string szB);
-		public static int GetChecksum(string szString);
+		public static Uint32 GetChecksum(string szString);
 		public static Uint64 hextol(string szString);
 		public static int atoi(string szString);
 		public static Uint64 atol(string szString);
