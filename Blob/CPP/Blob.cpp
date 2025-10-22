@@ -311,8 +311,9 @@ namespace NumbatLogic
 
 	void BlobView::PackInternalString(InternalString* sString)
 	{
-		PackInt32(sString->GetByteLength());
-		PackData((unsigned char*)sString->GetExternalString(), sString->GetLength());
+		int nByteLength = sString->GetByteLength();
+		PackInt32(nByteLength);
+		PackData((unsigned char*)sString->GetExternalString(), nByteLength);
 	}
 
 	void BlobView::PackBlob(Blob* pBlob)
@@ -393,7 +394,7 @@ namespace NumbatLogic
 			return true;
 		}
 
-		if (nByteLength > 0 && nByteLength < 1024)
+		if (nByteLength > 0 && nByteLength < 1024*5)
 		{
 			unsigned char* pBuffer = (unsigned char*)malloc(nByteLength+1);
 			UnpackData(pBuffer, nByteLength);
@@ -768,7 +769,7 @@ namespace NumbatLogic
 			return true;
 		}
 
-		if (nByteLength > 0 && nByteLength < 1024)
+		if (nByteLength > 0 && nByteLength < 1024*5)
 		{
 			unsigned char* pBuffer = (unsigned char*)malloc(nByteLength+1);
 			if (!UnpackData(pBuffer, nByteLength))
