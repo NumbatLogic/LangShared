@@ -13,7 +13,7 @@ namespace NumbatLogic
 				unsigned int nResult = 0xABC123;
 				const char* p = szString;
 				while (*p)
-					nResult = (nResult ^ *(p++)) << 1;
+					nResult = (nResult ^ *(p++)) << 2;
 				return nResult;
 			}
 
