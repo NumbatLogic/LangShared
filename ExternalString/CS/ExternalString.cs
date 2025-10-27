@@ -13,7 +13,7 @@ namespace NumbatLogic
 			for (int i = 0; i < szString.Length; i++)
 			{
 				char c = szString[i];
-				nResult = (nResult ^ c) << 1;
+				nResult = (nResult ^ c) << 2;
 			}
 			return nResult;
 		}
