@@ -44,5 +44,7 @@ namespace NumbatLogic
 
 			InternalString* m_sUsername;
 			InternalString* m_sPassword;
+
+			InternalString* m_sTemp;
 	};
 } 

@@ -49,6 +49,7 @@ namespace NumbatLogic
 		}
 		m_pClientSocketVector->Clear();
 		Assert::Plz(m_pClientSocketVector->GetSize() == 0);
+		delete m_pClientSocketVector;
 	}
 
 	void gsServerSocket::Start(int port)

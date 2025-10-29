@@ -565,6 +565,7 @@ namespace NumbatLogic
 
 	gsBlob::~gsBlob()
 	{
+		free(m_pBuffer);
 	}
 
 	bool gsBlob::Load(const char* szFileName)
@@ -779,6 +780,7 @@ namespace NumbatLogic
 			}
 			pBuffer[nByteLength] = 0;
 			sString->Set((char*)pBuffer);
+			free(pBuffer);
 			return true;
 		}
 
