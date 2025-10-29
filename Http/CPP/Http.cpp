@@ -1,6 +1,7 @@
 #include "Http.hpp"
 
 #include "../../InternalString/CPP/InternalString.hpp"
+#include "../../Assert/CPP/Assert.hpp"
 
 #include <curl/curl.h>
 #include <cstring>
@@ -84,6 +85,7 @@ namespace NumbatLogic
 		m_sBody = "";
 		m_sUsername = 0;
 		m_sPassword = 0;
+		m_sTemp = 0;
 	}
 
 	HttpPost::~HttpPost()
@@ -92,6 +94,8 @@ namespace NumbatLogic
 			delete m_sUsername;
 		if (m_sPassword)
 			delete m_sPassword;
+		if (m_sTemp)
+			delete m_sTemp;
 	}
 
 	void HttpPost::AddHeader(const char* sName, const char* sValue)
@@ -187,9 +191,8 @@ namespace NumbatLogic
 			return nullptr;
 		}
 
-		// Return a copy of the response (caller is responsible for freeing)
-		char* result = new char[response.length() + 1];
-		strcpy(result, response.c_str());
-		return result;
+		Assert::Plz(!m_sTemp);
+		m_sTemp = new InternalString(response.c_str());
+		return m_sTemp->GetExternalString();
 	}
 } 

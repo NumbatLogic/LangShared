@@ -14,6 +14,7 @@ namespace NumbatLogic
 		m_pJson = NULL;
 		m_pNext = NULL;
 		m_pPrevious = NULL;
+		m_pChild = NULL;
 	}
 
 	Json::Json(cJSON* pJson, Json* pPrevious)
@@ -24,6 +25,7 @@ namespace NumbatLogic
 		m_pJson = pJson;
 		m_pPrevious = pPrevious;
 		m_pNext = NULL;
+		m_pChild = NULL;
 
 		RecursiveCreate();
 	}
@@ -37,11 +39,14 @@ namespace NumbatLogic
 	{
 		Cleanup();
 
-		m_pOwnedJson = cJSON_Parse(szIn);
-		m_pJson = m_pOwnedJson;
+		if (szIn != 0)
+		{
+			m_pOwnedJson = cJSON_Parse(szIn);
+			m_pJson = m_pOwnedJson;
 
-		if (RecursiveCreate())
-			return true;
+			if (RecursiveCreate())
+				return true;
+		}
 
 		return false;
 	}
@@ -53,7 +58,8 @@ namespace NumbatLogic
 		
 		if (!pBlob->Load(sxPath))
 			goto Cleanup;
-		
+		pBlob->GetBlobView()->SetOffset(pBlob->GetSize());
+		pBlob->GetBlobView()->PackUint8('\0');
 		if (!LoadFromExternalString((const char*)pBlob->GetData()))
 			goto Cleanup;
 
@@ -127,7 +133,13 @@ namespace NumbatLogic
 			cJSON_Delete(m_pOwnedJson);
 		m_pOwnedJson = NULL;
 		m_pJson = NULL;
+		if (m_pNext)
+			delete m_pNext;
 		m_pNext = NULL;
 		m_pPrevious = NULL;
+
+		if (m_pChild)
+			delete m_pChild;
+		m_pChild = NULL;
 	}
 }
