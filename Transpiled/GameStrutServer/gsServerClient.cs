@@ -73,7 +73,7 @@ namespace NumbatLogic
 						ushort nMagic;
 						ushort nVersion;
 						byte nAuthMode;
-						if (pReceiveBlob.UnpackUint16(nMagic) && pReceiveBlob.UnpackUint16(nVersion) && pReceiveBlob.UnpackUint8(nAuthMode))
+						if (pReceiveBlob.UnpackUint16(ref nMagic) && pReceiveBlob.UnpackUint16(ref nVersion) && pReceiveBlob.UnpackUint8(ref nAuthMode))
 						{
 							if (nMagic == gsClient.MAGIC_WORD && nVersion == __pServer.__nVersion)
 							{
@@ -123,7 +123,7 @@ namespace NumbatLogic
 						uint nRoomId;
 						int nSyncType;
 						gsBlob pSyncBlob = new gsBlob();
-						if (pReceiveBlob.UnpackUint32(nSyncId) && pReceiveBlob.UnpackUint32(nLastSyncId) && pReceiveBlob.UnpackUint32(nRoomId) && pReceiveBlob.UnpackInt32(nSyncType) && pReceiveBlob.UnpackBlob(pSyncBlob))
+						if (pReceiveBlob.UnpackUint32(ref nSyncId) && pReceiveBlob.UnpackUint32(ref nLastSyncId) && pReceiveBlob.UnpackUint32(ref nRoomId) && pReceiveBlob.UnpackInt32(ref nSyncType) && pReceiveBlob.UnpackBlob(pSyncBlob))
 						{
 							if (nRoomId > 0)
 							{
