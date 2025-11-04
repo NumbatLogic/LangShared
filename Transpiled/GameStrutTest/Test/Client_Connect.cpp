@@ -1,6 +1,6 @@
 #include "Client_Connect.hpp"
-#include "../../GameStrutServer/gsServerRoom.hpp"
 #include "../../GameStrutServer/gsServer.hpp"
+#include "../../GameStrutServer/gsServerRoom.hpp"
 #include "../../Vector/OwnedVector.hpp"
 #include "../../../Assert/CPP/Assert.hpp"
 #include "../GameStrutTestUtil.hpp"
@@ -12,17 +12,17 @@
 namespace NumbatLogic
 {
 	class Client_Connect_Server;
+	class gsServer;
 	class Client_Connect_ServerClient;
+	class gsServerClient;
 	class gsServerRoom;
 	template <class T>
 	class OwnedVector;
 	class Client_Connect_Client;
-	class Client_Connect;
-	class gsServer;
 	class gsClient;
+	class Client_Connect;
 	class Assert;
 	class GameStrutTestUtil;
-	class gsServerClient;
 	template <class T>
 	class Vector;
 	class gsClientRoom;

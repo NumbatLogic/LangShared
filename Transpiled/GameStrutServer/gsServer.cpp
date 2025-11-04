@@ -1,8 +1,8 @@
 #include "gsServer.hpp"
 #include "../../InternalString/CPP/InternalString.hpp"
 #include "../../GameStrutClient/CPP/gsServerSocket.hpp"
-#include "../Vector/OwnedVector.hpp"
 #include "gsServerRoom.hpp"
+#include "../Vector/OwnedVector.hpp"
 #include "gsServerClient.hpp"
 #include "../../Assert/CPP/Assert.hpp"
 #include "../../GameStrutClient/CPP/gsClientSocket.hpp"
@@ -15,9 +15,9 @@ namespace NumbatLogic
 	class gsServer;
 	class InternalString;
 	class gsServerSocket;
+	class gsServerRoom;
 	template <class T>
 	class OwnedVector;
-	class gsServerRoom;
 	class gsServerClient;
 	class gsClientSocket;
 	class Assert;

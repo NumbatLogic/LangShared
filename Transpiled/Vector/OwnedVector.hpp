@@ -47,6 +47,17 @@ namespace NumbatLogic
 			return m_pVector->Get(nIndex);
 		}
 
+		public: void Set(int nIndex, T pObject)
+		{
+			T pTemp = m_pVector->Get(nIndex);
+			if (pTemp != 0)
+				{
+					delete pTemp;
+					pTemp = 0;
+				}
+			m_pVector->Set(nIndex, pObject);
+		}
+
 		public: void Clear()
 		{
 			while (m_pVector->GetSize() > 0)
@@ -78,6 +89,11 @@ namespace NumbatLogic
 				delete m_pVector->Get(nIndex);
 			}
 			m_pVector->Erase(nIndex);
+		}
+
+		public: void Swap(int nIndexA, int nIndexB)
+		{
+			m_pVector->Swap(nIndexA, nIndexB);
 		}
 
 		public: T PopBack()

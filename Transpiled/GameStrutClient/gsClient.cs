@@ -18,7 +18,7 @@ namespace NumbatLogic
 			__nVersion = nVersion;
 			__eState = CONNECT;
 			__pSyncInnerVector = new OwnedVector<gsSyncInner>();
-			__ROOM_JOIN_HASH = ExternalString.GetChecksum("__RoomJoin");
+			__ROOM_JOIN_HASH = 302730024;
 		}
 
 		~gsClient()
@@ -96,8 +96,7 @@ namespace NumbatLogic
 							gsBlob pSyncBlob = new gsBlob();
 							if (!pReceiveBlob.UnpackBlob(pSyncBlob))
 								Assert.Plz(false);
-							if (pSyncInner.__pSync != null)
-								pSyncInner.OnComplete(pSyncBlob);
+							pSyncInner.OnComplete(pSyncBlob);
 						}
 						else
 						{
@@ -112,7 +111,6 @@ namespace NumbatLogic
 							{
 								if (nMessageType == __ROOM_JOIN_HASH)
 								{
-									uint nRoomId;
 									int nRoomType;
 									bool bPrimary;
 									if (!pMessageBlob.UnpackUint32(nRoomId) || !pMessageBlob.UnpackInt32(nRoomType) || !pMessageBlob.UnpackBool(bPrimary))
@@ -134,6 +132,17 @@ namespace NumbatLogic
 							}
 						}
 					}
+					int i = 0;
+					while (i < __pSyncInnerVector.GetSize())
+					{
+						gsSyncInner pSyncInner = __pSyncInnerVector.Get(i);
+						if (pSyncInner.__bComplete && pSyncInner.__pSync == null)
+						{
+							__pSyncInnerVector.Erase(i);
+							continue;
+						}
+						i++;
+					}
 					break;
 				}
 
@@ -153,10 +162,7 @@ namespace NumbatLogic
 		public delegate void CompleteCallback();
 		public void SyncSend(gsSync pSync, string sxSyncType, gsBlob pBlob, bool mayChangeRoom, gsClientRoom pRoom)
 		{
-			gsSync pOwnedSync = pSync;
-			NumbatLogic.gsSync __705409795 = pOwnedSync;
-			pOwnedSync = null;
-			gsSyncInner pSyncInner = new gsSyncInner(__705409795, ++__nLastSyncId, sxSyncType, pRoom, this);
+			gsSyncInner pSyncInner = new gsSyncInner(pSync, ++__nLastSyncId, sxSyncType, pRoom, this);
 			gsBlob pSendBlob = new gsBlob();
 			pSendBlob.PackUint32(pSyncInner.__nSyncId);
 			pSendBlob.PackUint32(0);
@@ -168,9 +174,9 @@ namespace NumbatLogic
 			pSendBlob.PackBlob(pBlob);
 			__pClientSocket.Send(pSendBlob);
 			pSyncInner.__pSync.__pSyncInner = pSyncInner;
-			NumbatLogic.gsSyncInner __3933501000 = pSyncInner;
+			NumbatLogic.gsSyncInner __2420450420 = pSyncInner;
 			pSyncInner = null;
-			__pSyncInnerVector.PushBack(__3933501000);
+			__pSyncInnerVector.PushBack(__2420450420);
 		}
 
 		public bool GetPending()

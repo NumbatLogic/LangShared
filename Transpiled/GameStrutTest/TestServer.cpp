@@ -3,6 +3,7 @@
 namespace NumbatLogic
 {
 	class TestServer;
+	class gsServer;
 }
 namespace NumbatLogic
 {
