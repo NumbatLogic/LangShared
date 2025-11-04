@@ -18,7 +18,7 @@ namespace NumbatLogic
 			__nVersion = nVersion;
 			__eState = CONNECT;
 			__pSyncInnerVector = new OwnedVector<gsSyncInner>();
-			__ROOM_JOIN_HASH = 302730024;
+			__ROOM_JOIN_HASH = ExternalString.GetChecksum("__RoomJoin");
 		}
 
 		~gsClient()
@@ -60,11 +60,11 @@ namespace NumbatLogic
 							ushort nMagic;
 							ushort nVersion;
 							bool bSuccess;
-							if (pReceiveBlob.UnpackUint16(nMagic) && pReceiveBlob.UnpackUint16(nVersion) && pReceiveBlob.UnpackBool(bSuccess))
+							if (pReceiveBlob.UnpackUint16(ref nMagic) && pReceiveBlob.UnpackUint16(ref nVersion) && pReceiveBlob.UnpackBool(ref bSuccess))
 							{
 								if (nMagic == gsClient.MAGIC_WORD && bSuccess)
 								{
-									if (!pReceiveBlob.UnpackUint32(__nClientId))
+									if (!pReceiveBlob.UnpackUint32(ref __nClientId))
 										Assert.Plz(false);
 									__eState = State.CONNECTED;
 									break;
@@ -84,7 +84,7 @@ namespace NumbatLogic
 					{
 						bool bSyncResponse;
 						uint nSyncId;
-						if (!pReceiveBlob.UnpackBool(bSyncResponse) || !pReceiveBlob.UnpackUint32(nSyncId))
+						if (!pReceiveBlob.UnpackBool(ref bSyncResponse) || !pReceiveBlob.UnpackUint32(ref nSyncId))
 						{
 							Console.Log("bad blob?");
 							Assert.Plz(false);
@@ -102,7 +102,7 @@ namespace NumbatLogic
 						{
 							uint nRoomId;
 							int nMessageType;
-							if (!pReceiveBlob.UnpackUint32(nRoomId) || !pReceiveBlob.UnpackInt32(nMessageType))
+							if (!pReceiveBlob.UnpackUint32(ref nRoomId) || !pReceiveBlob.UnpackInt32(ref nMessageType))
 								Assert.Plz(false);
 							gsBlob pMessageBlob = new gsBlob();
 							if (!pReceiveBlob.UnpackBlob(pMessageBlob))
@@ -113,7 +113,7 @@ namespace NumbatLogic
 								{
 									int nRoomType;
 									bool bPrimary;
-									if (!pMessageBlob.UnpackUint32(nRoomId) || !pMessageBlob.UnpackInt32(nRoomType) || !pMessageBlob.UnpackBool(bPrimary))
+									if (!pMessageBlob.UnpackUint32(ref nRoomId) || !pMessageBlob.UnpackInt32(ref nRoomType) || !pMessageBlob.UnpackBool(ref bPrimary))
 										Assert.Plz(false);
 									gsBlob pJoinBlob = new gsBlob();
 									if (!pMessageBlob.UnpackBlob(pJoinBlob))

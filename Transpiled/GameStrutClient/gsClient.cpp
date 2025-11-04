@@ -3,6 +3,7 @@
 #include "../Vector/OwnedVector.hpp"
 #include "../../GameStrutClient/CPP/gsClientSocket.hpp"
 #include "gsSync.hpp"
+#include "../../ExternalString/CPP/ExternalString.hpp"
 #include "../../Blob/CPP/Blob.hpp"
 #include "../../InternalString/CPP/InternalString.hpp"
 #include "../../Assert/CPP/Assert.hpp"
@@ -16,6 +17,7 @@ namespace NumbatLogic
 	class OwnedVector;
 	class gsClientSocket;
 	class gsSyncInner;
+	class ExternalString;
 	class gsBlob;
 	class InternalString;
 	class Assert;
@@ -40,7 +42,7 @@ namespace NumbatLogic
 		__nVersion = nVersion;
 		__eState = CONNECT;
 		__pSyncInnerVector = new OwnedVector<gsSyncInner*>();
-		__ROOM_JOIN_HASH = 302730024;
+		__ROOM_JOIN_HASH = ExternalString::GetChecksum("__RoomJoin");
 	}
 
 	gsClient::~gsClient()

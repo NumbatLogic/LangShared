@@ -21,7 +21,7 @@ namespace NumbatLogic
 				gsBlob pReceiveBlob = pClientSocket.Receive();
 				Assert.Plz(pReceiveBlob != null);
 				int nRecievedInt;
-				Assert.Plz(pReceiveBlob.UnpackInt32(nRecievedInt));
+				Assert.Plz(pReceiveBlob.UnpackInt32(ref nRecievedInt));
 				Assert.Plz(nRecievedInt == 619);
 			}
 			{
@@ -34,7 +34,7 @@ namespace NumbatLogic
 				gsBlob pServerReceiveBlob = pServerClientSocket.Receive();
 				Assert.Plz(pServerReceiveBlob != null);
 				int nServerReceivedInt;
-				Assert.Plz(pServerReceiveBlob.UnpackInt32(nServerReceivedInt));
+				Assert.Plz(pServerReceiveBlob.UnpackInt32(ref nServerReceivedInt));
 				Assert.Plz(nServerReceivedInt == 420);
 			}
 			pClientSocket.Disconnect();
