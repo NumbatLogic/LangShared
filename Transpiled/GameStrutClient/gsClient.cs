@@ -57,9 +57,9 @@ namespace NumbatLogic
 						const int INITIAL_SIZE = 2 + 2 + 1 + 4;
 						if (pReceiveBlob.GetSize() == INITIAL_SIZE)
 						{
-							ushort nMagic;
-							ushort nVersion;
-							bool bSuccess;
+							ushort nMagic = 0;
+							ushort nVersion = 0;
+							bool bSuccess = false;
 							if (pReceiveBlob.UnpackUint16(ref nMagic) && pReceiveBlob.UnpackUint16(ref nVersion) && pReceiveBlob.UnpackBool(ref bSuccess))
 							{
 								if (nMagic == gsClient.MAGIC_WORD && bSuccess)
@@ -82,8 +82,8 @@ namespace NumbatLogic
 					gsBlob pReceiveBlob = __pClientSocket.Receive();
 					if (pReceiveBlob != null)
 					{
-						bool bSyncResponse;
-						uint nSyncId;
+						bool bSyncResponse = false;
+						uint nSyncId = 0;
 						if (!pReceiveBlob.UnpackBool(ref bSyncResponse) || !pReceiveBlob.UnpackUint32(ref nSyncId))
 						{
 							Console.Log("bad blob?");
@@ -100,8 +100,8 @@ namespace NumbatLogic
 						}
 						else
 						{
-							uint nRoomId;
-							int nMessageType;
+							uint nRoomId = 0;
+							int nMessageType = 0;
 							if (!pReceiveBlob.UnpackUint32(ref nRoomId) || !pReceiveBlob.UnpackInt32(ref nMessageType))
 								Assert.Plz(false);
 							gsBlob pMessageBlob = new gsBlob();
@@ -111,8 +111,8 @@ namespace NumbatLogic
 							{
 								if (nMessageType == __ROOM_JOIN_HASH)
 								{
-									int nRoomType;
-									bool bPrimary;
+									int nRoomType = 0;
+									bool bPrimary = false;
 									if (!pMessageBlob.UnpackUint32(ref nRoomId) || !pMessageBlob.UnpackInt32(ref nRoomType) || !pMessageBlob.UnpackBool(ref bPrimary))
 										Assert.Plz(false);
 									gsBlob pJoinBlob = new gsBlob();

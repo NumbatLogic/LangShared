@@ -99,9 +99,9 @@ namespace NumbatLogic
 				gsBlob* pReceiveBlob = __pClientSocket->Receive();
 				if (pReceiveBlob != 0)
 				{
-					unsigned short nMagic;
-					unsigned short nVersion;
-					unsigned char nAuthMode;
+					unsigned short nMagic = 0;
+					unsigned short nVersion = 0;
+					unsigned char nAuthMode = 0;
 					if (pReceiveBlob->UnpackUint16(nMagic) && pReceiveBlob->UnpackUint16(nVersion) && pReceiveBlob->UnpackUint8(nAuthMode))
 					{
 						if (nMagic == gsClient::MAGIC_WORD && nVersion == __pServer->__nVersion)
@@ -156,10 +156,10 @@ namespace NumbatLogic
 				gsBlob* pReceiveBlob = __pClientSocket->Receive();
 				if (pReceiveBlob != 0)
 				{
-					unsigned int nSyncId;
-					unsigned int nLastSyncId;
-					unsigned int nRoomId;
-					int nSyncType;
+					unsigned int nSyncId = 0;
+					unsigned int nLastSyncId = 0;
+					unsigned int nRoomId = 0;
+					int nSyncType = 0;
 					gsBlob* pSyncBlob = new gsBlob();
 					if (pReceiveBlob->UnpackUint32(nSyncId) && pReceiveBlob->UnpackUint32(nLastSyncId) && pReceiveBlob->UnpackUint32(nRoomId) && pReceiveBlob->UnpackInt32(nSyncType) && pReceiveBlob->UnpackBlob(pSyncBlob))
 					{
