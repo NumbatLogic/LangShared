@@ -19,6 +19,7 @@ namespace NumbatLogic
 			static float CosF(float fAngle);
 			static float SqrtF(float fX);
 			static float PowF(float fbase, float fExponent);
+			static float Atan2F(float fX, float fY);
 	};
 }
 

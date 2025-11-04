@@ -58,4 +58,9 @@ namespace NumbatLogic
 	{
 		return powf(fbase, fExponent);
 	}
+
+	float Math::Atan2F(float fX, float fY)
+	{
+		return atan2f(fX, fY);
+	}
 }

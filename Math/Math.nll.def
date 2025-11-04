@@ -14,5 +14,6 @@ namespace NumbatLogic
 		public static float CosF(float fAngle);
 		public static float SqrtF(float fAngle);
 		public static float PowF(float fbase, float fExponent);
+		public static float Atan2F(float fX, float fY);
 	}
 }
