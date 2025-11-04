@@ -7,9 +7,9 @@ namespace NumbatLogic
 			return string.Equals(szA, szB);
 		}
 
-		public static int GetChecksum(string szString)
+		public static uint GetChecksum(string szString)
 		{
-			int nResult = 0xABC123;
+			uint nResult = 0xABC123;
 			for (int i = 0; i < szString.Length; i++)
 			{
 				char c = szString[i];
