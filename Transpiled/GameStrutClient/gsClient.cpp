@@ -87,9 +87,9 @@ namespace NumbatLogic
 					const int INITIAL_SIZE = 2 + 2 + 1 + 4;
 					if (pReceiveBlob->GetSize() == INITIAL_SIZE)
 					{
-						unsigned short nMagic;
-						unsigned short nVersion;
-						bool bSuccess;
+						unsigned short nMagic = 0;
+						unsigned short nVersion = 0;
+						bool bSuccess = false;
 						if (pReceiveBlob->UnpackUint16(nMagic) && pReceiveBlob->UnpackUint16(nVersion) && pReceiveBlob->UnpackBool(bSuccess))
 						{
 							if (nMagic == gsClient::MAGIC_WORD && bSuccess)
@@ -114,8 +114,8 @@ namespace NumbatLogic
 				gsBlob* pReceiveBlob = __pClientSocket->Receive();
 				if (pReceiveBlob != 0)
 				{
-					bool bSyncResponse;
-					unsigned int nSyncId;
+					bool bSyncResponse = false;
+					unsigned int nSyncId = 0;
 					if (!pReceiveBlob->UnpackBool(bSyncResponse) || !pReceiveBlob->UnpackUint32(nSyncId))
 					{
 						Console::Log("bad blob?");
@@ -133,8 +133,8 @@ namespace NumbatLogic
 					}
 					else
 					{
-						unsigned int nRoomId;
-						int nMessageType;
+						unsigned int nRoomId = 0;
+						int nMessageType = 0;
 						if (!pReceiveBlob->UnpackUint32(nRoomId) || !pReceiveBlob->UnpackInt32(nMessageType))
 							Assert::Plz(false);
 						gsBlob* pMessageBlob = new gsBlob();
@@ -144,8 +144,8 @@ namespace NumbatLogic
 						{
 							if (nMessageType == __ROOM_JOIN_HASH)
 							{
-								int nRoomType;
-								bool bPrimary;
+								int nRoomType = 0;
+								bool bPrimary = false;
 								if (!pMessageBlob->UnpackUint32(nRoomId) || !pMessageBlob->UnpackInt32(nRoomType) || !pMessageBlob->UnpackBool(bPrimary))
 									Assert::Plz(false);
 								gsBlob* pJoinBlob = new gsBlob();

@@ -35,7 +35,7 @@ namespace NumbatLogic
 		{
 			gsBlob* pReceiveBlob = pClientSocket->Receive();
 			Assert::Plz(pReceiveBlob != 0);
-			int nRecievedInt;
+			int nRecievedInt = 0;
 			Assert::Plz(pReceiveBlob->UnpackInt32(nRecievedInt));
 			Assert::Plz(nRecievedInt == 619);
 			if (pReceiveBlob) delete pReceiveBlob;
@@ -50,7 +50,7 @@ namespace NumbatLogic
 		{
 			gsBlob* pServerReceiveBlob = pServerClientSocket->Receive();
 			Assert::Plz(pServerReceiveBlob != 0);
-			int nServerReceivedInt;
+			int nServerReceivedInt = 0;
 			Assert::Plz(pServerReceiveBlob->UnpackInt32(nServerReceivedInt));
 			Assert::Plz(nServerReceivedInt == 420);
 			if (pServerReceiveBlob) delete pServerReceiveBlob;

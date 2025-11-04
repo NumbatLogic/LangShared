@@ -70,9 +70,9 @@ namespace NumbatLogic
 					gsBlob pReceiveBlob = __pClientSocket.Receive();
 					if (pReceiveBlob != null)
 					{
-						ushort nMagic;
-						ushort nVersion;
-						byte nAuthMode;
+						ushort nMagic = 0;
+						ushort nVersion = 0;
+						byte nAuthMode = 0;
 						if (pReceiveBlob.UnpackUint16(ref nMagic) && pReceiveBlob.UnpackUint16(ref nVersion) && pReceiveBlob.UnpackUint8(ref nAuthMode))
 						{
 							if (nMagic == gsClient.MAGIC_WORD && nVersion == __pServer.__nVersion)
@@ -118,10 +118,10 @@ namespace NumbatLogic
 					gsBlob pReceiveBlob = __pClientSocket.Receive();
 					if (pReceiveBlob != null)
 					{
-						uint nSyncId;
-						uint nLastSyncId;
-						uint nRoomId;
-						int nSyncType;
+						uint nSyncId = 0;
+						uint nLastSyncId = 0;
+						uint nRoomId = 0;
+						int nSyncType = 0;
 						gsBlob pSyncBlob = new gsBlob();
 						if (pReceiveBlob.UnpackUint32(ref nSyncId) && pReceiveBlob.UnpackUint32(ref nLastSyncId) && pReceiveBlob.UnpackUint32(ref nRoomId) && pReceiveBlob.UnpackInt32(ref nSyncType) && pReceiveBlob.UnpackBlob(pSyncBlob))
 						{
