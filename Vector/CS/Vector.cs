@@ -50,6 +50,13 @@ namespace NumbatLogic
 			m_pList.RemoveAt(nIndex);
 		}
 
+		public void Swap(int nIndexA, int nIndexB)
+		{
+			T xTemp = m_pList[nIndexA];
+			m_pList[nIndexA] = m_pList[nIndexB];
+			m_pList[nIndexB] = xTemp;
+		}
+
 		public T PopBack()
 		{
 			int nIndex = m_pList.Count - 1;

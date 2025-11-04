@@ -10,6 +10,7 @@ namespace NumbatLogic
 		public void Set(int nIndex, T xObject);
 		public void Insert(int nIndex, T xObject);
 		public void Erase(int nIndex);
+		public void Swap(int nIndexA, int nIndexB);
 		public T PopBack();
 		public T PopFront();
 	}
