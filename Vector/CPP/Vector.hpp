@@ -76,6 +76,13 @@ namespace NumbatLogic
 				m_pVector->erase(m_pVector->begin() + nIndex);
 			}
 
+			void Swap(int nIndexA, int nIndexB)
+			{
+				T xTemp = (*m_pVector)[nIndexA];
+				(*m_pVector)[nIndexA] = (*m_pVector)[nIndexB];
+				(*m_pVector)[nIndexB] = xTemp;
+			}
+
 		protected:
 			std::vector<T>* m_pVector;		
 	};

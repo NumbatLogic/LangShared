@@ -73,6 +73,11 @@ namespace NumbatLogic
 			m_pVector.Erase(nIndex);
 		}
 
+		public void Swap(int nIndexA, int nIndexB)
+		{
+			m_pVector.Swap(nIndexA, nIndexB);
+		}
+
 		public T** PopBack()
 		{
 			return m_pVector.PopBack(); //disown
