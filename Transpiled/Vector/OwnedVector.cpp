@@ -10,5 +10,5 @@ namespace NumbatLogic
 }
 namespace NumbatLogic
 {
-										}
+}
 

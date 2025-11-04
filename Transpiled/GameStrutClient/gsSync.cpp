@@ -50,17 +50,18 @@ namespace NumbatLogic
 		__nSyncType = ExternalString::GetChecksum(sxSyncType);
 	}
 
+	gsSyncInner::~gsSyncInner()
+	{
+		if (__pSync != 0)
+			__pSync->__pSyncInner = 0;
+		if (__sSyncType) delete __sSyncType;
+	}
+
 	void gsSyncInner::OnComplete(gsBlob* pBlob)
 	{
 		if (__pSync != 0)
 			__pSync->OnComplete(pBlob);
 		__bComplete = true;
-	}
-
-	gsSyncInner::~gsSyncInner()
-	{
-		if (__pSync) delete __pSync;
-		if (__sSyncType) delete __sSyncType;
 	}
 
 }

@@ -38,6 +38,12 @@ namespace NumbatLogic
 			__nSyncType = ExternalString.GetChecksum(sxSyncType);
 		}
 
+		~gsSyncInner()
+		{
+			if (__pSync != null)
+				__pSync.__pSyncInner = null;
+		}
+
 		public virtual void OnComplete(gsBlob pBlob)
 		{
 			if (__pSync != null)
@@ -51,10 +57,6 @@ namespace NumbatLogic
 		public int __nSyncType;
 		public bool __bComplete;
 		public bool __bError;
-		~gsSyncInner()
-		{
-		}
-
 	}
 }
 

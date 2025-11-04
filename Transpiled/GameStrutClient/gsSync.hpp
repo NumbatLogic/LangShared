@@ -23,6 +23,7 @@ namespace NumbatLogic
 	class gsSyncInner
 	{
 		public: gsSyncInner(gsSync* pSync, unsigned int nSyncId, const char* sxSyncType, gsClientRoom* pRoom, gsClient* pClient);
+		public: virtual ~gsSyncInner();
 		public: virtual void OnComplete(gsBlob* pBlob);
 		public: gsSync* __pSync;
 		public: unsigned int __nSyncId;
@@ -30,7 +31,6 @@ namespace NumbatLogic
 		public: int __nSyncType;
 		public: bool __bComplete;
 		public: bool __bError;
-		public: virtual ~gsSyncInner();
 	};
 }
 
