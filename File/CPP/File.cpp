@@ -13,16 +13,15 @@ namespace NumbatLogic
 {
 	InternalString* File::GetContents(const char* sPath)
 	{
-		Blob* pBlob = new Blob(true);
+		gsBlob* pBlob = new gsBlob();
 		if (!pBlob->Load(sPath))
 		{
 			delete pBlob;
 			return NULL;
 		}
 
-		BlobView* pBlobView = pBlob->GetBlobView();
-		pBlobView->SetOffset(pBlobView->GetSize());
-		pBlobView->PackUint8(0);
+		pBlob->SetOffset(pBlob->GetSize());
+		pBlob->PackUint8(0);
 
 		InternalString* sTemp = new InternalString((const char*)pBlob->GetData());
 		delete pBlob;
@@ -32,9 +31,8 @@ namespace NumbatLogic
 
 	void File::PutContents(const char* sxPath, const char* sxContents)
 	{
-		Blob* pBlob = new Blob(true);
-		BlobView* pBlobView = pBlob->GetBlobView();
-		pBlobView->PackData((unsigned char*)sxContents, (int)strlen(sxContents));
+		gsBlob* pBlob = new gsBlob();
+		pBlob->PackData((unsigned char*)sxContents, (int)strlen(sxContents));
 		pBlob->Save(sxPath);
 		delete pBlob;
 	}

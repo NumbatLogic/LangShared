@@ -3,8 +3,6 @@
 #include <cstddef>
 #include <string.h>	// for NULL
 
-namespace NumbatLogic { class BlobView; }
-
 namespace NumbatLogic
 {
 	class InternalString
@@ -43,11 +41,6 @@ namespace NumbatLogic
 			int GetByteLength();
 			unsigned short GetChar(int nIndex);
 
-			void BlobWriteUtf8(BlobView* pBlobView, bool bZeroTerminator);
-			void BlobWrite16Bit(BlobView* pBlobView, bool bZeroTerminator);
-
-			//void BlobReadUtf8(BlobView* pBlobView, bool bZeroTerminator);
-
 			bool IsAscii();
 
 			bool IsEqual(const char* szCompare);
@@ -63,9 +56,6 @@ namespace NumbatLogic
 			void Replace(const char* sxFind, const char* sxReplace);
 
 		protected:
-			friend class Blob;
-			friend class BlobView;
-
 			char* m_szBuffer;
 			int m_nBufferSize;
 

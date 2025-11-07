@@ -104,22 +104,6 @@ namespace NumbatLogic
 			return m_pStringBuilder[nIndex];
 		}
 
-		public void BlobWriteUtf8(BlobView pBlobView, bool bZeroTerminator)
-		{
-			byte[] pData = System.Text.Encoding.UTF8.GetBytes(m_pStringBuilder.ToString());
-			pBlobView.Pack(pData, pData.Length);
-			if (bZeroTerminator)
-				pBlobView.PackUint8(0);
-		}
-
-		public void BlobWrite16Bit(BlobView pBlobView, bool bZeroTerminator)
-		{
-			byte[] pData = System.Text.Encoding.Unicode.GetBytes(m_pStringBuilder.ToString());
-			pBlobView.Pack(pData, pData.Length);
-			if (bZeroTerminator)
-				pBlobView.PackUint16(0);
-		}
-
 		public bool IsAscii()
 		{
 			return System.Text.Encoding.UTF8.GetByteCount(m_pStringBuilder.ToString()) == m_pStringBuilder.Length;

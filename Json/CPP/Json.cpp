@@ -54,12 +54,12 @@ namespace NumbatLogic
 	bool Json::LoadFromPath(const char* sxPath)
 	{
 		bool bSuccess = false;
-		Blob* pBlob = new Blob(true);
+		gsBlob* pBlob = new gsBlob();
 		
 		if (!pBlob->Load(sxPath))
 			goto Cleanup;
-		pBlob->GetBlobView()->SetOffset(pBlob->GetSize());
-		pBlob->GetBlobView()->PackUint8('\0');
+		pBlob->SetOffset(pBlob->GetSize());
+		pBlob->PackUint8('\0');
 		if (!LoadFromExternalString((const char*)pBlob->GetData()))
 			goto Cleanup;
 

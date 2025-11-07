@@ -1,4 +1,3 @@
-#include "../../Blob/CPP/Blob.hpp"
 #include "../../Assert/CPP/Assert.hpp"
 #include "InternalString.hpp"
 
@@ -340,27 +339,6 @@ namespace NumbatLogic
 		for (i = 0; i < nIndex; i++)
 			p += GetUtf8CharSize((*p));
 		return DecodeChar(p);
-	}
-
-	void InternalString::BlobWriteUtf8(BlobView* pBlobView, bool bZeroTerminator)
-	{
-		unsigned char* p = (unsigned char*)m_szBuffer;
-		pBlobView->PackData(p, m_nByteLength);
-		if (bZeroTerminator)
-			pBlobView->PackUint8(0);
-	}
-
-	void InternalString::BlobWrite16Bit(BlobView* pBlobView, bool bZeroTerminator)
-	{
-		int i;
-		unsigned char* p = (unsigned char*)m_szBuffer;
-		for (i = 0; i < m_nCharLength; i++)
-		{
-			pBlobView->PackUint16(DecodeChar(p));
-			p += GetUtf8CharSize(p[0]);
-		}
-		if (bZeroTerminator)
-			pBlobView->PackUint16(0);
 	}
 
 	bool InternalString::IsAscii()

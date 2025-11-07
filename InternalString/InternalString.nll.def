@@ -22,8 +22,6 @@ namespace NumbatLogic
 		public void CropFront(int nLength);
 		public int GetLength();
 		public UniChar GetChar(int nIndex);
-		public void BlobWriteUtf8(BlobView pBlobView, bool bZeroTerminator);
-		public void BlobWrite16Bit(BlobView pBlobView, bool bZeroTerminator);
 		public bool IsAscii();
 		public bool IsEqual(string sString);
 		public bool StartsWith(string szString);
