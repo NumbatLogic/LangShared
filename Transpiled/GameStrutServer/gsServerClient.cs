@@ -121,15 +121,18 @@ namespace NumbatLogic
 						uint nSyncId = 0;
 						uint nLastSyncId = 0;
 						uint nRoomId = 0;
-						int nSyncType = 0;
+						uint nSyncType = 0;
 						gsBlob pSyncBlob = new gsBlob();
-						if (pReceiveBlob.UnpackUint32(ref nSyncId) && pReceiveBlob.UnpackUint32(ref nLastSyncId) && pReceiveBlob.UnpackUint32(ref nRoomId) && pReceiveBlob.UnpackInt32(ref nSyncType) && pReceiveBlob.UnpackBlob(pSyncBlob))
+						if (pReceiveBlob.UnpackUint32(ref nSyncId) && pReceiveBlob.UnpackUint32(ref nLastSyncId) && pReceiveBlob.UnpackUint32(ref nRoomId) && pReceiveBlob.UnpackUint32(ref nSyncType) && pReceiveBlob.UnpackBlob(pSyncBlob))
 						{
 							if (nRoomId > 0)
 							{
 								gsServerRoom pRoom = GetRoomByRoomId(nRoomId);
 								if (!pRoom)
-									Assert.Plz(false);
+								{
+									ErrorDisconnect("Bad room");
+									return;
+								}
 								pRoom.OnSync(nSyncId, nSyncType, pSyncBlob, this);
 							}
 							else
@@ -155,6 +158,13 @@ namespace NumbatLogic
 				}
 
 			}
+		}
+
+		public void ErrorDisconnect(string sxErrorMessage)
+		{
+			Console.Log("Error disconnect");
+			Console.Log(sxErrorMessage);
+			__pClientSocket.Disconnect();
 		}
 
 		~gsServerClient()

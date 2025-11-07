@@ -27,9 +27,9 @@ namespace NumbatLogic
 				{
 					gsServerClient pServerClient = OnCreateServerClient(__nLastClientId++, pClientSocket, this);
 					Assert.Plz(pServerClient != null);
-					NumbatLogic.gsServerClient __886602758 = pServerClient;
+					NumbatLogic.gsServerClient __206009596 = pServerClient;
 					pServerClient = null;
-					__pClientVector.PushBack(__886602758);
+					__pClientVector.PushBack(__206009596);
 				}
 			}
 			for (int i = 0; i < __pClientVector.GetSize(); i++)
@@ -97,9 +97,9 @@ namespace NumbatLogic
 			gsServerRoom pOwnedRoom = OnCreateRoom(++__nLastRoomId, nRoomType, pCreateBlob);
 			Assert.Plz(pOwnedRoom != null);
 			gsServerRoom pRoom = pOwnedRoom;
-			NumbatLogic.gsServerRoom __3651228234 = pOwnedRoom;
+			NumbatLogic.gsServerRoom __432254608 = pOwnedRoom;
 			pOwnedRoom = null;
-			__pRoomVector.PushBack(__3651228234);
+			__pRoomVector.PushBack(__432254608);
 			return pRoom;
 		}
 

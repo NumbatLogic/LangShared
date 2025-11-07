@@ -28,7 +28,7 @@ namespace NumbatLogic
 		public: gsSync* __pSync;
 		public: unsigned int __nSyncId;
 		public: InternalString* __sSyncType;
-		public: int __nSyncType;
+		public: unsigned int __nSyncType;
 		public: bool __bComplete;
 		public: bool __bError;
 	};

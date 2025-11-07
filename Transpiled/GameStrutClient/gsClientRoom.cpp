@@ -14,7 +14,7 @@ namespace NumbatLogic
 }
 namespace NumbatLogic
 {
-	gsClientRoom::gsClientRoom(unsigned int nRoomId, const char* sxRoomType, int nRoomType, bool bPrimary, gsClient* pClient)
+	gsClientRoom::gsClientRoom(unsigned int nRoomId, const char* sxRoomType, unsigned int nRoomType, bool bPrimary, gsClient* pClient)
 	{
 		__nRoomId = 0;
 		__sRoomType = 0;
