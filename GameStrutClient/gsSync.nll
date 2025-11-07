@@ -41,6 +41,7 @@ namespace NumbatLogic
 
 		public destruct()
 		{
+
 			if (__pSync != null)
 				__pSync.__pSyncInner = null;
 		}
@@ -56,7 +57,7 @@ namespace NumbatLogic
 
 		public Uint32 __nSyncId;
 		public InternalString* __sSyncType;
-		public Int32 __nSyncType;
+		public Uint32 __nSyncType;
 
 		public bool __bComplete;
 		public bool __bError;

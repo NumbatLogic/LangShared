@@ -23,14 +23,14 @@ namespace NumbatLogic
 
 		}
 
-		public virtual void OnSync(Uint32 nSyncId, Int32 nSyncType, gsBlob pInBlob, gsServerClient pServerClient)
+		public virtual void OnSync(Uint32 nSyncId, Uint32 nSyncType, gsBlob pInBlob, gsServerClient pServerClient)
 		{
 			///return null;
 		}
 
 		// SEKRIT
 		public Uint32 __nRoomId;
-		public Int32 __nRoomType;
+		public Uint32 __nRoomType;
 		public InternalString* __sRoomType;
 		public bool __bPrimary;
 		public gsServer __pServer;
@@ -55,7 +55,7 @@ namespace NumbatLogic
 
 			gsBlob* pBlob = own new gsBlob();
 			pBlob.PackUint32(__nRoomId);
-			pBlob.PackInt32(__nRoomType);
+			pBlob.PackUint32(__nRoomType);
 			pBlob.PackBool(__bPrimary);
 			pBlob.PackBlob(pJoinBlob);
 

@@ -130,10 +130,10 @@ namespace NumbatLogic
 								if (nMessageType == __ROOM_JOIN_HASH)
 								{
 									//Uint32 nRoomId;
-									Int32 nRoomType;
+									Uint32 nRoomType;
 									bool bPrimary;
 
-									if (!pMessageBlob.UnpackUint32(ref nRoomId) || !pMessageBlob.UnpackInt32(ref nRoomType) || !pMessageBlob.UnpackBool(ref bPrimary))
+									if (!pMessageBlob.UnpackUint32(ref nRoomId) || !pMessageBlob.UnpackUint32(ref nRoomType) || !pMessageBlob.UnpackBool(ref bPrimary))
 										Assert::Plz(false);
 
 									gsBlob* pJoinBlob = own new gsBlob();
@@ -193,8 +193,8 @@ namespace NumbatLogic
 				pSendBlob.PackUint32(pRoom.__nRoomId);
 			else
 				pSendBlob.PackUint32(0);
-				pSendBlob.PackInt32(pSyncInner.__nSyncType);
-				pSendBlob.PackBlob(pBlob);
+			pSendBlob.PackUint32(pSyncInner.__nSyncType);
+			pSendBlob.PackBlob(pBlob);
 
 			__pClientSocket.Send(pSendBlob);
 
