@@ -166,13 +166,13 @@ namespace NumbatLogic
 						Uint32 nSyncId;
 						Uint32 nLastSyncId;
 						Uint32 nRoomId;
-						Int32 nSyncType;
+						Uint32 nSyncType;
 						gsBlob* pSyncBlob = own new gsBlob();
 						
 						if (pReceiveBlob.UnpackUint32(ref nSyncId)
 							&& pReceiveBlob.UnpackUint32(ref nLastSyncId)
 							&& pReceiveBlob.UnpackUint32(ref nRoomId)
-							&& pReceiveBlob.UnpackInt32(ref nSyncType)
+							&& pReceiveBlob.UnpackUint32(ref nSyncType)
 							&& pReceiveBlob.UnpackBlob(pSyncBlob))
 						{
 							if (nRoomId > 0)
@@ -180,8 +180,11 @@ namespace NumbatLogic
 								gsServerRoom pRoom = GetRoomByRoomId(nRoomId);
 
 								if (!pRoom)
-									Assert::Plz(false);
-
+								{
+									ErrorDisconnect("Bad room");
+									return;
+								}
+									
 								pRoom.OnSync(nSyncId, nSyncType, pSyncBlob, this);
 							}
 							else
@@ -206,6 +209,19 @@ namespace NumbatLogic
 					Assert::Plz(false);
 				}
 			}
+		}
+
+		public void ErrorDisconnect(string sxErrorMessage)
+		{
+			Console::Log("Error disconnect");
+			Console::Log(sxErrorMessage);
+
+			// todo send disconnection sync
+			
+			//gsBlob* pBlob = own new gsBlob();
+			//				pResponseBlob.PackUint8(gsError::Error::BAD_HANDSHAKE); // todo: need some actual protocol here...
+			
+			__pClientSocket.Disconnect();
 		}
 	}
 	
