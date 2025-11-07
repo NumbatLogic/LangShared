@@ -159,15 +159,20 @@ namespace NumbatLogic
 					unsigned int nSyncId = 0;
 					unsigned int nLastSyncId = 0;
 					unsigned int nRoomId = 0;
-					int nSyncType = 0;
+					unsigned int nSyncType = 0;
 					gsBlob* pSyncBlob = new gsBlob();
-					if (pReceiveBlob->UnpackUint32(nSyncId) && pReceiveBlob->UnpackUint32(nLastSyncId) && pReceiveBlob->UnpackUint32(nRoomId) && pReceiveBlob->UnpackInt32(nSyncType) && pReceiveBlob->UnpackBlob(pSyncBlob))
+					if (pReceiveBlob->UnpackUint32(nSyncId) && pReceiveBlob->UnpackUint32(nLastSyncId) && pReceiveBlob->UnpackUint32(nRoomId) && pReceiveBlob->UnpackUint32(nSyncType) && pReceiveBlob->UnpackBlob(pSyncBlob))
 					{
 						if (nRoomId > 0)
 						{
 							gsServerRoom* pRoom = GetRoomByRoomId(nRoomId);
 							if (!pRoom)
-								Assert::Plz(false);
+							{
+								ErrorDisconnect("Bad room");
+								if (pSyncBlob) delete pSyncBlob;
+								if (pReceiveBlob) delete pReceiveBlob;
+								return;
+							}
 							pRoom->OnSync(nSyncId, nSyncType, pSyncBlob, this);
 						}
 						else
@@ -195,6 +200,13 @@ namespace NumbatLogic
 			}
 
 		}
+	}
+
+	void gsServerClient::ErrorDisconnect(const char* sxErrorMessage)
+	{
+		Console::Log("Error disconnect");
+		Console::Log(sxErrorMessage);
+		__pClientSocket->Disconnect();
 	}
 
 	gsServerClient::~gsServerClient()

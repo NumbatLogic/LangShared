@@ -30,6 +30,7 @@ namespace NumbatLogic
 		public: unsigned int __nLastSyncId;
 		public: gsServerClient(unsigned int nClientId, gsClientSocket* pClientSocket, gsServer* pServer);
 		public: void __Update();
+		public: void ErrorDisconnect(const char* sxErrorMessage);
 		public: virtual ~gsServerClient();
 	};
 }

@@ -54,7 +54,7 @@ namespace NumbatLogic
 		public gsSync __pSync;
 		public uint __nSyncId;
 		public InternalString __sSyncType;
-		public int __nSyncType;
+		public uint __nSyncType;
 		public bool __bComplete;
 		public bool __bError;
 	}

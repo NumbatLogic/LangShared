@@ -22,9 +22,9 @@ namespace NumbatLogic
 		{
 			gsServerRoom pOwnedServerRoom = new gsServerRoom(__pServer.__nLastRoomId++, "Client_Connect_Room", __pServer);
 			gsServerRoom pServerRoom = pOwnedServerRoom;
-			NumbatLogic.gsServerRoom __384115425 = pOwnedServerRoom;
+			NumbatLogic.gsServerRoom __214264756 = pOwnedServerRoom;
 			pOwnedServerRoom = null;
-			__pServer.__pRoomVector.PushBack(__384115425);
+			__pServer.__pRoomVector.PushBack(__214264756);
 			__pServer.__ClientJoin(this, pServerRoom);
 		}
 

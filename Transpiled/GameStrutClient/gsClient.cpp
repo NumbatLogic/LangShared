@@ -144,18 +144,18 @@ namespace NumbatLogic
 						{
 							if (nMessageType == __ROOM_JOIN_HASH)
 							{
-								int nRoomType = 0;
+								unsigned int nRoomType = 0;
 								bool bPrimary = false;
-								if (!pMessageBlob->UnpackUint32(nRoomId) || !pMessageBlob->UnpackInt32(nRoomType) || !pMessageBlob->UnpackBool(bPrimary))
+								if (!pMessageBlob->UnpackUint32(nRoomId) || !pMessageBlob->UnpackUint32(nRoomType) || !pMessageBlob->UnpackBool(bPrimary))
 									Assert::Plz(false);
 								gsBlob* pJoinBlob = new gsBlob();
 								if (!pMessageBlob->UnpackBlob(pJoinBlob))
 									Assert::Plz(false);
 								gsClientRoom* pRoom = OnRoomJoin(nRoomId, nRoomType, bPrimary, pJoinBlob);
 								Assert::Plz(pRoom != 0);
-								NumbatLogic::gsClientRoom* __3132352023 = pRoom;
+								NumbatLogic::gsClientRoom* __3242241752 = pRoom;
 								pRoom = 0;
-								__pRoomVector->PushBack(__3132352023);
+								__pRoomVector->PushBack(__3242241752);
 								if (pJoinBlob) delete pJoinBlob;
 								if (pRoom) delete pRoom;
 							}
@@ -206,13 +206,13 @@ namespace NumbatLogic
 			pSendBlob->PackUint32(pRoom->__nRoomId);
 		else
 			pSendBlob->PackUint32(0);
-		pSendBlob->PackInt32(pSyncInner->__nSyncType);
+		pSendBlob->PackUint32(pSyncInner->__nSyncType);
 		pSendBlob->PackBlob(pBlob);
 		__pClientSocket->Send(pSendBlob);
 		pSyncInner->__pSync->__pSyncInner = pSyncInner;
-		NumbatLogic::gsSyncInner* __2420450420 = pSyncInner;
+		NumbatLogic::gsSyncInner* __108628304 = pSyncInner;
 		pSyncInner = 0;
-		__pSyncInnerVector->PushBack(__2420450420);
+		__pSyncInnerVector->PushBack(__108628304);
 		if (pSyncInner) delete pSyncInner;
 		if (pSendBlob) delete pSendBlob;
 	}

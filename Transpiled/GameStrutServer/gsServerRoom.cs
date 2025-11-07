@@ -22,12 +22,12 @@ namespace NumbatLogic
 		{
 		}
 
-		public virtual void OnSync(uint nSyncId, int nSyncType, gsBlob pInBlob, gsServerClient pServerClient)
+		public virtual void OnSync(uint nSyncId, uint nSyncType, gsBlob pInBlob, gsServerClient pServerClient)
 		{
 		}
 
 		public uint __nRoomId;
-		public int __nRoomType;
+		public uint __nRoomType;
 		public InternalString __sRoomType;
 		public bool __bPrimary;
 		public gsServer __pServer;
@@ -49,7 +49,7 @@ namespace NumbatLogic
 			gsBlob pJoinBlob = OnClientJoin(pClient);
 			gsBlob pBlob = new gsBlob();
 			pBlob.PackUint32(__nRoomId);
-			pBlob.PackInt32(__nRoomType);
+			pBlob.PackUint32(__nRoomType);
 			pBlob.PackBool(__bPrimary);
 			pBlob.PackBlob(pJoinBlob);
 			pClient.Send(null, "__RoomJoin", pBlob);

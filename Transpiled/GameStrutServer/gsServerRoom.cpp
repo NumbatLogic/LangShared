@@ -41,7 +41,7 @@ namespace NumbatLogic
 	{
 	}
 
-	void gsServerRoom::OnSync(unsigned int nSyncId, int nSyncType, gsBlob* pInBlob, gsServerClient* pServerClient)
+	void gsServerRoom::OnSync(unsigned int nSyncId, unsigned int nSyncType, gsBlob* pInBlob, gsServerClient* pServerClient)
 	{
 	}
 
@@ -68,7 +68,7 @@ namespace NumbatLogic
 		gsBlob* pJoinBlob = OnClientJoin(pClient);
 		gsBlob* pBlob = new gsBlob();
 		pBlob->PackUint32(__nRoomId);
-		pBlob->PackInt32(__nRoomType);
+		pBlob->PackUint32(__nRoomType);
 		pBlob->PackBool(__bPrimary);
 		pBlob->PackBlob(pJoinBlob);
 		pClient->Send(0, "__RoomJoin", pBlob);

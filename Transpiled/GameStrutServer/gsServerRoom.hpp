@@ -19,9 +19,9 @@ namespace NumbatLogic
 		public: gsServerClient* GetClientByClientId(unsigned short nClientId);
 		protected: virtual gsBlob* OnClientJoin(gsServerClient* pClient);
 		protected: virtual void OnClientLeave(gsServerClient* pClient);
-		public: virtual void OnSync(unsigned int nSyncId, int nSyncType, gsBlob* pInBlob, gsServerClient* pServerClient);
+		public: virtual void OnSync(unsigned int nSyncId, unsigned int nSyncType, gsBlob* pInBlob, gsServerClient* pServerClient);
 		public: unsigned int __nRoomId;
-		public: int __nRoomType;
+		public: unsigned int __nRoomType;
 		public: InternalString* __sRoomType;
 		public: bool __bPrimary;
 		public: gsServer* __pServer;
