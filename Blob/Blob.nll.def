@@ -1,111 +1,5 @@
 namespace NumbatLogic
 {
-	class Blob
-	{
-		public construct(bool bAutoResize);
-		public bool Load(string fileName);
-		public bool Save(string fileName);
-	    public void Resize(int nSize, bool bAutoResize);
-	    public int GetSize();
-	    //public System.IO.Stream CreateStream(int nStart, int nEnd)
-		public Uint32 GetMsoCrc32();
-		//public void Md4Hash(BlobView pOut);
-		//public void UnpackData(byte[] pData, int nOffset, int nSize)
-		
-		public void PackUint8(Uint8 val, int nOffset);
-
-		public Int16 UnpackInt16(int nOffset);
-		public Int32 UnpackInt32(int nOffset);
-		public Uint8 UnpackUint8(int nOffset);
-		public Uint16 UnpackUint16(int nOffset);
-		public Uint32 UnpackUint32(int nOffset);
-		public double UnpackDouble(int nOffset);
-
-		//public void PackData(byte[] pData, int nOffset, int nSize);
-		//public void Pack(byte[] pData, int nDataOffset, int nOffset, int nSize);
-		public BlobView GetBlobView();
-		public bool Equal(Blob pOther);
-
-		public Blob** Clone();
-	}
-
-
-
-	class BlobView
-	{
-		public construct(Blob pBlob, int nStart, int nEnd);
-		public Blob GetBlob();
-		public int GetStart();
-		public int GetEnd();
-		public int GetSize();
-		public int GetOffset();
-		public void SetOffset(int nOffset);
-		//public System.IO.Stream CreateStream();
-		public void Pack(BlobView pBlobView, int nSize);
-		public void PackAt(int nOffset, BlobView pBlobView, int nSize);
-		//public void PackDataAt(int nOffset, byte[] pData, int nSize);
-		//public void Pack(byte[] pData, int nDataSize);
-
-
-		public void PackBool(bool val);
-
-		public void PackInt16(Int16 val);
-		public void PackInt32(Int32 val);
-		public void PackUint8(Uint8 val);
-		public void PackUint16(Uint16 val);
-		public void PackUint32(Uint32 val);
-		public void PackDouble(double val);
-
-		public void PackExternalString(string sxString);
-		public void PackInternalString(InternalString sString);
-		public void PackBlob(Blob pBlob);
-
-
-
-		public void Unpack(BlobView pBlobView, int nSize);
-		public void UnpackAt(int nOffset, BlobView pBlobView, int nSize);
-		//public void UnpackData(byte[] pData, int nSize);
-		//public void UnpackDataAt(int nOffset, byte[] pData, int nSize);
-
-
-
-		public bool UnpackBool();
-
-		public Int16 UnpackInt16();
-		public Int32 UnpackInt32();
-
-		public Int32 UnpackInt32At(int nOffset);
-
-		public Uint8 UnpackUint8();
-		public Uint16 UnpackUint16();
-		public Uint32 UnpackUint32();
-		public double UnpackDouble();
-
-
-		public bool SafeUnpackInt32(ref Uint8 nVal);
-
-		public bool SafeUnpackUint8(ref Uint8 nVal);
-		public bool SafeUnpackUint32(ref Uint8 nVal);
-
-		public bool UnpackInternalString(InternalString sString);
-		public bool UnpackBlob(Blob pBlob);
-
-
-
-
-
-		//public bool TryUnpackUint16(ref Uint16 nValue);
-
-		public Uint8 GetChecksum();
-	}
-
-
-
-
-
-
-
-
 	class gsBlob
 	{
 		public construct();
@@ -116,7 +10,7 @@ namespace NumbatLogic
 		public int GetOffset();
 		public void SetOffset(int nOffset);
 		
-		public bool IsEqual(Blob pOther);
+		public bool IsEqual(gsBlob pOther);
 		public gsBlob** Clone();
 		public void Reset();
 
