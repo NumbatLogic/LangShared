@@ -16,7 +16,7 @@ namespace NumbatLogic
 {
 	class gsServerRoom
 	{
-		public: gsServerClient* GetClientByClientId(unsigned short nClientId);
+		public: gsServerClient* GetClientByClientId(unsigned int nClientId);
 		protected: virtual gsBlob* OnClientJoin(gsServerClient* pClient);
 		protected: virtual void OnClientLeave(gsServerClient* pClient);
 		public: virtual void OnSync(unsigned int nSyncId, unsigned int nSyncType, gsBlob* pInBlob, gsServerClient* pServerClient);

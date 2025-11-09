@@ -2,7 +2,7 @@ namespace NumbatLogic
 {
 	class gsServerRoom
 	{
-		public gsServerClient GetClientByClientId(ushort nClientId)
+		public gsServerClient GetClientByClientId(uint nClientId)
 		{
 			for (int i = 0; i < __pClientVector.GetSize(); i++)
 			{

@@ -6,11 +6,11 @@ namespace NumbatLogic
 		{
 			gsBlob pSendBlob = new gsBlob();
 			uint nSyncId = __nLastSyncId++;
-			int nMessageTypeHash = ExternalString.GetChecksum(sxMessageType);
+			uint nMessageTypeHash = ExternalString.GetChecksum(sxMessageType);
 			pSendBlob.PackBool(false);
 			pSendBlob.PackUint32(nSyncId);
 			pSendBlob.PackUint32(pRoom == null ? 0 : pRoom.__nRoomId);
-			pSendBlob.PackInt32(nMessageTypeHash);
+			pSendBlob.PackUint32(nMessageTypeHash);
 			pSendBlob.PackBlob(pBlob);
 			__pClientSocket.Send(pSendBlob);
 		}
@@ -102,7 +102,7 @@ namespace NumbatLogic
 						{
 							Console.Log("Bad handshake, disconnecting");
 							gsBlob pResponseBlob = new gsBlob();
-							pResponseBlob.PackUint8(gsError.Error.BAD_HANDSHAKE);
+							pResponseBlob.PackUint8((byte)(gsError.Error.BAD_HANDSHAKE));
 							__pClientSocket.Disconnect();
 							return;
 						}
@@ -128,7 +128,7 @@ namespace NumbatLogic
 							if (nRoomId > 0)
 							{
 								gsServerRoom pRoom = GetRoomByRoomId(nRoomId);
-								if (!pRoom)
+								if (pRoom == null)
 								{
 									ErrorDisconnect("Bad room");
 									return;
@@ -155,6 +155,7 @@ namespace NumbatLogic
 				default:
 				{
 					Assert.Plz(false);
+					break;
 				}
 
 			}

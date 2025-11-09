@@ -28,7 +28,7 @@ namespace NumbatLogic
 	class Client_Connect_Client : public gsClient
 	{
 		public: Client_Connect_Client(const char* sxAddress, unsigned short nPort, unsigned short nVersion);
-		public: virtual gsClientRoom* OnRoomJoin(unsigned int nRoomId, int nRoomTypeHash, bool bPrimary, gsBlob* pJoinBlob);
+		public: virtual gsClientRoom* OnRoomJoin(unsigned int nRoomId, unsigned int nRoomTypeHash, bool bPrimary, gsBlob* pJoinBlob);
 	};
 	class Client_Connect
 	{

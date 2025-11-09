@@ -2,7 +2,7 @@ namespace NumbatLogic
 {
 	class gsClientRoom
 	{
-		public gsClientRoom(uint nRoomId, string sxRoomType, uint nRoomType, bool bPrimary, gsClient pClient)
+		public gsClientRoom(uint nRoomId, string sxRoomType, uint nRoomTypeHash, bool bPrimary, gsClient pClient)
 		{
 			__nRoomId = nRoomId;
 			if (sxRoomType == null)
@@ -12,10 +12,10 @@ namespace NumbatLogic
 			else
 			{
 				__sRoomType = new InternalString(sxRoomType);
-				int nTestChecksum = ExternalString.GetChecksum(sxRoomType);
-				Assert.Plz(nTestChecksum == nRoomType);
+				uint nTestChecksum = ExternalString.GetChecksum(sxRoomType);
+				Assert.Plz(nTestChecksum == nRoomTypeHash);
 			}
-			__nRoomTypeHash = nRoomType;
+			__nRoomTypeHash = nRoomTypeHash;
 			__bPrimary = bPrimary;
 			__pClient = pClient;
 		}

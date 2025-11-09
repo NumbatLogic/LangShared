@@ -23,7 +23,7 @@ namespace NumbatLogic
 			__pServerSocket.Update();
 			{
 				gsClientSocket pClientSocket = __pServerSocket.Accept();
-				if (pClientSocket)
+				if (pClientSocket != null)
 				{
 					gsServerClient pServerClient = OnCreateServerClient(__nLastClientId++, pClientSocket, this);
 					Assert.Plz(pServerClient != null);
@@ -62,7 +62,7 @@ namespace NumbatLogic
 			return new gsServerClient(__nLastClientId++, pClientSocket, this);
 		}
 
-		public virtual gsServerRoom OnCreateRoom(uint nRoomId, int nRoomType, gsBlob pCreateBlob)
+		public virtual gsServerRoom OnCreateRoom(uint nRoomId, uint nRoomType, gsBlob pCreateBlob)
 		{
 			return null;
 		}
@@ -82,7 +82,7 @@ namespace NumbatLogic
 		public uint __nLastRoomId;
 		public void __ClientJoin(gsServerClient pClient, gsServerRoom pRoom)
 		{
-			while (pClient.__pRoomVector.GetSize())
+			while (pClient.__pRoomVector.GetSize() > 0)
 			{
 				gsServerRoom pCurrentRoom = pClient.__pRoomVector.Get(0);
 				pCurrentRoom.__ClientLeave(pClient);
@@ -93,7 +93,7 @@ namespace NumbatLogic
 		public gsServerRoom __CreateRoom(string sxRoomType, gsBlob pCreateBlob)
 		{
 			pCreateBlob.SetOffset(0);
-			int nRoomType = ExternalString.GetChecksum(sxRoomType);
+			uint nRoomType = ExternalString.GetChecksum(sxRoomType);
 			gsServerRoom pOwnedRoom = OnCreateRoom(++__nLastRoomId, nRoomType, pCreateBlob);
 			Assert.Plz(pOwnedRoom != null);
 			gsServerRoom pRoom = pOwnedRoom;

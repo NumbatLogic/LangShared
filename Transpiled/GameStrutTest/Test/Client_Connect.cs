@@ -6,7 +6,7 @@ namespace NumbatLogic
 		{
 		}
 
-		public virtual gsServerClient OnCreateServerClient(uint nClientId, gsClientSocket pClientSocket, gsServer pServer)
+		public override gsServerClient OnCreateServerClient(uint nClientId, gsClientSocket pClientSocket, gsServer pServer)
 		{
 			return new Client_Connect_ServerClient(nClientId, pClientSocket, pServer);
 		}
@@ -18,7 +18,7 @@ namespace NumbatLogic
 		{
 		}
 
-		public virtual void OnInitialJoin()
+		public override void OnInitialJoin()
 		{
 			gsServerRoom pOwnedServerRoom = new gsServerRoom(__pServer.__nLastRoomId++, "Client_Connect_Room", __pServer);
 			gsServerRoom pServerRoom = pOwnedServerRoom;
@@ -35,7 +35,7 @@ namespace NumbatLogic
 		{
 		}
 
-		public virtual gsClientRoom OnRoomJoin(uint nRoomId, int nRoomTypeHash, bool bPrimary, gsBlob pJoinBlob)
+		public override gsClientRoom OnRoomJoin(uint nRoomId, uint nRoomTypeHash, bool bPrimary, gsBlob pJoinBlob)
 		{
 			return base.OnRoomJoin(nRoomId, nRoomTypeHash, bPrimary, pJoinBlob);
 		}
@@ -55,7 +55,7 @@ namespace NumbatLogic
 			Assert.Plz(pServerClient.__pRoomVector.GetSize() == 1);
 			gsServerRoom pServerRoom = pServer.__pRoomVector.Get(0);
 			Assert.Plz(pServerRoom.__pClientVector.GetSize() == 1);
-			Assert.Plz(pClient.__eState == gsClient.CONNECTED);
+			Assert.Plz(pClient.__eState == gsClient.State.CONNECTED);
 			Assert.Plz(pServerClient.__nClientId == pClient.__nClientId);
 			Assert.Plz(pClient.__pRoomVector.GetSize() == 1);
 			gsClientRoom pClientRoom = pClient.__pRoomVector.Get(0);

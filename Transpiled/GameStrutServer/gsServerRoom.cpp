@@ -21,7 +21,7 @@ namespace NumbatLogic
 }
 namespace NumbatLogic
 {
-	gsServerClient* gsServerRoom::GetClientByClientId(unsigned short nClientId)
+	gsServerClient* gsServerRoom::GetClientByClientId(unsigned int nClientId)
 	{
 		for (int i = 0; i < __pClientVector->GetSize(); i++)
 		{
