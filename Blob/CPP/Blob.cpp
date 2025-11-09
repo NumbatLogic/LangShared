@@ -193,14 +193,14 @@ namespace NumbatLogic
 
 	void gsBlob::PackInternalString(InternalString* sString)
 	{
-		int nByteLength = sString->GetByteLength();
-		PackInt32(nByteLength);
+		unsigned short nByteLength = (unsigned short)sString->GetByteLength();
+		PackUint16(nByteLength);
 		PackData((unsigned char*)sString->GetExternalString(), nByteLength);
 	}
 
 	void gsBlob::PackBlob(gsBlob* pBlob)
 	{
-		PackInt32(pBlob->m_nSize);
+		PackUint16((unsigned short)pBlob->m_nSize);
 		PackData(pBlob->m_pBuffer, pBlob->m_nSize);
 	}
 
@@ -227,8 +227,8 @@ namespace NumbatLogic
 
 	bool gsBlob::UnpackInternalString(InternalString* sString)
 	{
-		signed int nByteLength = 0;
-		if (!UnpackInt32(nByteLength))
+		unsigned short nByteLength = 0;
+		if (!UnpackUint16(nByteLength))
 			return false;
 		
 		if (nByteLength == 0)
@@ -256,8 +256,8 @@ namespace NumbatLogic
 
 	bool gsBlob::UnpackBlob(gsBlob* pBlob)
 	{
-		signed int nSize = 0;
-		if (!UnpackInt32(nSize))
+		unsigned short nSize = 0;
+		if (!UnpackUint16(nSize))
 			return false;
 
 		pBlob->Resize(nSize);
