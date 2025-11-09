@@ -57,7 +57,7 @@ namespace NumbatLogic
 	{
 	}
 
-	gsClientRoom* Client_Connect_Client::OnRoomJoin(unsigned int nRoomId, int nRoomTypeHash, bool bPrimary, gsBlob* pJoinBlob)
+	gsClientRoom* Client_Connect_Client::OnRoomJoin(unsigned int nRoomId, unsigned int nRoomTypeHash, bool bPrimary, gsBlob* pJoinBlob)
 	{
 		return gsClient::OnRoomJoin(nRoomId, nRoomTypeHash, bPrimary, pJoinBlob);
 	}
@@ -74,7 +74,7 @@ namespace NumbatLogic
 		Assert::Plz(pServerClient->__pRoomVector->GetSize() == 1);
 		gsServerRoom* pServerRoom = pServer->__pRoomVector->Get(0);
 		Assert::Plz(pServerRoom->__pClientVector->GetSize() == 1);
-		Assert::Plz(pClient->__eState == gsClient::CONNECTED);
+		Assert::Plz(pClient->__eState == gsClient::State::CONNECTED);
 		Assert::Plz(pServerClient->__nClientId == pClient->__nClientId);
 		Assert::Plz(pClient->__pRoomVector->GetSize() == 1);
 		gsClientRoom* pClientRoom = pClient->__pRoomVector->Get(0);

@@ -40,7 +40,7 @@ namespace NumbatLogic
 		__pClientSocket = new gsClientSocket();
 		__pClientSocket->Connect(sxAddress, nPort);
 		__nVersion = nVersion;
-		__eState = CONNECT;
+		__eState = State::CONNECT;
 		__pSyncInnerVector = new OwnedVector<gsSyncInner*>();
 		__ROOM_JOIN_HASH = ExternalString::GetChecksum("__RoomJoin");
 	}
@@ -134,8 +134,8 @@ namespace NumbatLogic
 					else
 					{
 						unsigned int nRoomId = 0;
-						int nMessageType = 0;
-						if (!pReceiveBlob->UnpackUint32(nRoomId) || !pReceiveBlob->UnpackInt32(nMessageType))
+						unsigned int nMessageType = 0;
+						if (!pReceiveBlob->UnpackUint32(nRoomId) || !pReceiveBlob->UnpackUint32(nMessageType))
 							Assert::Plz(false);
 						gsBlob* pMessageBlob = new gsBlob();
 						if (!pReceiveBlob->UnpackBlob(pMessageBlob))
@@ -191,6 +191,7 @@ namespace NumbatLogic
 			default:
 			{
 				Assert::Plz(false);
+				break;
 			}
 
 		}
@@ -210,9 +211,9 @@ namespace NumbatLogic
 		pSendBlob->PackBlob(pBlob);
 		__pClientSocket->Send(pSendBlob);
 		pSyncInner->__pSync->__pSyncInner = pSyncInner;
-		NumbatLogic::gsSyncInner* __108628304 = pSyncInner;
+		NumbatLogic::gsSyncInner* __108628308 = pSyncInner;
 		pSyncInner = 0;
-		__pSyncInnerVector->PushBack(__108628304);
+		__pSyncInnerVector->PushBack(__108628308);
 		if (pSyncInner) delete pSyncInner;
 		if (pSendBlob) delete pSendBlob;
 	}
@@ -222,9 +223,9 @@ namespace NumbatLogic
 		return __pClientSocket->Pending();
 	}
 
-	gsClientRoom* gsClient::OnRoomJoin(unsigned int nRoomId, int nRoomType, bool bPrimary, gsBlob* pJoinBlob)
+	gsClientRoom* gsClient::OnRoomJoin(unsigned int nRoomId, unsigned int nRoomTypeHash, bool bPrimary, gsBlob* pJoinBlob)
 	{
-		return new gsClientRoom(nRoomId, 0, nRoomType, bPrimary, this);
+		return new gsClientRoom(nRoomId, 0, nRoomTypeHash, bPrimary, this);
 	}
 
 	gsSyncInner* gsClient::GetSyncInnerBySyncId(unsigned int nSyncId)

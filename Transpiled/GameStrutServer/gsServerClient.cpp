@@ -33,11 +33,11 @@ namespace NumbatLogic
 	{
 		gsBlob* pSendBlob = new gsBlob();
 		unsigned int nSyncId = __nLastSyncId++;
-		int nMessageTypeHash = ExternalString::GetChecksum(sxMessageType);
+		unsigned int nMessageTypeHash = ExternalString::GetChecksum(sxMessageType);
 		pSendBlob->PackBool(false);
 		pSendBlob->PackUint32(nSyncId);
 		pSendBlob->PackUint32(pRoom == 0 ? 0 : pRoom->__nRoomId);
-		pSendBlob->PackInt32(nMessageTypeHash);
+		pSendBlob->PackUint32(nMessageTypeHash);
 		pSendBlob->PackBlob(pBlob);
 		__pClientSocket->Send(pSendBlob);
 		if (pSendBlob) delete pSendBlob;
@@ -137,7 +137,7 @@ namespace NumbatLogic
 					{
 						Console::Log("Bad handshake, disconnecting");
 						gsBlob* pResponseBlob = new gsBlob();
-						pResponseBlob->PackUint8(gsError::Error::BAD_HANDSHAKE);
+						pResponseBlob->PackUint8((unsigned char)(gsError::Error::BAD_HANDSHAKE));
 						__pClientSocket->Disconnect();
 						if (pResponseBlob) delete pResponseBlob;
 						if (pReceiveBlob) delete pReceiveBlob;
@@ -166,7 +166,7 @@ namespace NumbatLogic
 						if (nRoomId > 0)
 						{
 							gsServerRoom* pRoom = GetRoomByRoomId(nRoomId);
-							if (!pRoom)
+							if (pRoom == 0)
 							{
 								ErrorDisconnect("Bad room");
 								if (pSyncBlob) delete pSyncBlob;
@@ -197,6 +197,7 @@ namespace NumbatLogic
 			default:
 			{
 				Assert::Plz(false);
+				break;
 			}
 
 		}

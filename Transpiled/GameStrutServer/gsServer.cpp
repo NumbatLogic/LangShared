@@ -61,7 +61,7 @@ namespace NumbatLogic
 		__pServerSocket->Update();
 		{
 			gsClientSocket* pClientSocket = __pServerSocket->Accept();
-			if (pClientSocket)
+			if (pClientSocket != 0)
 			{
 				gsServerClient* pServerClient = OnCreateServerClient(__nLastClientId++, pClientSocket, this);
 				Assert::Plz(pServerClient != 0);
@@ -101,7 +101,7 @@ namespace NumbatLogic
 		return new gsServerClient(__nLastClientId++, pClientSocket, this);
 	}
 
-	gsServerRoom* gsServer::OnCreateRoom(unsigned int nRoomId, int nRoomType, gsBlob* pCreateBlob)
+	gsServerRoom* gsServer::OnCreateRoom(unsigned int nRoomId, unsigned int nRoomType, gsBlob* pCreateBlob)
 	{
 		return 0;
 	}
@@ -113,7 +113,7 @@ namespace NumbatLogic
 
 	void gsServer::__ClientJoin(gsServerClient* pClient, gsServerRoom* pRoom)
 	{
-		while (pClient->__pRoomVector->GetSize())
+		while (pClient->__pRoomVector->GetSize() > 0)
 		{
 			gsServerRoom* pCurrentRoom = pClient->__pRoomVector->Get(0);
 			pCurrentRoom->__ClientLeave(pClient);
@@ -124,7 +124,7 @@ namespace NumbatLogic
 	gsServerRoom* gsServer::__CreateRoom(const char* sxRoomType, gsBlob* pCreateBlob)
 	{
 		pCreateBlob->SetOffset(0);
-		int nRoomType = ExternalString::GetChecksum(sxRoomType);
+		unsigned int nRoomType = ExternalString::GetChecksum(sxRoomType);
 		gsServerRoom* pOwnedRoom = OnCreateRoom(++__nLastRoomId, nRoomType, pCreateBlob);
 		Assert::Plz(pOwnedRoom != 0);
 		gsServerRoom* pRoom = pOwnedRoom;

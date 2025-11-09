@@ -25,7 +25,7 @@ namespace NumbatLogic
 		public: void Update();
 		public: bool Pending();
 		public: virtual gsServerClient* OnCreateServerClient(unsigned int nClientId, gsClientSocket* pClientSocket, gsServer* pServer);
-		public: virtual gsServerRoom* OnCreateRoom(unsigned int nRoomId, int nRoomType, gsBlob* pCreateBlob);
+		public: virtual gsServerRoom* OnCreateRoom(unsigned int nRoomId, unsigned int nRoomType, gsBlob* pCreateBlob);
 		public: virtual void Auth(gsBlob* pAuthBlob, gsClientSocket* pClientSocket);
 		public: InternalString* __sAddress;
 		public: unsigned short __nPort;
