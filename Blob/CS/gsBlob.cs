@@ -143,6 +143,7 @@ namespace NumbatLogic
 			m_nOffset += nDataSize;
 		}
 
+		public void PackBool(bool val) { PackUint8(val ? (byte)1 : (byte)0); }
 		public void PackInt16(short val) { Pack(System.BitConverter.GetBytes(val), 2); }
 		public void PackInt32(int val) { Pack(System.BitConverter.GetBytes(val), 4); }
 		public void PackUint8(byte val) { Pack(System.BitConverter.GetBytes(val), 1); }
@@ -154,8 +155,14 @@ namespace NumbatLogic
 		public void PackInternalString(InternalString sString)
 		{
 			byte[] pData = System.Text.Encoding.UTF8.GetBytes(sString.GetExternalString());
-			PackUint32((uint)pData.Length);
+			PackUint16((ushort)pData.Length);
 			Pack(pData, pData.Length);
+		}
+
+		public void PackBlob(gsBlob pBlob)
+		{
+			PackUint16((ushort)pBlob.m_nSize);
+			Pack(pBlob.m_pBuffer, pBlob.m_nSize);
 		}
 
 		
@@ -163,7 +170,15 @@ namespace NumbatLogic
 
 
 
-
+		public bool UnpackBool(ref bool val)
+		{
+			byte n = 0;
+			if (!UnpackUint8(ref n))
+				return false;
+			val = n == 1;
+			return true;
+		}
+		
 		public bool UnpackInt16(ref short val) { const int SIZE = 2; if (m_nOffset + SIZE > m_nSize) return false; val = System.BitConverter.ToInt16(m_pBuffer, m_nOffset); m_nOffset += SIZE; return true; }
 		public bool UnpackInt32(ref int val) {  const int SIZE = 4; if (m_nOffset + SIZE > m_nSize) return false; val = System.BitConverter.ToInt32(m_pBuffer, m_nOffset); m_nOffset += SIZE; return true; }
 		public bool UnpackUint8(ref byte val) { const int SIZE = 1; if (m_nOffset + SIZE > m_nSize) return false; val = m_pBuffer[m_nOffset]; m_nOffset += SIZE; return true; }
@@ -174,8 +189,8 @@ namespace NumbatLogic
 
 		public bool UnpackInternalString(InternalString sString)
 		{
-			uint nByteLength = 0;
-			if (!UnpackUint32(ref nByteLength))
+			ushort nByteLength = 0;
+			if (!UnpackUint16(ref nByteLength))
 				return false;
 			
 			if (nByteLength == 0)
@@ -193,194 +208,23 @@ namespace NumbatLogic
 			return true;
 		}
 
-
-
-		/*public void Unpack(byte[] pTo, int nToOffset, int nFromOffset, int nSize)
+		public bool UnpackBlob(gsBlob pBlob)
 		{
-			Buffer.BlockCopy(pData, 0, m_pBuffer, (int)nOffset, (int)nSize);
-		}*/
-/*
-
-		public void UnpackData(byte[] pData, int nOffset, int nSize)
-		{
-			Assert.Plz(nOffset + nSize <= m_nSize);
-			System.Buffer.BlockCopy(m_pBuffer, nOffset, pData, 0, nSize);
-		}
-
-
-		public void PackUint8(byte val, int nOffset) { m_pBuffer[nOffset] = val; }
-
-
-		
-
-
-		public void PackData(byte[] pData, int nOffset, int nSize)
-		{
-			Assert.Plz(nOffset + nSize <= m_nSize);
-			System.Buffer.BlockCopy(pData, 0, m_pBuffer, nOffset, nSize);
-		}
-
-
-		public void Pack(byte[] pData, int nDataOffset, int nOffset, int nSize)
-		{
-			Assert.Plz(nSize > 0);
-			Assert.Plz(nOffset + nSize <= m_nSize);
-			System.Buffer.BlockCopy(pData, nDataOffset, m_pBuffer, nOffset, nSize);
-		}
-
-
-*/
-
-		//m_pBlob->GetBlobView()->Pack(pBlobView, nSize);
-
-
-		//public coid UnpackData()
-
-		/*void Blob :: UnpackData(unsigned char* pData, unsigned int nOffset, unsigned int nSize)
-		{
-			CLIFFY_ASSERT(nOffset + nSize <= m_nSize);
-			memcpy(pData, m_pBuffer + nOffset, nSize);
-		}*/
-/*
-		public bool Equal(Blob pOther)
-		{
-			if (m_nSize != pOther.m_nSize)
+			ushort nSize = 0;
+			if (!UnpackUint16(ref nSize))
 				return false;
 
-			for (int i = 0; i < m_nSize; i++)
-				if (m_pBuffer[i] != pOther.m_pBuffer[i])
-					return false;
+			pBlob.Resize(nSize);
+
+			if (nSize == 0)
+				return true;
+
+			if (nSize > m_nOffset - m_nSize)
+				return false;
+
+			System.Buffer.BlockCopy(pBlob.m_pBuffer, 0, m_pBuffer, m_nOffset, nSize);
+
 			return true;
 		}
-
-		public Blob Clone()
-		{
-			Blob clone = new Blob(m_bAutoResize);
-			clone.m_nSize = m_nSize;
-			
-			// Create a new buffer with the same size as the original
-			clone.m_pBuffer = new byte[m_pBuffer.Length];
-			
-			// Copy all data from original buffer
-			System.Buffer.BlockCopy(m_pBuffer, 0, clone.m_pBuffer, 0, m_nSize);
-			
-			// Update the blob view to reflect the new size
-			clone.m_pBlobView.m_nEnd = m_nSize;
-			
-			return clone;
-		}*/
 	}
-/*
-	class BlobView
-	{
-		internal int m_nStart;
-		internal int m_nEnd;
-		internal int m_nOffset;
-		internal Blob m_pBlob;
-
-
-		public BlobView(Blob pBlob, int nStart, int nEnd)
-		{
-			Assert.Plz(nStart <= nEnd);
-			Assert.Plz(nEnd <= pBlob.GetSize());
-
-			m_pBlob = pBlob;
-			m_nStart = nStart;
-			m_nEnd = nEnd;
-			m_nOffset = 0;
-		}
-
-
-
-		public Blob GetBlob()
-		{
-			return m_pBlob;
-		}
-
-
-
-		public int GetStart() { return m_nStart; }
-		public int GetEnd() { return m_nEnd; }
-		public int GetSize()
-		{
-			int nEnd = m_nEnd;
-			if (nEnd == 0)
-				nEnd = m_pBlob.GetSize();
-			return nEnd - m_nStart;
-		}
-
-		public int GetOffset() { return m_nOffset; }
-
-		public void SetOffset(int nOffset)
-		{
-			// todo: cap?
-			m_nOffset = nOffset;
-		}
-
-		public System.IO.Stream CreateStream()
-		{
-			if (this == m_pBlob.GetBlobView())
-				return m_pBlob.CreateStream(m_nStart + m_nOffset, m_nStart + m_pBlob.GetSize());
-			return m_pBlob.CreateStream(m_nStart + m_nOffset, m_nEnd);
-		}
-
-		
-
-
-		
-
-
-		public void Unpack(BlobView pBlobView, int nSize)
-		{
-			UnpackAt(m_nOffset, pBlobView, nSize);
-			m_nOffset += nSize;
-		}
-
-		public void UnpackAt(int nOffset, BlobView pBlobView, int nSize)
-		{
-			byte[] pData = new byte[nSize];
-			UnpackDataAt(nOffset, pData, nSize);
-
-			pBlobView.Pack(pData, nSize);
-		}
-
-
-		public void UnpackData(byte[] pData, int nSize)
-		{
-			UnpackDataAt(m_nOffset, pData, nSize);
-			m_nOffset += nSize;
-		}
-
-		public void UnpackDataAt(int nOffset, byte[] pData, int nSize)
-		{
-			int nBlobOffset = m_nStart + nOffset;
-			int nEnd = m_nEnd;
-			if (nEnd == 0)
-				nEnd = m_pBlob.GetSize();
-			Assert.Plz(nBlobOffset + nSize <= nEnd);
-			m_pBlob.UnpackData(pData, nBlobOffset, nSize);
-		}
-
-
-
-
-		public short UnpackInt16() { short nTemp = m_pBlob.UnpackInt16(m_nStart + m_nOffset); m_nOffset += 2; return nTemp; }
-		public int UnpackInt32() { int nTemp = m_pBlob.UnpackInt32(m_nStart + m_nOffset); m_nOffset += 4; return nTemp; }
-
-		public int UnpackInt32At(int nOffset) { return m_pBlob.UnpackInt32(m_nStart + nOffset); }
-
-		public byte UnpackUint8() { byte nTemp = m_pBlob.UnpackUint8(m_nStart + m_nOffset++); return nTemp; }
-		public ushort UnpackUint16() { ushort nTemp = m_pBlob.UnpackUint16(m_nStart + m_nOffset); m_nOffset += 2; return nTemp; }
-		public uint UnpackUint32() { uint nTemp = m_pBlob.UnpackUint32(m_nStart + m_nOffset); m_nOffset += 4; return nTemp; }
-		public double UnpackDouble() { double fTemp = m_pBlob.UnpackDouble(m_nStart + m_nOffset); m_nOffset += 8; return fTemp; }
-
-
-
-
-
-
-		
-
-
-	}*/
 }
