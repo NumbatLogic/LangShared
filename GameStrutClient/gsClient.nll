@@ -16,7 +16,7 @@ namespace NumbatLogic
 			__pClientSocket = own new gsClientSocket();
 			__pClientSocket.Connect(sxAddress, nPort);
 			__nVersion = nVersion;
-			__eState = CONNECT;
+			__eState = State::CONNECT;
 
 			__pSyncInnerVector = own new OwnedVector<gsSyncInner>();
 
@@ -116,9 +116,9 @@ namespace NumbatLogic
 						else
 						{
 							Uint32 nRoomId;
-							Int32 nMessageType;
+							Uint32 nMessageType;
 
-							if (!pReceiveBlob.UnpackUint32(ref nRoomId) || !pReceiveBlob.UnpackInt32(ref nMessageType))
+							if (!pReceiveBlob.UnpackUint32(ref nRoomId) || !pReceiveBlob.UnpackUint32(ref nMessageType))
 								Assert::Plz(false);
 
 							gsBlob* pMessageBlob = own new gsBlob();
@@ -177,6 +177,7 @@ namespace NumbatLogic
 				default:
 				{
 					Assert::Plz(false);
+					break;
 				}
 			}
 		}
@@ -209,9 +210,9 @@ namespace NumbatLogic
 			return __pClientSocket.Pending();
 		}
 
-		public virtual gsClientRoom** OnRoomJoin(Uint32 nRoomId, Int32 nRoomType, bool bPrimary, gsBlob pJoinBlob)
+		public virtual gsClientRoom** OnRoomJoin(Uint32 nRoomId, Uint32 nRoomTypeHash, bool bPrimary, gsBlob pJoinBlob)
 		{
-			return new gsClientRoom(nRoomId, null, nRoomType, bPrimary, this);
+			return new gsClientRoom(nRoomId, null, nRoomTypeHash, bPrimary, this);
 		}
 	
 		

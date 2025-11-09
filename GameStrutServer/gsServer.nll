@@ -26,7 +26,7 @@ namespace NumbatLogic
 
 			{
 				gsClientSocket pClientSocket = __pServerSocket.Accept();
-				if (pClientSocket)
+				if (pClientSocket != null)
 				{
 					gsServerClient* pServerClient = own OnCreateServerClient(__nLastClientId++, pClientSocket, this);
 					Assert::Plz(pServerClient != null);
@@ -86,7 +86,7 @@ namespace NumbatLogic
 			return new gsServerClient(__nLastClientId++, pClientSocket, this);
 		}
 
-		public virtual gsServerRoom** OnCreateRoom(Uint32 nRoomId, Int32 nRoomType, gsBlob pCreateBlob)
+		public virtual gsServerRoom** OnCreateRoom(Uint32 nRoomId, Uint32 nRoomType, gsBlob pCreateBlob)
 		{
 			return null;
 		}
@@ -118,7 +118,7 @@ namespace NumbatLogic
 			// TODO: process id check
 			
 			// TODO: only kick from primary room
-			while (pClient.__pRoomVector.GetSize())
+			while (pClient.__pRoomVector.GetSize() > 0)
 			{
 				gsServerRoom pCurrentRoom = pClient.__pRoomVector.Get(0);
 				pCurrentRoom.__ClientLeave(pClient);
@@ -131,7 +131,7 @@ namespace NumbatLogic
 		{
 			pCreateBlob.SetOffset(0);
 
-			Int32 nRoomType = ExternalString::GetChecksum(sxRoomType);
+			Uint32 nRoomType = ExternalString::GetChecksum(sxRoomType);
 			gsServerRoom* pOwnedRoom = own OnCreateRoom(++__nLastRoomId, nRoomType, pCreateBlob);
 			Assert::Plz(pOwnedRoom != null);
 			gsServerRoom pRoom = pOwnedRoom;

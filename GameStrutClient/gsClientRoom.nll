@@ -2,7 +2,7 @@ namespace NumbatLogic
 {
 	class gsClientRoom
 	{
-		public construct(Uint32 nRoomId, string sxRoomType, Uint32 nRoomType, bool bPrimary, gsClient pClient)
+		public construct(Uint32 nRoomId, string sxRoomType, Uint32 nRoomTypeHash, bool bPrimary, gsClient pClient)
 		{
 			__nRoomId = nRoomId;
 			if (sxRoomType == null)
@@ -12,10 +12,10 @@ namespace NumbatLogic
 			else
 			{
 				__sRoomType = own new InternalString(sxRoomType);
-				Int32 nTestChecksum = ExternalString::GetChecksum(sxRoomType);
-				Assert::Plz(nTestChecksum == nRoomType);
+				Uint32 nTestChecksum = ExternalString::GetChecksum(sxRoomType);
+				Assert::Plz(nTestChecksum == nRoomTypeHash);
 			}
-			__nRoomTypeHash = nRoomType;
+			__nRoomTypeHash = nRoomTypeHash;
 			__bPrimary = bPrimary;
 			__pClient = pClient;
 		}
