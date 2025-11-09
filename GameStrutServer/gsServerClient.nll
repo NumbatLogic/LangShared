@@ -7,12 +7,12 @@ namespace NumbatLogic
 			gsBlob* pSendBlob = own new gsBlob();
 		
 			Uint32 nSyncId = __nLastSyncId++;
-			Int32 nMessageTypeHash = ExternalString::GetChecksum(sxMessageType);
+			Uint32 nMessageTypeHash = ExternalString::GetChecksum(sxMessageType);
 
 			pSendBlob.PackBool(false);
 			pSendBlob.PackUint32(nSyncId);
 			pSendBlob.PackUint32(pRoom == null ? 0 : pRoom.__nRoomId);
-			pSendBlob.PackInt32(nMessageTypeHash);
+			pSendBlob.PackUint32(nMessageTypeHash);
 			pSendBlob.PackBlob(pBlob);
 			
 			__pClientSocket.Send(pSendBlob);
@@ -147,7 +147,7 @@ namespace NumbatLogic
 						{
 							Console::Log("Bad handshake, disconnecting");
 							gsBlob* pResponseBlob = own new gsBlob();
-							pResponseBlob.PackUint8(gsError::Error::BAD_HANDSHAKE); // todo: need some actual protocol here...
+							pResponseBlob.PackUint8(cast Uint8(gsError::Error::BAD_HANDSHAKE)); // todo: need some actual protocol here...
 							__pClientSocket.Disconnect();
 							return;
 						}
@@ -179,7 +179,7 @@ namespace NumbatLogic
 							{
 								gsServerRoom pRoom = GetRoomByRoomId(nRoomId);
 
-								if (!pRoom)
+								if (pRoom == null)
 								{
 									ErrorDisconnect("Bad room");
 									return;
@@ -207,6 +207,7 @@ namespace NumbatLogic
 				default:
 				{
 					Assert::Plz(false);
+					break;
 				}
 			}
 		}
