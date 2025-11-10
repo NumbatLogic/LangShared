@@ -60,6 +60,7 @@ namespace NumbatLogic
 			Assert.Plz(pClient.__pRoomVector.GetSize() == 1);
 			gsClientRoom pClientRoom = pClient.__pRoomVector.Get(0);
 			Assert.Plz(pServerRoom.__nRoomId == pClientRoom.__nRoomId);
+			if (pServer != null) pServer.Dispose();
 		}
 
 	}
