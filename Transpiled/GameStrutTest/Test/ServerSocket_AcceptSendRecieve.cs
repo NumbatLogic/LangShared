@@ -11,10 +11,12 @@ namespace NumbatLogic
 			GameStrutTestUtil.Update(pServerSocket, pClientSocket);
 			gsClientSocket pServerClientSocket = pServerSocket.Accept();
 			Assert.Plz(pServerClientSocket != null);
+			Assert.Plz(pServerClientSocket.GetConnected());
+			Assert.Plz(pClientSocket.GetConnected());
 			{
 				gsBlob pSendBlob = new gsBlob();
 				pSendBlob.PackInt32(619);
-				pServerSocket.Send(pSendBlob, 0);
+				Assert.Plz(pServerSocket.Send(pSendBlob, 0));
 			}
 			GameStrutTestUtil.Update(pServerSocket, pClientSocket);
 			{
@@ -27,7 +29,7 @@ namespace NumbatLogic
 			{
 				gsBlob pClientResponseBlob = new gsBlob();
 				pClientResponseBlob.PackInt32(420);
-				pClientSocket.Send(pClientResponseBlob);
+				Assert.Plz(pClientSocket.Send(pClientResponseBlob));
 			}
 			GameStrutTestUtil.Update(pServerSocket, pClientSocket);
 			{

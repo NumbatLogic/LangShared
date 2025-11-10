@@ -1,6 +1,6 @@
 namespace NumbatLogic
 {
-	class gsServer
+	class gsServer : System.IDisposable
 	{
 		public gsServer(string sxAddress, ushort nPort, ushort nVersion, string sxDatabasePath)
 		{
@@ -15,7 +15,15 @@ namespace NumbatLogic
 
 		~gsServer()
 		{
-			__pServerSocket.Stop();
+			Dispose();
+		}
+
+		public void Dispose()
+		{
+			{
+				__pServerSocket.Stop();
+			}
+			System.GC.SuppressFinalize(this);
 		}
 
 		public void Update()
