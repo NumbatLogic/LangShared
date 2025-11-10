@@ -1,6 +1,6 @@
 namespace NumbatLogic
 {
-	class gsServer
+	class disposable gsServer
 	{
 		public construct(string sxAddress, Uint16 nPort, Uint16 nVersion, string sxDatabasePath)
 		{
