@@ -4,15 +4,15 @@ namespace NumbatLogic
 	{
 		private const int DEFAULT_SIZE = 64;
 
-		internal byte[] m_pBuffer;
-		internal int m_nSize;
-		internal int m_nOffset;
+		public byte[] __pBuffer;
+		public int __nSize;
+		public int __nOffset;
 		
 
 		public gsBlob()
 		{
-			m_pBuffer = new byte[DEFAULT_SIZE];
-			m_nSize = 0;
+			__pBuffer = new byte[DEFAULT_SIZE];
+			__nSize = 0;
 		}
 
 		public bool Load(string fileName)
@@ -20,15 +20,15 @@ namespace NumbatLogic
 			try
 			{
 				byte[] temp = System.IO.File.ReadAllBytes(fileName);
-				m_pBuffer = temp;
+				__pBuffer = temp;
 			}
 			catch
 			{
 				return false;
 			}
 
-			m_nSize = m_pBuffer.Length;
-			m_nOffset = 0;
+			__nSize = __pBuffer.Length;
+			__nOffset = 0;
 			return true;
 		}
 
@@ -38,7 +38,7 @@ namespace NumbatLogic
 			{
 				using (System.IO.FileStream fs = new System.IO.FileStream(fileName, System.IO.FileMode.Create, System.IO.FileAccess.Write))
 				{
-					fs.Write(m_pBuffer, 0, (int)m_nSize);
+					fs.Write(__pBuffer, 0, (int)__nSize);
 				}
 			}
 			catch //(Exception e)
@@ -55,9 +55,9 @@ namespace NumbatLogic
 			const byte POLYNOMIAL = 0xD8;  /* 11011 followed by 0's */
 
 			byte remainder = 0;
-			for (int currentByte = 0; currentByte < m_nSize; currentByte++)
+			for (int currentByte = 0; currentByte < __nSize; currentByte++)
 			{
-				remainder ^= m_pBuffer[currentByte];
+				remainder ^= __pBuffer[currentByte];
 				for (int bit = 8; bit > 0; --bit)
 				{
 					if ((remainder & TOPBIT) > 0)
@@ -75,8 +75,8 @@ namespace NumbatLogic
 
 		public void Resize(int nSize)
 		{
-			byte[] pOldBuffer = m_pBuffer;
-			int nBufferSize = m_pBuffer.Length;
+			byte[] pOldBuffer = __pBuffer;
+			int nBufferSize = __pBuffer.Length;
 
 			if (nSize > nBufferSize)
 			{
@@ -89,38 +89,38 @@ namespace NumbatLogic
 						nBufferSize <<= 1;
 				}
 
-				m_pBuffer = new byte[nBufferSize];
-				pOldBuffer.CopyTo(m_pBuffer, 0);
+				__pBuffer = new byte[nBufferSize];
+				pOldBuffer.CopyTo(__pBuffer, 0);
 				pOldBuffer = null;
 			}
-			m_nSize = nSize;
+			__nSize = nSize;
 		}
 
 		public int GetSize()
 		{
-			return m_nSize;
+			return __nSize;
 		}
 
 		public int GetOffset()
 		{
-			return m_nOffset;
+			return __nOffset;
 		}
 
 		public void SetOffset(int nOffset)
 		{
-			Assert.Plz(nOffset < m_nSize);
-			m_nOffset = nOffset;
+			Assert.Plz(nOffset < __nSize);
+			__nOffset = nOffset;
 		}
 
 		public System.IO.Stream CreateStream(int nStart, int nEnd)
 		{
-			return new System.IO.MemoryStream(m_pBuffer, nStart, nEnd - nStart);
+			return new System.IO.MemoryStream(__pBuffer, nStart, nEnd - nStart);
 		}
 
 		/*public void Pack(BlobView pBlobView, int nSize)
 		{
-			PackAt(m_nOffset, pBlobView, nSize);
-			m_nOffset += nSize;
+			PackAt(__nOffset, pBlobView, nSize);
+			__nOffset += nSize;
 		}
 
 		public void PackAt(int nOffset, BlobView pBlobView, int nSize)
@@ -132,15 +132,15 @@ namespace NumbatLogic
 
 		public void PackDataAt(int nOffset, byte[] pData, int nSize)
 		{
-			if (nOffset + nSize > m_nSize)
+			if (nOffset + nSize > __nSize)
 				Resize(nOffset + nSize);
-			System.Buffer.BlockCopy(pData, 0, m_pBuffer, nOffset, nSize);
+			System.Buffer.BlockCopy(pData, 0, __pBuffer, nOffset, nSize);
 		}
 
 		public void Pack(byte[] pData, int nDataSize)
 		{
-			PackDataAt(m_nOffset, pData, nDataSize);
-			m_nOffset += nDataSize;
+			PackDataAt(__nOffset, pData, nDataSize);
+			__nOffset += nDataSize;
 		}
 
 		public void PackBool(bool val) { PackUint8(val ? (byte)1 : (byte)0); }
@@ -161,8 +161,8 @@ namespace NumbatLogic
 
 		public void PackBlob(gsBlob pBlob)
 		{
-			PackUint16((ushort)pBlob.m_nSize);
-			Pack(pBlob.m_pBuffer, pBlob.m_nSize);
+			PackUint16((ushort)pBlob.__nSize);
+			Pack(pBlob.__pBuffer, pBlob.__nSize);
 		}
 
 		
@@ -179,12 +179,12 @@ namespace NumbatLogic
 			return true;
 		}
 		
-		public bool UnpackInt16(ref short val) { const int SIZE = 2; if (m_nOffset + SIZE > m_nSize) return false; val = System.BitConverter.ToInt16(m_pBuffer, m_nOffset); m_nOffset += SIZE; return true; }
-		public bool UnpackInt32(ref int val) {  const int SIZE = 4; if (m_nOffset + SIZE > m_nSize) return false; val = System.BitConverter.ToInt32(m_pBuffer, m_nOffset); m_nOffset += SIZE; return true; }
-		public bool UnpackUint8(ref byte val) { const int SIZE = 1; if (m_nOffset + SIZE > m_nSize) return false; val = m_pBuffer[m_nOffset]; m_nOffset += SIZE; return true; }
-		public bool UnpackUint16(ref ushort val) { const int SIZE = 2; if (m_nOffset + SIZE > m_nSize) return false; val = System.BitConverter.ToUInt16(m_pBuffer, m_nOffset); m_nOffset += SIZE; return true; }
-		public bool UnpackUint32(ref uint val) { const int SIZE = 4; if (m_nOffset + SIZE > m_nSize) return false; val = System.BitConverter.ToUInt32(m_pBuffer, m_nOffset); m_nOffset += SIZE; return true; }
-		public bool UnpackDouble(ref double val) { const int SIZE = 8; if (m_nOffset + SIZE > m_nSize) return false; val = System.BitConverter.ToDouble(m_pBuffer, m_nOffset); m_nOffset += SIZE; return true; }
+		public bool UnpackInt16(ref short val) { const int SIZE = 2; if (__nOffset + SIZE > __nSize) return false; val = System.BitConverter.ToInt16(__pBuffer, __nOffset); __nOffset += SIZE; return true; }
+		public bool UnpackInt32(ref int val) {  const int SIZE = 4; if (__nOffset + SIZE > __nSize) return false; val = System.BitConverter.ToInt32(__pBuffer, __nOffset); __nOffset += SIZE; return true; }
+		public bool UnpackUint8(ref byte val) { const int SIZE = 1; if (__nOffset + SIZE > __nSize) return false; val = __pBuffer[__nOffset]; __nOffset += SIZE; return true; }
+		public bool UnpackUint16(ref ushort val) { const int SIZE = 2; if (__nOffset + SIZE > __nSize) return false; val = System.BitConverter.ToUInt16(__pBuffer, __nOffset); __nOffset += SIZE; return true; }
+		public bool UnpackUint32(ref uint val) { const int SIZE = 4; if (__nOffset + SIZE > __nSize) return false; val = System.BitConverter.ToUInt32(__pBuffer, __nOffset); __nOffset += SIZE; return true; }
+		public bool UnpackDouble(ref double val) { const int SIZE = 8; if (__nOffset + SIZE > __nSize) return false; val = System.BitConverter.ToDouble(__pBuffer, __nOffset); __nOffset += SIZE; return true; }
 
 
 		public bool UnpackInternalString(InternalString sString)
@@ -199,11 +199,11 @@ namespace NumbatLogic
 				return true;
 			}
 
-			if (m_nOffset + nByteLength > m_nSize)
+			if (__nOffset + nByteLength > __nSize)
 				return false;
 
-			sString.Set(System.Text.Encoding.UTF8.GetString(m_pBuffer, m_nOffset, (int)nByteLength));
-			m_nOffset += (int)nByteLength;
+			sString.Set(System.Text.Encoding.UTF8.GetString(__pBuffer, __nOffset, (int)nByteLength));
+			__nOffset += (int)nByteLength;
 
 			return true;
 		}
@@ -219,10 +219,10 @@ namespace NumbatLogic
 			if (nSize == 0)
 				return true;
 
-			if (nSize > m_nOffset - m_nSize)
+			if (nSize > __nSize - __nOffset)
 				return false;
-
-			System.Buffer.BlockCopy(pBlob.m_pBuffer, 0, m_pBuffer, m_nOffset, nSize);
+			
+			System.Buffer.BlockCopy(pBlob.__pBuffer, 0, __pBuffer, __nOffset, nSize);
 
 			return true;
 		}
