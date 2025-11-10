@@ -316,9 +316,10 @@ int bytesAvailable = 200;
 		return pBlob;
 	}
 
-	void gsClientSocket::SetAcceptedSocket(int socket)
+	void gsClientSocket::SetServerClientSocket(int nSocket, unsigned int nClientSocketId)
 	{
-		m_nSocket = socket;
+		m_nSocket = nSocket;
 		m_bConnected = true;
+		m_nClientSocketId = nClientSocketId;
 	}
 }
