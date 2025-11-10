@@ -19,9 +19,8 @@ namespace NumbatLogic
 			virtual bool Send(gsBlob* pBlob) override;
 			virtual gsBlob* Receive() override;
 
-			void SetAcceptedSocket(int socket);
+			void SetServerClientSocket(int nSocket, unsigned int nClientSocketId);
 			unsigned int GetClientSocketId() const { return m_nClientSocketId; }
-			void SetClientSocketId(unsigned int clientSocketId) { m_nClientSocketId = clientSocketId; }
 
 		protected:
 			int m_nSocket;

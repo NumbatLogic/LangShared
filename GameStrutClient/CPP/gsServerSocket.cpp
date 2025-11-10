@@ -182,8 +182,8 @@ namespace NumbatLogic
 		struct sockaddr_in clientAddr;
 		socklen_t clientLen = sizeof(clientAddr);
 		
-		int clientSocket = accept(m_nSocket, (struct sockaddr*)&clientAddr, &clientLen);
-		if (clientSocket < 0)
+		int nClientSocket = accept(m_nSocket, (struct sockaddr*)&clientAddr, &clientLen);
+		if (nClientSocket < 0)
 		{
 			// No pending connection or error
 			return NULL;
@@ -191,19 +191,17 @@ namespace NumbatLogic
 
 		// Create new client socket
 		gsClientSocket* pNewClient = new gsClientSocket();
-		Assert::Plz(pNewClient != NULL);
-		pNewClient->SetAcceptedSocket(clientSocket);
-		pNewClient->SetClientSocketId(m_nNextClientId++);  // Assign and increment client socket ID
+		pNewClient->SetServerClientSocket(nClientSocket, m_nNextClientId++);
 		
 		// Set non-blocking mode
 		#ifdef NB_WINDOWS
 			u_long mode = 1;
-			ioctlsocket(clientSocket, FIONBIO, &mode);
+			ioctlsocket(nClientSocket, FIONBIO, &mode);
 		#else
-			int flags = fcntl(clientSocket, F_GETFL, 0);
+			int flags = fcntl(nClientSocket, F_GETFL, 0);
 			if (flags != -1)
 			{
-				fcntl(clientSocket, F_SETFL, flags | O_NONBLOCK);
+				fcntl(nClientSocket, F_SETFL, flags | O_NONBLOCK);
 			}
 		#endif
 		// Add to client vector
@@ -212,7 +210,7 @@ namespace NumbatLogic
 		return pNewClient;
 	}
 
-	void gsServerSocket::Send(gsBlob* pBlob, unsigned int clientSocketId)
+	bool gsServerSocket::Send(gsBlob* pBlob, unsigned int clientSocketId)
 	{
 		Assert::Plz(pBlob != NULL);
 		Assert::Plz(m_nSocket != -1);
@@ -230,7 +228,7 @@ namespace NumbatLogic
 					}
 				}
 			}
-			return;
+			return true;
 		}
 		else
 		{
@@ -240,11 +238,12 @@ namespace NumbatLogic
 				if (pClientSocket && pClientSocket->GetClientSocketId() == clientSocketId)
 				{
 					pClientSocket->Send(pBlob);
-					return;
+					return true;
 				}
 			}
 		}
 
 		Assert::Plz(false);
+		return false;
 	}
 }
