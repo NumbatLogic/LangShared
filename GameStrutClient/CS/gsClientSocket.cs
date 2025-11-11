@@ -8,8 +8,7 @@ namespace NumbatLogic
 	class gsClientSocket : gsSocket
 	{
 		public Socket __pSocket;
-		public uint __nClientSocketId;
-
+		
 		public byte[] __pRecieveBuffer = null;
 		public int __nRecieveOffset = 0;
 
@@ -106,14 +105,5 @@ namespace NumbatLogic
 			}
 			return null;
 		}
-
-		public void SetAcceptedSocket(int socket)
-		{
-		}
-
-		public uint GetClientSocketId() { return __nClientSocketId; }
-		public void SetClientSocketId(uint clientSocketId) { __nClientSocketId = clientSocketId; }
-
-		
 	}
 }

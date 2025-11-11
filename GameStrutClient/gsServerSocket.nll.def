@@ -8,7 +8,6 @@ namespace NumbatLogic
 		public bool Pending();
 		public gsClientSocket Accept();
 
-		public bool Send(gsBlob pBlob, int nClientSocketId);
-		//public virtual gsBlob** Receive();
+		public bool Broadcast(gsBlob pBlob);
 	}
 } 

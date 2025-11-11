@@ -74,45 +74,18 @@ namespace NumbatLogic
 			return null;
 		}
 
-		public bool Send(gsBlob pBlob, uint nClientSocketId)
+		public bool Broadcast(gsBlob pBlob)
 		{
 			Assert.Plz(pBlob != null);
 			Assert.Plz(__pSocket != null);
 			
-			if (nClientSocketId == 0)
+			for (int i = 0; i < __pClientSockets.Count; i++)
 			{
-				for (int i = 0; i < __pClientSockets.Count; i++)
-				{
-					gsClientSocket pClientSocket = __pClientSockets[i];
-					pClientSocket.Send(pBlob);
-				}
-				return true;
+				gsClientSocket pClientSocket = __pClientSockets[i];
+				if (!pClientSocket.Send(pBlob))
+					return false;
 			}
-			else
-			{
-				for (int i = 0; i < __pClientSockets.Count; i++)
-				{
-					gsClientSocket pClientSocket = __pClientSockets[i];
-					if (pClientSocket.GetClientSocketId() == nClientSocketId)
-					{
-						return pClientSocket.Send(pBlob);
-					}
-				}
-			}
-			Assert.Plz(false);
-			return false;
+			return true;
 		}
-
-
-
-		/*public virtual bool Send(gsBlob pBlob)
-		{
-			return false;
-		}
-
-		public virtual gsBlob Receive()
-		{
-			return null;
-		}*/
 	}
 }

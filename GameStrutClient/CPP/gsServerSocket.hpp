@@ -18,7 +18,7 @@ namespace NumbatLogic
 			bool Pending();
 			gsClientSocket* Accept();
 
-			bool Send(gsBlob* pBlob, unsigned int clientSocketId);
+			bool Broadcast(gsBlob* pBlob);
 
 		protected:
 			using gsSocket::Send;
