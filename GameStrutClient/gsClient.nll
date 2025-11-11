@@ -19,9 +19,6 @@ namespace NumbatLogic
 			__eState = State::CONNECT;
 
 			__pSyncInnerVector = own new OwnedVector<gsSyncInner>();
-
-			// should dis be static?
-			__ROOM_JOIN_HASH = ExternalString::GetChecksum("__RoomJoin");
 		}
 
 		public destruct()
@@ -234,7 +231,7 @@ namespace NumbatLogic
 
 		public State __eState;
 
-		public Uint32 __ROOM_JOIN_HASH;
+		public static Uint32 __ROOM_JOIN_HASH = tthash("__RoomJoin");
 
 
 
