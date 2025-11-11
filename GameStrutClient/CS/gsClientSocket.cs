@@ -1,11 +1,10 @@
 using System.Net;
 using System.Net.Sockets;
-//using System.Threading;
 using System;
 
 namespace NumbatLogic
 {
-	class gsClientSocket : gsSocket
+	class gsClientSocket
 	{
 		public Socket __pSocket;
 		
@@ -62,7 +61,7 @@ namespace NumbatLogic
 			return __pSocket != null && __pSocket.Connected;
 		}
 
-		public override bool Send(gsBlob pBlob)
+		public bool Send(gsBlob pBlob)
 		{
 			Assert.Plz(pBlob != null);
 			Assert.Plz(pBlob.GetSize() > 0);
@@ -80,7 +79,7 @@ namespace NumbatLogic
 			return true;
 		}
 
-		public override gsBlob Receive()
+		public gsBlob Receive()
 		{
 			if (__nRecieveOffset >= 2)
 			{

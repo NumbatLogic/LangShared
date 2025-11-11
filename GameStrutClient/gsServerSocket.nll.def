@@ -1,6 +1,6 @@
 namespace NumbatLogic
 {
-	class gsServerSocket : gsSocket
+	class gsServerSocket
 	{
 		public void Start(int port);
 		public void Stop();
