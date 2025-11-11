@@ -210,40 +210,20 @@ namespace NumbatLogic
 		return pNewClient;
 	}
 
-	bool gsServerSocket::Send(gsBlob* pBlob, unsigned int clientSocketId)
+	bool gsServerSocket::Broadcast(gsBlob* pBlob)
 	{
 		Assert::Plz(pBlob != NULL);
 		Assert::Plz(m_nSocket != -1);
 		
-		if (clientSocketId == 0)
+		for (unsigned int i = 0; i < m_pClientSocketVector->GetSize(); i++)
 		{
-			for (unsigned int i = 0; i < m_pClientSocketVector->GetSize(); i++)
+			gsClientSocket* pClientSocket = m_pClientSocketVector->Get(i);
+			if (pClientSocket)
 			{
-				gsClientSocket* pClientSocket = m_pClientSocketVector->Get(i);
-				if (pClientSocket)
-				{
-					if (!pClientSocket->Send(pBlob))
-					{
-						Assert::Plz(false);
-					}
-				}
-			}
-			return true;
-		}
-		else
-		{
-			for (unsigned int i = 0; i < m_pClientSocketVector->GetSize(); i++)
-			{
-				gsClientSocket* pClientSocket = m_pClientSocketVector->Get(i);
-				if (pClientSocket && pClientSocket->GetClientSocketId() == clientSocketId)
-				{
-					pClientSocket->Send(pBlob);
-					return true;
-				}
+				if (!pClientSocket->Send(pBlob))
+					return false;
 			}
 		}
-
-		Assert::Plz(false);
-		return false;
+		return true;
 	}
 }

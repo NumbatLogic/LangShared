@@ -16,7 +16,7 @@ namespace NumbatLogic
 			{
 				gsBlob pSendBlob = new gsBlob();
 				pSendBlob.PackInt32(619);
-				Assert.Plz(pServerSocket.Send(pSendBlob, 0));
+				Assert.Plz(pServerSocket.Broadcast(pSendBlob));
 			}
 			GameStrutTestUtil.Update(pServerSocket, pClientSocket);
 			{
