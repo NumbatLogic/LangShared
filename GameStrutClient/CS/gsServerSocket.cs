@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace NumbatLogic
 {
-	class gsServerSocket : gsSocket
+	class gsServerSocket
 	{
 		public Socket __pSocket = null;
 		protected List<gsClientSocket> __pClientSockets = new List<gsClientSocket>();

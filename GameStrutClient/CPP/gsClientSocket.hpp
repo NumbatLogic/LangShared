@@ -1,10 +1,10 @@
 #pragma once
-#include "gsSocket.hpp"
 #include "../../InternalString/CPP/InternalString.hpp"
 
 namespace NumbatLogic
 {
-	class gsClientSocket : public gsSocket
+	class gsBlob;
+	class gsClientSocket
 	{
 		public:
 			gsClientSocket();
@@ -16,8 +16,8 @@ namespace NumbatLogic
 			bool Pending();
 			bool GetConnected();
 
-			virtual bool Send(gsBlob* pBlob) override;
-			virtual gsBlob* Receive() override;
+			bool Send(gsBlob* pBlob);
+			gsBlob* Receive();
 
 			void SetServerClientSocket(int nSocket, unsigned int nClientSocketId);
 			unsigned int GetClientSocketId() const { return m_nClientSocketId; }

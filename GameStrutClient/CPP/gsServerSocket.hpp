@@ -1,12 +1,11 @@
 #pragma once
-
 #include "../../Vector/CPP/Vector.hpp"
-#include "gsSocket.hpp"
 
 namespace NumbatLogic
 {
+	class gsBlob;
 	class gsClientSocket;
-	class gsServerSocket : gsSocket
+	class gsServerSocket
 	{
 		public:
 			gsServerSocket();
@@ -21,7 +20,6 @@ namespace NumbatLogic
 			bool Broadcast(gsBlob* pBlob);
 
 		protected:
-			using gsSocket::Send;
 			int m_nSocket;
 			int m_nPort;
 			unsigned int m_nNextClientId;
