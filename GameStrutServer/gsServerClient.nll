@@ -2,13 +2,12 @@ namespace NumbatLogic
 {
 	class gsServerClient
 	{
-		public void Send(gsServerRoom pRoom, string sxMessageType, gsBlob pBlob)
+		public void Send(gsServerRoom pRoom, Uint32 nMessageTypeHash, gsBlob pBlob)
 		{
 			gsBlob* pSendBlob = own new gsBlob();
 		
 			Uint32 nSyncId = __nLastSyncId++;
-			Uint32 nMessageTypeHash = ExternalString::GetChecksum(sxMessageType);
-
+			
 			pSendBlob.PackBool(false);
 			pSendBlob.PackUint32(nSyncId);
 			pSendBlob.PackUint32(pRoom == null ? 0 : pRoom.__nRoomId);

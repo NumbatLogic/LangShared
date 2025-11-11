@@ -59,7 +59,7 @@ namespace NumbatLogic
 			pBlob.PackBool(__bPrimary);
 			pBlob.PackBlob(pJoinBlob);
 
-			pClient.Send(null, "__RoomJoin", pBlob);
+			pClient.Send(null, gsClient::__ROOM_JOIN_HASH, pBlob);
 		}
 
 		public void __ClientLeave(gsServerClient pClient)
