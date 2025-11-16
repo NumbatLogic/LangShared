@@ -32,6 +32,7 @@ namespace NumbatLogic
 			void PackUint8(unsigned char val);
 			void PackUint16(unsigned short val);
 			void PackUint32(unsigned int val);
+			void PackFloat(float val);
 			void PackDouble(double val);
 
 			void PackExternalString(const char* sxString);
@@ -48,6 +49,7 @@ namespace NumbatLogic
 			bool UnpackUint8(unsigned char& val);
 			bool UnpackUint16(unsigned short& val);
 			bool UnpackUint32(unsigned int& val);
+			bool UnpackFloat(float& val);
 			bool UnpackDouble(double& val);
 
 			bool UnpackInternalString(InternalString* sString);

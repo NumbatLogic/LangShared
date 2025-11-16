@@ -177,11 +177,10 @@ namespace NumbatLogic
 	void gsBlob::PackUint8(unsigned char val) { PackData(&val, 1); }
 	void gsBlob::PackUint16(unsigned short val) { PackData((unsigned char*)&val, 2); }
 	void gsBlob::PackUint32(unsigned int val) { PackData((unsigned char*)&val, 4); }
-
 	void gsBlob::PackInt8(signed char val) { PackData((unsigned char*)&val, 1); }
 	void gsBlob::PackInt16(signed short val) { PackData((unsigned char*)&val, 2); }
 	void gsBlob::PackInt32(signed int val) { PackData((unsigned char*)&val, 4); }
-
+	void gsBlob::PackFloat(float val) { PackData((unsigned char*)&val, 4); }
 	void gsBlob::PackDouble(double val) { PackData((unsigned char*)&val, 8); }
 
 	void gsBlob::PackExternalString(const char* sxString)
@@ -218,11 +217,10 @@ namespace NumbatLogic
 	bool gsBlob::UnpackUint8(unsigned char& val) { return UnpackData((unsigned char*)&val, sizeof(val)); }
 	bool gsBlob::UnpackUint16(unsigned short& val) { return UnpackData((unsigned char*)&val, sizeof(val)); }
 	bool gsBlob::UnpackUint32(unsigned int& val) { return UnpackData((unsigned char*)&val, sizeof(val)); }
-
 	bool gsBlob::UnpackInt8(signed char& val) { return UnpackData((unsigned char*)&val, sizeof(val)); }
 	bool gsBlob::UnpackInt16(signed short& val) { return UnpackData((unsigned char*)&val, sizeof(val)); }
 	bool gsBlob::UnpackInt32(signed int& val) { return UnpackData((unsigned char*)&val, sizeof(val)); }
-
+	bool gsBlob::UnpackFloat(float& val) { return UnpackData((unsigned char*)&val, sizeof(val)); }
 	bool gsBlob::UnpackDouble(double& val) { return UnpackData((unsigned char*)&val, sizeof(val)); }
 
 	bool gsBlob::UnpackInternalString(InternalString* sString)
