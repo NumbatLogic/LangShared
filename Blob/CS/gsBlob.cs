@@ -144,6 +144,7 @@ namespace NumbatLogic
 		}
 
 		public void PackBool(bool val) { PackUint8(val ? (byte)1 : (byte)0); }
+		public void PackInt8(sbyte val) { Pack(System.BitConverter.GetBytes(val), 1); }
 		public void PackInt16(short val) { Pack(System.BitConverter.GetBytes(val), 2); }
 		public void PackInt32(int val) { Pack(System.BitConverter.GetBytes(val), 4); }
 		public void PackUint8(byte val) { Pack(System.BitConverter.GetBytes(val), 1); }
@@ -178,7 +179,8 @@ namespace NumbatLogic
 			val = n == 1;
 			return true;
 		}
-		
+
+		public bool UnpackInt8(ref sbyte val) { const int SIZE = 1; if (__nOffset + SIZE > __nSize) return false; val = __pBuffer[__nOffset]; __nOffset += SIZE; return true; }
 		public bool UnpackInt16(ref short val) { const int SIZE = 2; if (__nOffset + SIZE > __nSize) return false; val = System.BitConverter.ToInt16(__pBuffer, __nOffset); __nOffset += SIZE; return true; }
 		public bool UnpackInt32(ref int val) {  const int SIZE = 4; if (__nOffset + SIZE > __nSize) return false; val = System.BitConverter.ToInt32(__pBuffer, __nOffset); __nOffset += SIZE; return true; }
 		public bool UnpackUint8(ref byte val) { const int SIZE = 1; if (__nOffset + SIZE > __nSize) return false; val = __pBuffer[__nOffset]; __nOffset += SIZE; return true; }
