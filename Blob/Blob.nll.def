@@ -19,7 +19,7 @@ namespace NumbatLogic
 		// Pack
 		public void PackBool(bool val);
 
-		public void PackInt16(Int8 val);
+		public void PackInt8(Int8 val);
 		public void PackInt16(Int16 val);
 		public void PackInt32(Int32 val);
 		
