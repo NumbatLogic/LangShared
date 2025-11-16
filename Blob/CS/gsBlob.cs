@@ -150,6 +150,7 @@ namespace NumbatLogic
 		public void PackUint8(byte val) { Pack(System.BitConverter.GetBytes(val), 1); }
 		public void PackUint16(ushort val) { Pack(System.BitConverter.GetBytes(val), 2); }
 		public void PackUint32(uint val) { Pack(System.BitConverter.GetBytes(val), 4); }
+		public void PackFloat(float val) { Pack(System.BitConverter.GetBytes(val), 4); }
 		public void PackDouble(double val) { Pack(System.BitConverter.GetBytes(val), 8); }
 		
 
@@ -180,12 +181,13 @@ namespace NumbatLogic
 			return true;
 		}
 
-		public bool UnpackInt8(ref sbyte val) { const int SIZE = 1; if (__nOffset + SIZE > __nSize) return false; val = __pBuffer[__nOffset]; __nOffset += SIZE; return true; }
+		public bool UnpackInt8(ref sbyte val) { const int SIZE = 1; if (__nOffset + SIZE > __nSize) return false; val = unchecked((sbyte)__pBuffer[__nOffset]); __nOffset += SIZE; return true; }
 		public bool UnpackInt16(ref short val) { const int SIZE = 2; if (__nOffset + SIZE > __nSize) return false; val = System.BitConverter.ToInt16(__pBuffer, __nOffset); __nOffset += SIZE; return true; }
 		public bool UnpackInt32(ref int val) {  const int SIZE = 4; if (__nOffset + SIZE > __nSize) return false; val = System.BitConverter.ToInt32(__pBuffer, __nOffset); __nOffset += SIZE; return true; }
 		public bool UnpackUint8(ref byte val) { const int SIZE = 1; if (__nOffset + SIZE > __nSize) return false; val = __pBuffer[__nOffset]; __nOffset += SIZE; return true; }
 		public bool UnpackUint16(ref ushort val) { const int SIZE = 2; if (__nOffset + SIZE > __nSize) return false; val = System.BitConverter.ToUInt16(__pBuffer, __nOffset); __nOffset += SIZE; return true; }
 		public bool UnpackUint32(ref uint val) { const int SIZE = 4; if (__nOffset + SIZE > __nSize) return false; val = System.BitConverter.ToUInt32(__pBuffer, __nOffset); __nOffset += SIZE; return true; }
+		public bool UnpackFloat(ref float val) { const int SIZE = 4; if (__nOffset + SIZE > __nSize) return false; val = System.BitConverter.ToSingle(__pBuffer, __nOffset); __nOffset += SIZE; return true; }
 		public bool UnpackDouble(ref double val) { const int SIZE = 8; if (__nOffset + SIZE > __nSize) return false; val = System.BitConverter.ToDouble(__pBuffer, __nOffset); __nOffset += SIZE; return true; }
 
 

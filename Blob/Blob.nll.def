@@ -26,6 +26,7 @@ namespace NumbatLogic
 		public void PackUint8(Uint8 val);
 		public void PackUint16(Uint16 val);
 		public void PackUint32(Uint32 val);
+		public void PackFloat(float val);
 		public void PackDouble(double val);
 
 		public void PackExternalString(string sxString);
@@ -42,6 +43,7 @@ namespace NumbatLogic
 		public bool UnpackUint8(ref Uint8 val);
 		public bool UnpackUint16(ref Uint16 val);
 		public bool UnpackUint32(ref Uint32 val);
+		public bool UnpackFloat(ref float val);
 		public bool UnpackDouble(ref double val);
 
 		public bool UnpackInternalString(InternalString sString);
