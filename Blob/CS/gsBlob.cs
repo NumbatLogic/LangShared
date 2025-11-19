@@ -108,7 +108,7 @@ namespace NumbatLogic
 
 		public void SetOffset(int nOffset)
 		{
-			Assert.Plz(nOffset < __nSize);
+			Assert.Plz(nOffset <= __nSize);
 			__nOffset = nOffset;
 		}
 
