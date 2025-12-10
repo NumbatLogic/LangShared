@@ -19,7 +19,7 @@ namespace NumbatLogic
 
 		public bool GetError()
 		{
-			return __pSyncInner != null ? __pSyncInner.__bError : false;
+			return false;
 		}
 
 		public virtual void OnComplete(gsBlob pBlob)
@@ -56,7 +56,6 @@ namespace NumbatLogic
 		public InternalString __sSyncType;
 		public uint __nSyncType;
 		public bool __bComplete;
-		public bool __bError;
 	}
 }
 

@@ -30,7 +30,6 @@ namespace NumbatLogic
 		public: InternalString* __sSyncType;
 		public: unsigned int __nSyncType;
 		public: bool __bComplete;
-		public: bool __bError;
 	};
 }
 

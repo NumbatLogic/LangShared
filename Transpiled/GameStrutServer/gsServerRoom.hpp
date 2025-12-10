@@ -23,7 +23,6 @@ namespace NumbatLogic
 		public: unsigned int __nRoomId;
 		public: unsigned int __nRoomType;
 		public: InternalString* __sRoomType;
-		public: bool __bPrimary;
 		public: gsServer* __pServer;
 		public: Vector<gsServerClient*>* __pClientVector;
 		public: gsServerRoom(unsigned int nRoomId, const char* sxRoomType, gsServer* pServer);

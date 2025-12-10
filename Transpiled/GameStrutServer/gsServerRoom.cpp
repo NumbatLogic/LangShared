@@ -5,6 +5,7 @@
 #include "../../ExternalString/CPP/ExternalString.hpp"
 #include "../../InternalString/CPP/InternalString.hpp"
 #include "../../Assert/CPP/Assert.hpp"
+#include "../GameStrutClient/gsClient.hpp"
 #include "gsServer.hpp"
 
 namespace NumbatLogic
@@ -17,6 +18,7 @@ namespace NumbatLogic
 	class InternalString;
 	class Assert;
 	class gsBlob;
+	class gsClient;
 	class gsServer;
 }
 namespace NumbatLogic
@@ -50,7 +52,6 @@ namespace NumbatLogic
 		__nRoomId = 0;
 		__nRoomType = 0;
 		__sRoomType = 0;
-		__bPrimary = false;
 		__pServer = 0;
 		__pClientVector = 0;
 		__nRoomId = nRoomId;
@@ -69,9 +70,9 @@ namespace NumbatLogic
 		gsBlob* pBlob = new gsBlob();
 		pBlob->PackUint32(__nRoomId);
 		pBlob->PackUint32(__nRoomType);
-		pBlob->PackBool(__bPrimary);
+		pBlob->PackBool(false);
 		pBlob->PackBlob(pJoinBlob);
-		pClient->Send(0, "__RoomJoin", pBlob);
+		pClient->Send(0, gsClient::__ROOM_JOIN_HASH, pBlob);
 		if (pJoinBlob) delete pJoinBlob;
 		if (pBlob) delete pBlob;
 	}

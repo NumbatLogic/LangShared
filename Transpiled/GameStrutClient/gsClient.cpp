@@ -3,7 +3,6 @@
 #include "../Vector/OwnedVector.hpp"
 #include "../../GameStrutClient/CPP/gsClientSocket.hpp"
 #include "gsSync.hpp"
-#include "../../ExternalString/CPP/ExternalString.hpp"
 #include "../../Blob/CPP/Blob.hpp"
 #include "../../InternalString/CPP/InternalString.hpp"
 #include "../../Assert/CPP/Assert.hpp"
@@ -17,7 +16,6 @@ namespace NumbatLogic
 	class OwnedVector;
 	class gsClientSocket;
 	class gsSyncInner;
-	class ExternalString;
 	class gsBlob;
 	class InternalString;
 	class Assert;
@@ -35,14 +33,12 @@ namespace NumbatLogic
 		__nLastSyncId = 0;
 		__pSyncInnerVector = 0;
 		__eState = State::CONNECT;
-		__ROOM_JOIN_HASH = 0;
 		__pRoomVector = new OwnedVector<gsClientRoom*>();
 		__pClientSocket = new gsClientSocket();
 		__pClientSocket->Connect(sxAddress, nPort);
 		__nVersion = nVersion;
 		__eState = State::CONNECT;
 		__pSyncInnerVector = new OwnedVector<gsSyncInner*>();
-		__ROOM_JOIN_HASH = ExternalString::GetChecksum("__RoomJoin");
 	}
 
 	gsClient::~gsClient()
@@ -153,9 +149,9 @@ namespace NumbatLogic
 									Assert::Plz(false);
 								gsClientRoom* pRoom = OnRoomJoin(nRoomId, nRoomType, bPrimary, pJoinBlob);
 								Assert::Plz(pRoom != 0);
-								NumbatLogic::gsClientRoom* __3242241752 = pRoom;
+								NumbatLogic::gsClientRoom* __3242241740 = pRoom;
 								pRoom = 0;
-								__pRoomVector->PushBack(__3242241752);
+								__pRoomVector->PushBack(__3242241740);
 								if (pJoinBlob) delete pJoinBlob;
 								if (pRoom) delete pRoom;
 							}
@@ -211,9 +207,9 @@ namespace NumbatLogic
 		pSendBlob->PackBlob(pBlob);
 		__pClientSocket->Send(pSendBlob);
 		pSyncInner->__pSync->__pSyncInner = pSyncInner;
-		NumbatLogic::gsSyncInner* __108628308 = pSyncInner;
+		NumbatLogic::gsSyncInner* __108628296 = pSyncInner;
 		pSyncInner = 0;
-		__pSyncInnerVector->PushBack(__108628308);
+		__pSyncInnerVector->PushBack(__108628296);
 		if (pSyncInner) delete pSyncInner;
 		if (pSendBlob) delete pSendBlob;
 	}
@@ -228,6 +224,7 @@ namespace NumbatLogic
 		return new gsClientRoom(nRoomId, 0, nRoomTypeHash, bPrimary, this);
 	}
 
+	unsigned int gsClient::__ROOM_JOIN_HASH = 385012456;
 	gsSyncInner* gsClient::GetSyncInnerBySyncId(unsigned int nSyncId)
 	{
 		for (int i = 0; i < __pSyncInnerVector->GetSize(); i++)

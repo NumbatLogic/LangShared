@@ -18,7 +18,7 @@ namespace NumbatLogic
 {
 	class gsServerClient
 	{
-		public: void Send(gsServerRoom* pRoom, const char* sxMessageType, gsBlob* pBlob);
+		public: void Send(gsServerRoom* pRoom, unsigned int nMessageTypeHash, gsBlob* pBlob);
 		public: virtual void OnInitialJoin();
 		public: gsServerRoom* GetRoomByRoomId(unsigned int nRoomId);
 		public: void SyncRespond(unsigned int nSyncId, gsBlob* pBlob);

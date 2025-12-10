@@ -18,7 +18,6 @@ namespace NumbatLogic
 			__nVersion = nVersion;
 			__eState = State.CONNECT;
 			__pSyncInnerVector = new OwnedVector<gsSyncInner>();
-			__ROOM_JOIN_HASH = ExternalString.GetChecksum("__RoomJoin");
 		}
 
 		~gsClient()
@@ -120,9 +119,9 @@ namespace NumbatLogic
 										Assert.Plz(false);
 									gsClientRoom pRoom = OnRoomJoin(nRoomId, nRoomType, bPrimary, pJoinBlob);
 									Assert.Plz(pRoom != null);
-									NumbatLogic.gsClientRoom __3242241752 = pRoom;
+									NumbatLogic.gsClientRoom __3242241740 = pRoom;
 									pRoom = null;
-									__pRoomVector.PushBack(__3242241752);
+									__pRoomVector.PushBack(__3242241740);
 								}
 								else
 								{
@@ -175,9 +174,9 @@ namespace NumbatLogic
 			pSendBlob.PackBlob(pBlob);
 			__pClientSocket.Send(pSendBlob);
 			pSyncInner.__pSync.__pSyncInner = pSyncInner;
-			NumbatLogic.gsSyncInner __108628308 = pSyncInner;
+			NumbatLogic.gsSyncInner __108628296 = pSyncInner;
 			pSyncInner = null;
-			__pSyncInnerVector.PushBack(__108628308);
+			__pSyncInnerVector.PushBack(__108628296);
 		}
 
 		public bool GetPending()
@@ -198,7 +197,7 @@ namespace NumbatLogic
 		public uint __nLastSyncId;
 		public OwnedVector<gsSyncInner> __pSyncInnerVector;
 		public State __eState;
-		public uint __ROOM_JOIN_HASH;
+		public static uint __ROOM_JOIN_HASH = 385012456;
 		public gsSyncInner GetSyncInnerBySyncId(uint nSyncId)
 		{
 			for (int i = 0; i < __pSyncInnerVector.GetSize(); i++)
