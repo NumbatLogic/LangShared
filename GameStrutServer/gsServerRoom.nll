@@ -32,7 +32,7 @@ namespace NumbatLogic
 		public Uint32 __nRoomId;
 		public Uint32 __nRoomType;
 		public InternalString* __sRoomType;
-		public bool __bPrimary;
+		//public bool __bPrimary;
 		public gsServer __pServer;
 		public Vector<gsServerClient>* __pClientVector;
 
@@ -56,7 +56,7 @@ namespace NumbatLogic
 			gsBlob* pBlob = own new gsBlob();
 			pBlob.PackUint32(__nRoomId);
 			pBlob.PackUint32(__nRoomType);
-			pBlob.PackBool(__bPrimary);
+			pBlob.PackBool(false /*__bPrimary*/);
 			pBlob.PackBlob(pJoinBlob);
 
 			pClient.Send(null, gsClient::__ROOM_JOIN_HASH, pBlob);

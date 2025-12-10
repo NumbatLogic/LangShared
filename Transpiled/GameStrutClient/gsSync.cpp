@@ -29,7 +29,7 @@ namespace NumbatLogic
 
 	bool gsSync::GetError()
 	{
-		return __pSyncInner != 0 ? __pSyncInner->__bError : false;
+		return false;
 	}
 
 	void gsSync::OnComplete(gsBlob* pBlob)
@@ -43,7 +43,6 @@ namespace NumbatLogic
 		__sSyncType = 0;
 		__nSyncType = 0;
 		__bComplete = false;
-		__bError = false;
 		__pSync = pSync;
 		__nSyncId = nSyncId;
 		__sSyncType = new InternalString(sxSyncType);

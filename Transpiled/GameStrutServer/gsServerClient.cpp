@@ -1,6 +1,5 @@
 #include "gsServerClient.hpp"
 #include "../../Blob/CPP/Blob.hpp"
-#include "../../ExternalString/CPP/ExternalString.hpp"
 #include "gsServerRoom.hpp"
 #include "../../GameStrutClient/CPP/gsClientSocket.hpp"
 #include "../../Vector/CPP/Vector.hpp"
@@ -15,7 +14,6 @@ namespace NumbatLogic
 {
 	class gsServerClient;
 	class gsBlob;
-	class ExternalString;
 	class gsClientSocket;
 	template <class T>
 	class Vector;
@@ -29,11 +27,10 @@ namespace NumbatLogic
 }
 namespace NumbatLogic
 {
-	void gsServerClient::Send(gsServerRoom* pRoom, const char* sxMessageType, gsBlob* pBlob)
+	void gsServerClient::Send(gsServerRoom* pRoom, unsigned int nMessageTypeHash, gsBlob* pBlob)
 	{
 		gsBlob* pSendBlob = new gsBlob();
 		unsigned int nSyncId = __nLastSyncId++;
-		unsigned int nMessageTypeHash = ExternalString::GetChecksum(sxMessageType);
 		pSendBlob->PackBool(false);
 		pSendBlob->PackUint32(nSyncId);
 		pSendBlob->PackUint32(pRoom == 0 ? 0 : pRoom->__nRoomId);
