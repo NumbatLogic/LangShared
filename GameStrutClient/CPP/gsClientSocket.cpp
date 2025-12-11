@@ -82,10 +82,22 @@ namespace NumbatLogic
 		hints.ai_protocol = IPPROTO_TCP;
 
 		int status = getaddrinfo(host, std::to_string(port).c_str(), &hints, &result);
-		Assert::Plz(status == 0);
+		if (status != 0)
+		{
+			delete m_pHost;
+			m_pHost = NULL;
+			// wsa cleanup
+			return;
+		}
 
 		m_nSocket = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
-		Assert::Plz(m_nSocket >= 0);
+		if (m_nSocket < 0)
+		{
+			delete m_pHost;
+			m_pHost = NULL;
+			//wsa cleanup
+			return;
+		}
 
 		// Set socket to non-blocking mode
 		#ifdef NB_WINDOWS
@@ -104,26 +116,26 @@ namespace NumbatLogic
 		#endif
 
 		status = connect(m_nSocket, result->ai_addr, (int)result->ai_addrlen);
+		m_bConnected = true;
 		
 		#ifdef NB_WINDOWS
 			if (status == SOCKET_ERROR) {
 				int error = WSAGetLastError();
 				if (error != WSAEWOULDBLOCK) {
 					printf("Connect failed with error: %d\n", error);
-					Assert::Plz(false);
+					Disconnect();
 				}
 			}
 		#else
 			if (status < 0) {
 				if (errno != EINPROGRESS) {
 					printf("Connect failed with error: %s\n", strerror(errno));
-					Assert::Plz(false);
+					Disconnect();
 				}
 			}
 		#endif
 		
 		freeaddrinfo(result);
-		m_bConnected = true;
 	}
 
 	void gsClientSocket::Disconnect()
