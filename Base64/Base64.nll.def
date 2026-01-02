@@ -1,0 +1,7 @@
+namespace NumbatLogic
+{
+	class Base64
+	{
+		public static gsBlob** Decode(string sxBase64);
+	}
+}
