@@ -10,11 +10,14 @@ namespace NumbatLogic
 			// a bad checksum
 			static constexpr unsigned int GetChecksum(const char* szString)
 			{
-				unsigned int nResult = 0xABC123;
+				unsigned long hash = 0;
+        		int c = 0;
+
 				const char* p = szString;
-				while (*p)
-					nResult = (nResult ^ *(p++)) << 2;
-				return nResult;
+				while (c = *p++)
+					hash = c + (hash << 6) + (hash << 16) - hash;
+
+				return (unsigned int)hash;
 			}
 
 			static long hextol(const char* szString);
