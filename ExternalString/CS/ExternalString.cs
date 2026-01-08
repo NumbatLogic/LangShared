@@ -9,13 +9,13 @@ namespace NumbatLogic
 
 		public static uint GetChecksum(string szString)
 		{
-			uint nResult = 0xABC123;
+			ulong hash = 0;
 			for (int i = 0; i < szString.Length; i++)
 			{
-				char c = szString[i];
-				nResult = (nResult ^ c) << 2;
+				ulong c = szString[i];
+				hash = c + (hash << 6) + (hash << 16) - hash;
 			}
-			return nResult;
+			return (uint)hash;
 		}
 
 		public static long hextol(string szString)
