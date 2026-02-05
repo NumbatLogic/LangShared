@@ -34,6 +34,11 @@ namespace NumbatLogic
 		return atan2(fX, fY);
 	}
 
+	double Math::Asin(double fX)
+	{
+		return asin(fX);
+	}
+
 	float Math::FloorF(float fX)
 	{
 		return floorf(fX);
@@ -62,5 +67,10 @@ namespace NumbatLogic
 	float Math::Atan2F(float fX, float fY)
 	{
 		return atan2f(fX, fY);
+	}
+
+	float Math::AsinF(float fX)
+	{
+		return asinf(fX);
 	}
 }

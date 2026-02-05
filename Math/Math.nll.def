@@ -2,12 +2,19 @@ namespace NumbatLogic
 {
 	class Math
 	{
+		public static const double PI = 3.14159265358979323846;
+		public static const double DEG_TO_RAD = 0.01745329251994329577;
+
+		public static const float PI_F = 3.14159265358979323846f;
+		public static const float DEG_TO_RAD_F = 0.01745329251994329577f;
+
 		public static double Abs(double fX);
 		public static double Sin(double fAngle);
 		public static double Cos(double fAngle);
 		public static double Sqrt(double fAngle);
 		public static double Pow(double fbase, double fExponent);
 		public static double Atan2(double fX, double fY);
+		public static double Asin(double fX);
 
 		public static float FloorF(float fX);
 		public static float SinF(float fAngle);
@@ -15,5 +22,6 @@ namespace NumbatLogic
 		public static float SqrtF(float fAngle);
 		public static float PowF(float fbase, float fExponent);
 		public static float Atan2F(float fX, float fY);
+		public static float AsinF(float fX);
 	}
 }
