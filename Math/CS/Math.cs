@@ -4,6 +4,12 @@ namespace NumbatLogic
 {
 	class Math
 	{
+		public static const double PI = 3.14159265358979323846;
+		public static const double DEG_TO_RAD = 0.01745329251994329577;
+
+		public static const float PI_F = 3.14159265358979323846f;
+		public static const float DEG_TO_RAD_F = 0.01745329251994329577f;
+
 		public static double Abs(double fX)
 		{
 			return System.Math.Abs(fX);
@@ -29,6 +35,11 @@ namespace NumbatLogic
 			return System.Math.Atan2(fY, fX);
 		}
 
+		public static double Asin(double fX)
+		{
+			return System.Math.Asin(fX);
+		}
+
 		public static float AbsF(float fX)
 		{
 			return System.MathF.Abs(fX);
@@ -52,6 +63,11 @@ namespace NumbatLogic
 		public static float Atan2F(float fY, float fX)
 		{
 			return System.MathF.Atan2(fY, fX);
+		}
+
+		public static float AsinF(float fX)
+		{
+			return System.MathF.Asin(fX);
 		}
 	}
 } 
