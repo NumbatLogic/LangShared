@@ -73,4 +73,19 @@ namespace NumbatLogic
 	{
 		return asinf(fX);
 	}
+
+	float Math::LerpF(float fA, float fB, float fT)
+	{
+		return fA + (fB - fA) * fT;
+	}
+
+	float Math::LerpAngleF(float fAngle1, float fAngle2, float fT)
+	{
+		float fDiff = fAngle2 - fAngle1;
+		if (fDiff > PI_F)
+			fDiff -= 2.0f * PI_F;
+		else if (fDiff < -PI_F)
+			fDiff += 2.0f * PI_F;
+		return fAngle1 + fDiff * fT;
+	}
 }
