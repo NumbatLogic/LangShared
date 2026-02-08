@@ -28,6 +28,9 @@ namespace NumbatLogic
 			static float PowF(float fbase, float fExponent);
 			static float Atan2F(float fX, float fY);
 			static float AsinF(float fX);
+
+			static float LerpF(float fA, float fB, float fT);
+			static float LerpAngleF(float fAngle1, float fAngle2, float fT);
 	};
 }
 
