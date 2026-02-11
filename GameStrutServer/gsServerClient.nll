@@ -40,12 +40,13 @@ namespace NumbatLogic
 
 
 
-		public void SyncRespond(Uint32 nSyncId, gsBlob pBlob)
+		public void SyncRespond(Uint32 nSyncId, bool bAwaitRoomChange, gsBlob pBlob)
 		{
 			gsBlob* pRespondBlob = own new gsBlob();
 			
 			pRespondBlob.PackBool(true);
 			pRespondBlob.PackUint32(nSyncId);
+			pRespondBlob.PackBool(bAwaitRoomChange);
 			pRespondBlob.PackBlob(pBlob);
 
 			__pClientSocket.Send(pRespondBlob);

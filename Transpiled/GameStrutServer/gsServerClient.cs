@@ -29,11 +29,12 @@ namespace NumbatLogic
 			return null;
 		}
 
-		public void SyncRespond(uint nSyncId, gsBlob pBlob)
+		public void SyncRespond(uint nSyncId, bool bAwaitRoomChange, gsBlob pBlob)
 		{
 			gsBlob pRespondBlob = new gsBlob();
 			pRespondBlob.PackBool(true);
 			pRespondBlob.PackUint32(nSyncId);
+			pRespondBlob.PackBool(bAwaitRoomChange);
 			pRespondBlob.PackBlob(pBlob);
 			__pClientSocket.Send(pRespondBlob);
 		}

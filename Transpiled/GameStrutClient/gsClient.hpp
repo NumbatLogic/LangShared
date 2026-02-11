@@ -42,6 +42,7 @@ namespace NumbatLogic
 		public: OwnedVector<gsSyncInner*>* __pSyncInnerVector;
 		public: State __eState;
 		public: static unsigned int __ROOM_JOIN_HASH;
+		public: static unsigned int __ROOM_LEAVE_HASH;
 		public: gsSyncInner* GetSyncInnerBySyncId(unsigned int nSyncId);
 	};
 }

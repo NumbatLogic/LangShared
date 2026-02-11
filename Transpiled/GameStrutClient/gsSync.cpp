@@ -1,6 +1,7 @@
 #include "gsSync.hpp"
 #include "../../InternalString/CPP/InternalString.hpp"
 #include "../../ExternalString/CPP/ExternalString.hpp"
+#include "gsClientRoom.hpp"
 
 namespace NumbatLogic
 {
@@ -8,6 +9,7 @@ namespace NumbatLogic
 	class gsSyncInner;
 	class InternalString;
 	class ExternalString;
+	class gsClientRoom;
 }
 namespace NumbatLogic
 {
@@ -43,10 +45,13 @@ namespace NumbatLogic
 		__sSyncType = 0;
 		__nSyncType = 0;
 		__bComplete = false;
+		__bAwaitRoomChange = false;
+		__nRoomId = 0;
 		__pSync = pSync;
 		__nSyncId = nSyncId;
 		__sSyncType = new InternalString(sxSyncType);
 		__nSyncType = ExternalString::GetChecksum(sxSyncType);
+		__nRoomId = pRoom != 0 ? pRoom->__nRoomId : 0;
 	}
 
 	gsSyncInner::~gsSyncInner()
@@ -56,11 +61,14 @@ namespace NumbatLogic
 		if (__sSyncType) delete __sSyncType;
 	}
 
-	void gsSyncInner::OnComplete(gsBlob* pBlob)
+	void gsSyncInner::OnComplete(gsBlob* pBlob, bool bAwaitRoomChange)
 	{
 		if (__pSync != 0)
 			__pSync->OnComplete(pBlob);
-		__bComplete = true;
+		if (bAwaitRoomChange)
+			__bAwaitRoomChange = true;
+		else
+			__bComplete = true;
 	}
 
 }

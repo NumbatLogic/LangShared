@@ -36,6 +36,7 @@ namespace NumbatLogic
 			__nSyncId = nSyncId;
 			__sSyncType = new InternalString(sxSyncType);
 			__nSyncType = ExternalString.GetChecksum(sxSyncType);
+			__nRoomId = pRoom != null ? pRoom.__nRoomId : 0;
 		}
 
 		~gsSyncInner()
@@ -44,11 +45,14 @@ namespace NumbatLogic
 				__pSync.__pSyncInner = null;
 		}
 
-		public virtual void OnComplete(gsBlob pBlob)
+		public virtual void OnComplete(gsBlob pBlob, bool bAwaitRoomChange)
 		{
 			if (__pSync != null)
 				__pSync.OnComplete(pBlob);
-			__bComplete = true;
+			if (bAwaitRoomChange)
+				__bAwaitRoomChange = true;
+			else
+				__bComplete = true;
 		}
 
 		public gsSync __pSync;
@@ -56,6 +60,8 @@ namespace NumbatLogic
 		public InternalString __sSyncType;
 		public uint __nSyncType;
 		public bool __bComplete;
+		public bool __bAwaitRoomChange;
+		public uint __nRoomId;
 	}
 }
 

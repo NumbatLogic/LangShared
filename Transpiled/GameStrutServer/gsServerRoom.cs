@@ -62,7 +62,19 @@ namespace NumbatLogic
 				{
 					OnClientLeave(pClient);
 					__pClientVector.Erase(i);
-					return;
+					for (int j = 0; j < pClient.__pRoomVector.GetSize(); j++)
+					{
+						if (pClient.__pRoomVector.Get(j) == this)
+						{
+							pClient.__pRoomVector.Erase(j);
+							gsBlob pBlob = new gsBlob();
+							pBlob.PackUint32(__nRoomId);
+							pBlob.PackUint32(__nRoomType);
+							pClient.Send(null, gsClient.__ROOM_LEAVE_HASH, pBlob);
+							return;
+						}
+					}
+					Assert.Plz(false);
 				}
 			}
 			Assert.Plz(false);
