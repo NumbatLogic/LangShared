@@ -46,9 +46,9 @@ namespace NumbatLogic
 	{
 		gsServerRoom* pOwnedServerRoom = new gsServerRoom(__pServer->__nLastRoomId++, "Client_Connect_Room", __pServer);
 		gsServerRoom* pServerRoom = pOwnedServerRoom;
-		NumbatLogic::gsServerRoom* __214264756 = pOwnedServerRoom;
+		NumbatLogic::gsServerRoom* __1621810262 = pOwnedServerRoom;
 		pOwnedServerRoom = 0;
-		__pServer->__pRoomVector->PushBack(__214264756);
+		__pServer->__pRoomVector->PushBack(__1621810262);
 		__pServer->__ClientJoin(this, pServerRoom);
 		if (pOwnedServerRoom) delete pOwnedServerRoom;
 	}

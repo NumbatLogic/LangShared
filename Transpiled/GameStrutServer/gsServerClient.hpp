@@ -21,7 +21,7 @@ namespace NumbatLogic
 		public: void Send(gsServerRoom* pRoom, unsigned int nMessageTypeHash, gsBlob* pBlob);
 		public: virtual void OnInitialJoin();
 		public: gsServerRoom* GetRoomByRoomId(unsigned int nRoomId);
-		public: void SyncRespond(unsigned int nSyncId, gsBlob* pBlob);
+		public: void SyncRespond(unsigned int nSyncId, bool bAwaitRoomChange, gsBlob* pBlob);
 		public: unsigned int __nClientId;
 		public: gsServer* __pServer;
 		public: gsClientSocket* __pClientSocket;

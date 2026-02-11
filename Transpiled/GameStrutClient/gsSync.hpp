@@ -24,12 +24,14 @@ namespace NumbatLogic
 	{
 		public: gsSyncInner(gsSync* pSync, unsigned int nSyncId, const char* sxSyncType, gsClientRoom* pRoom, gsClient* pClient);
 		public: virtual ~gsSyncInner();
-		public: virtual void OnComplete(gsBlob* pBlob);
+		public: virtual void OnComplete(gsBlob* pBlob, bool bAwaitRoomChange);
 		public: gsSync* __pSync;
 		public: unsigned int __nSyncId;
 		public: InternalString* __sSyncType;
 		public: unsigned int __nSyncType;
 		public: bool __bComplete;
+		public: bool __bAwaitRoomChange;
+		public: unsigned int __nRoomId;
 	};
 }
 
