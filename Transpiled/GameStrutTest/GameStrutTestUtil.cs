@@ -30,6 +30,37 @@ namespace NumbatLogic
 			}
 		}
 
+		public static void UpdateVector(gsServer pServer, OwnedVector<gsClient> pClientVector)
+		{
+			int nNotPendingCount = 0;
+			while (nNotPendingCount < 5)
+			{
+				pServer.Update();
+				for (int i = 0; i < pClientVector.GetSize(); i++)
+				{
+					gsClient pClient = pClientVector.Get(i);
+					pClient.Update();
+				}
+				bool bPending = pServer.Pending();
+				if (!bPending)
+				{
+					for (int i = 0; i < pClientVector.GetSize(); i++)
+					{
+						gsClient pClient = pClientVector.Get(i);
+						if (pClient.GetPending())
+						{
+							bPending = true;
+							break;
+						}
+					}
+				}
+				if (bPending)
+					nNotPendingCount = 0;
+				else
+					nNotPendingCount++;
+			}
+		}
+
 	}
 }
 

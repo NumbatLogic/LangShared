@@ -3,6 +3,7 @@
 #include "../../GameStrutClient/CPP/gsClientSocket.hpp"
 #include "../GameStrutServer/gsServer.hpp"
 #include "../GameStrutClient/gsClient.hpp"
+#include "../Vector/OwnedVector.hpp"
 
 namespace NumbatLogic
 {
@@ -11,6 +12,8 @@ namespace NumbatLogic
 	class gsClientSocket;
 	class gsServer;
 	class gsClient;
+	template <class T>
+	class OwnedVector;
 }
 namespace NumbatLogic
 {
@@ -36,6 +39,37 @@ namespace NumbatLogic
 			pServer->Update();
 			pClient->Update();
 			if (pServer->Pending() || pClient->GetPending())
+				nNotPendingCount = 0;
+			else
+				nNotPendingCount++;
+		}
+	}
+
+	void GameStrutTestUtil::UpdateVector(gsServer* pServer, OwnedVector<gsClient*>* pClientVector)
+	{
+		int nNotPendingCount = 0;
+		while (nNotPendingCount < 5)
+		{
+			pServer->Update();
+			for (int i = 0; i < pClientVector->GetSize(); i++)
+			{
+				gsClient* pClient = pClientVector->Get(i);
+				pClient->Update();
+			}
+			bool bPending = pServer->Pending();
+			if (!bPending)
+			{
+				for (int i = 0; i < pClientVector->GetSize(); i++)
+				{
+					gsClient* pClient = pClientVector->Get(i);
+					if (pClient->GetPending())
+					{
+						bPending = true;
+						break;
+					}
+				}
+			}
+			if (bPending)
 				nNotPendingCount = 0;
 			else
 				nNotPendingCount++;
