@@ -275,6 +275,28 @@ namespace NumbatLogic
 		return false;
 	}
 
+	bool gsClient::HasActiveSync()
+	{
+		for (int i = 0; i < __pSyncInnerVector->GetSize(); i++)
+		{
+			gsSyncInner* pSyncInner = __pSyncInnerVector->Get(i);
+			if (!pSyncInner->__bComplete)
+				return true;
+		}
+		return false;
+	}
+
+	bool gsClient::HasActiveSyncByRoom(gsClientRoom* pRoom)
+	{
+		for (int i = 0; i < __pSyncInnerVector->GetSize(); i++)
+		{
+			gsSyncInner* pSyncInner = __pSyncInnerVector->Get(i);
+			if (pSyncInner->__nRoomId == pRoom->__nRoomId && !pSyncInner->__bComplete)
+				return true;
+		}
+		return false;
+	}
+
 	gsClientRoom* gsClient::OnRoomJoin(unsigned int nRoomId, unsigned int nRoomTypeHash, bool bPrimary, gsBlob* pJoinBlob)
 	{
 		return new gsClientRoom(nRoomId, 0, nRoomTypeHash, bPrimary, this);
