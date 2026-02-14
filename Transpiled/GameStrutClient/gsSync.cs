@@ -2,6 +2,7 @@ namespace NumbatLogic
 {
 	class gsSync
 	{
+		public const byte RESULT_SUCCESS = 0;
 		public gsSync()
 		{
 		}
@@ -17,12 +18,13 @@ namespace NumbatLogic
 			return __pSyncInner != null ? __pSyncInner.__bComplete : false;
 		}
 
-		public bool GetError()
+		public byte GetResult()
 		{
-			return false;
+			Assert.Plz(GetComplete());
+			return __pSyncInner != null ? __pSyncInner.__nResult : RESULT_SUCCESS;
 		}
 
-		public virtual void OnComplete(gsBlob pBlob)
+		public virtual void OnComplete(byte nResult, bool bAwaitRoomChange, gsBlob pBlob)
 		{
 		}
 
@@ -37,6 +39,7 @@ namespace NumbatLogic
 			__sSyncType = new InternalString(sxSyncType);
 			__nSyncType = ExternalString.GetChecksum(sxSyncType);
 			__nRoomId = pRoom != null ? pRoom.__nRoomId : 0;
+			__nResult = gsSync.RESULT_SUCCESS;
 		}
 
 		~gsSyncInner()
@@ -45,10 +48,11 @@ namespace NumbatLogic
 				__pSync.__pSyncInner = null;
 		}
 
-		public virtual void OnComplete(gsBlob pBlob, bool bAwaitRoomChange)
+		public virtual void OnComplete(byte nResult, bool bAwaitRoomChange, gsBlob pBlob)
 		{
+			__nResult = nResult;
 			if (__pSync != null)
-				__pSync.OnComplete(pBlob);
+				__pSync.OnComplete(nResult, bAwaitRoomChange, pBlob);
 			if (bAwaitRoomChange)
 				__bAwaitRoomChange = true;
 			else
@@ -62,6 +66,7 @@ namespace NumbatLogic
 		public bool __bComplete;
 		public bool __bAwaitRoomChange;
 		public uint __nRoomId;
+		public byte __nResult;
 	}
 }
 

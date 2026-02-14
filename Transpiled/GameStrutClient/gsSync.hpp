@@ -13,18 +13,19 @@ namespace NumbatLogic
 {
 	class gsSync
 	{
+		public: static const unsigned char RESULT_SUCCESS = 0;
 		public: gsSync();
 		public: virtual ~gsSync();
 		public: bool GetComplete();
-		public: bool GetError();
-		public: virtual void OnComplete(gsBlob* pBlob);
+		public: unsigned char GetResult();
+		public: virtual void OnComplete(unsigned char nResult, bool bAwaitRoomChange, gsBlob* pBlob);
 		public: gsSyncInner* __pSyncInner;
 	};
 	class gsSyncInner
 	{
 		public: gsSyncInner(gsSync* pSync, unsigned int nSyncId, const char* sxSyncType, gsClientRoom* pRoom, gsClient* pClient);
 		public: virtual ~gsSyncInner();
-		public: virtual void OnComplete(gsBlob* pBlob, bool bAwaitRoomChange);
+		public: virtual void OnComplete(unsigned char nResult, bool bAwaitRoomChange, gsBlob* pBlob);
 		public: gsSync* __pSync;
 		public: unsigned int __nSyncId;
 		public: InternalString* __sSyncType;
@@ -32,6 +33,7 @@ namespace NumbatLogic
 		public: bool __bComplete;
 		public: bool __bAwaitRoomChange;
 		public: unsigned int __nRoomId;
+		public: unsigned char __nResult;
 	};
 }
 
