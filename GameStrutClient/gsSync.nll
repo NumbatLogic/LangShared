@@ -2,6 +2,8 @@ namespace NumbatLogic
 {
 	class gsSync
 	{
+		public static const Uint8 RESULT_SUCCESS = 0;
+
 		public construct()
 		{
 		}
@@ -17,12 +19,13 @@ namespace NumbatLogic
 			return __pSyncInner != null ? __pSyncInner.__bComplete : false;
 		}
 
-		public bool GetError()
+		public Uint8 GetResult()
 		{
-			return /*__pSyncInner != null ? __pSyncInner.__bError :*/ false;
+			Assert::Plz(GetComplete());
+			return __pSyncInner != null ? __pSyncInner.__nResult : RESULT_SUCCESS;
 		}
 
-		public virtual void OnComplete(gsBlob pBlob) { }
+		public virtual void OnComplete(Uint8 nResult, bool bAwaitRoomChange, gsBlob pBlob) { }
 
 		// SEKRIT
 		public gsSyncInner __pSyncInner;
@@ -38,6 +41,7 @@ namespace NumbatLogic
 			__sSyncType = own new InternalString(sxSyncType);
 			__nSyncType = ExternalString::GetChecksum(sxSyncType);
 			__nRoomId = pRoom != null ? pRoom.__nRoomId : 0;
+			__nResult = gsSync::RESULT_SUCCESS;
 		}
 
 		public destruct()
@@ -46,10 +50,11 @@ namespace NumbatLogic
 				__pSync.__pSyncInner = null;
 		}
 
-		public virtual void OnComplete(gsBlob pBlob, bool bAwaitRoomChange)
+		public virtual void OnComplete(Uint8 nResult, bool bAwaitRoomChange, gsBlob pBlob)
 		{
+			__nResult = nResult;
 			if (__pSync != null)
-				__pSync.OnComplete(pBlob);
+				__pSync.OnComplete(nResult, bAwaitRoomChange, pBlob);
 
 			if (bAwaitRoomChange)
 				__bAwaitRoomChange = true;
@@ -66,6 +71,6 @@ namespace NumbatLogic
 		public bool __bComplete;
 		public bool __bAwaitRoomChange;
 		public Uint32 __nRoomId;
-		//public bool __bError;
+		public Uint8 __nResult;
 	}
 }

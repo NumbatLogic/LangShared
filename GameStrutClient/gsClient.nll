@@ -104,15 +104,27 @@ namespace NumbatLogic
 							gsSyncInner pSyncInner = GetSyncInnerBySyncId(nSyncId);
 							Assert::Plz(pSyncInner != null);
 
+							Uint8 nResult;
+							if (!pReceiveBlob.UnpackUint8(ref nResult))
+								Assert::Plz(false);
+
 							bool bAwaitRoomChange;
 							if (!pReceiveBlob.UnpackBool(ref bAwaitRoomChange))
 								Assert::Plz(false);
 
-							gsBlob* pSyncBlob = own new gsBlob();
-							if (!pReceiveBlob.UnpackBlob(pSyncBlob))
+							bool bHasBlob;
+							if (!pReceiveBlob.UnpackBool(ref bHasBlob))
 								Assert::Plz(false);
 
-							pSyncInner.OnComplete(pSyncBlob, bAwaitRoomChange);
+							gsBlob* pSyncBlob = null;
+							if (bHasBlob)
+							{
+								pSyncBlob = own new gsBlob();
+								if (!pReceiveBlob.UnpackBlob(pSyncBlob))
+									Assert::Plz(false);
+							}
+
+							pSyncInner.OnComplete(nResult, bAwaitRoomChange, pSyncBlob);
 						}
 						else
 						{

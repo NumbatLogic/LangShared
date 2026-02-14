@@ -1,4 +1,5 @@
 #include "gsSync.hpp"
+#include "../../Assert/CPP/Assert.hpp"
 #include "../../InternalString/CPP/InternalString.hpp"
 #include "../../ExternalString/CPP/ExternalString.hpp"
 #include "gsClientRoom.hpp"
@@ -7,6 +8,7 @@ namespace NumbatLogic
 {
 	class gsSync;
 	class gsSyncInner;
+	class Assert;
 	class InternalString;
 	class ExternalString;
 	class gsClientRoom;
@@ -29,12 +31,13 @@ namespace NumbatLogic
 		return __pSyncInner != 0 ? __pSyncInner->__bComplete : false;
 	}
 
-	bool gsSync::GetError()
+	unsigned char gsSync::GetResult()
 	{
-		return false;
+		Assert::Plz(GetComplete());
+		return __pSyncInner != 0 ? __pSyncInner->__nResult : RESULT_SUCCESS;
 	}
 
-	void gsSync::OnComplete(gsBlob* pBlob)
+	void gsSync::OnComplete(unsigned char nResult, bool bAwaitRoomChange, gsBlob* pBlob)
 	{
 	}
 
@@ -47,11 +50,13 @@ namespace NumbatLogic
 		__bComplete = false;
 		__bAwaitRoomChange = false;
 		__nRoomId = 0;
+		__nResult = 0;
 		__pSync = pSync;
 		__nSyncId = nSyncId;
 		__sSyncType = new InternalString(sxSyncType);
 		__nSyncType = ExternalString::GetChecksum(sxSyncType);
 		__nRoomId = pRoom != 0 ? pRoom->__nRoomId : 0;
+		__nResult = gsSync::RESULT_SUCCESS;
 	}
 
 	gsSyncInner::~gsSyncInner()
@@ -61,10 +66,11 @@ namespace NumbatLogic
 		if (__sSyncType) delete __sSyncType;
 	}
 
-	void gsSyncInner::OnComplete(gsBlob* pBlob, bool bAwaitRoomChange)
+	void gsSyncInner::OnComplete(unsigned char nResult, bool bAwaitRoomChange, gsBlob* pBlob)
 	{
+		__nResult = nResult;
 		if (__pSync != 0)
-			__pSync->OnComplete(pBlob);
+			__pSync->OnComplete(nResult, bAwaitRoomChange, pBlob);
 		if (bAwaitRoomChange)
 			__bAwaitRoomChange = true;
 		else
