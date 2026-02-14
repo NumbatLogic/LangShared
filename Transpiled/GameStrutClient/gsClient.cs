@@ -240,6 +240,28 @@ namespace NumbatLogic
 			return false;
 		}
 
+		public bool HasActiveSync()
+		{
+			for (int i = 0; i < __pSyncInnerVector.GetSize(); i++)
+			{
+				gsSyncInner pSyncInner = __pSyncInnerVector.Get(i);
+				if (!pSyncInner.__bComplete)
+					return true;
+			}
+			return false;
+		}
+
+		public bool HasActiveSyncByRoom(gsClientRoom pRoom)
+		{
+			for (int i = 0; i < __pSyncInnerVector.GetSize(); i++)
+			{
+				gsSyncInner pSyncInner = __pSyncInnerVector.Get(i);
+				if (pSyncInner.__nRoomId == pRoom.__nRoomId && !pSyncInner.__bComplete)
+					return true;
+			}
+			return false;
+		}
+
 		public virtual gsClientRoom OnRoomJoin(uint nRoomId, uint nRoomTypeHash, bool bPrimary, gsBlob pJoinBlob)
 		{
 			return new gsClientRoom(nRoomId, null, nRoomTypeHash, bPrimary, this);
