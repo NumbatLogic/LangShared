@@ -180,9 +180,14 @@ namespace NumbatLogic
 								}
 								else
 								{
-									Console::Log("unknown hash");
-									Assert::Plz(false);
+									OnSync(nSyncId, nMessageType, pMessageBlob);
 								}
+							}
+							else
+							{
+								gsClientRoom pRoom = GetRoomByRoomId(nRoomId);
+								Assert::Plz(pRoom != null);
+								pRoom.OnSync(nSyncId, nMessageType, pMessageBlob);
 							}
 						}
 					}
@@ -229,6 +234,10 @@ namespace NumbatLogic
 					break;
 				}
 			}
+		}
+
+		public virtual void OnSync(Uint32 nSyncId, Uint32 nMessageType, gsBlob pMessageBlob)
+		{
 		}
 
 		public delegate void CompleteCallback();
@@ -319,6 +328,17 @@ namespace NumbatLogic
 		public static Uint32 __ROOM_LEAVE_HASH = tthash("__RoomLeave");
 
 
+
+		public gsClientRoom GetRoomByRoomId(Uint32 nRoomId)
+		{
+			for (int i = 0; i < __pRoomVector.GetSize(); i++)
+			{
+				gsClientRoom pRoom = __pRoomVector.Get(i);
+				if (pRoom.__nRoomId == nRoomId)
+					return pRoom;
+			}
+			return null;
+		}
 
 		public gsSyncInner GetSyncInnerBySyncId(Uint32 nSyncId)
 		{

@@ -20,6 +20,9 @@ namespace NumbatLogic
 			__pClient = pClient;
 		}
 
+		public virtual void OnSync(Uint32 nSyncId, Uint32 nMessageType, gsBlob pMessageBlob)
+		{
+		}
 
 		// SEKRIT
 

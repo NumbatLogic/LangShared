@@ -8,8 +8,8 @@ namespace NumbatLogic
 {
 	class gsClientRoom;
 	class gsSyncInner;
-	class gsSync;
 	class gsBlob;
+	class gsSync;
 	template <class T>
 	class OwnedVector;
 	class gsClientSocket;
@@ -29,6 +29,7 @@ namespace NumbatLogic
 		public: gsClient(const char* sxAddress, unsigned short nPort, unsigned short nVersion);
 		public: virtual ~gsClient();
 		public: void Update();
+		public: virtual void OnSync(unsigned int nSyncId, unsigned int nMessageType, gsBlob* pMessageBlob);
 		public: typedef void (CompleteCallback)();
 		public: void SyncSend(gsSync* pSync, const char* sxSyncType, gsBlob* pBlob, bool mayChangeRoom, gsClientRoom* pRoom);
 		public: bool GetPending();
@@ -45,6 +46,7 @@ namespace NumbatLogic
 		public: State __eState;
 		public: static unsigned int __ROOM_JOIN_HASH;
 		public: static unsigned int __ROOM_LEAVE_HASH;
+		public: gsClientRoom* GetRoomByRoomId(unsigned int nRoomId);
 		public: gsSyncInner* GetSyncInnerBySyncId(unsigned int nSyncId);
 	};
 }

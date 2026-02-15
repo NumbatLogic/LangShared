@@ -190,9 +190,14 @@ namespace NumbatLogic
 								}
 								else
 								{
-									Console::Log("unknown hash");
-									Assert::Plz(false);
+									OnSync(nSyncId, nMessageType, pMessageBlob);
 								}
+						}
+						else
+						{
+							gsClientRoom* pRoom = GetRoomByRoomId(nRoomId);
+							Assert::Plz(pRoom != 0);
+							pRoom->OnSync(nSyncId, nMessageType, pMessageBlob);
 						}
 						if (pMessageBlob) delete pMessageBlob;
 					}
@@ -241,6 +246,10 @@ namespace NumbatLogic
 		}
 	}
 
+	void gsClient::OnSync(unsigned int nSyncId, unsigned int nMessageType, gsBlob* pMessageBlob)
+	{
+	}
+
 	void gsClient::SyncSend(gsSync* pSync, const char* sxSyncType, gsBlob* pBlob, bool mayChangeRoom, gsClientRoom* pRoom)
 	{
 		gsSyncInner* pSyncInner = new gsSyncInner(pSync, ++__nLastSyncId, sxSyncType, pRoom, this);
@@ -255,9 +264,9 @@ namespace NumbatLogic
 		pSendBlob->PackBlob(pBlob);
 		__pClientSocket->Send(pSendBlob);
 		pSyncInner->__pSync->__pSyncInner = pSyncInner;
-		NumbatLogic::gsSyncInner* __3131101350 = pSyncInner;
+		NumbatLogic::gsSyncInner* __3131166948 = pSyncInner;
 		pSyncInner = 0;
-		__pSyncInnerVector->PushBack(__3131101350);
+		__pSyncInnerVector->PushBack(__3131166948);
 		if (pSyncInner) delete pSyncInner;
 		if (pSendBlob) delete pSendBlob;
 	}
@@ -304,6 +313,17 @@ namespace NumbatLogic
 
 	unsigned int gsClient::__ROOM_JOIN_HASH = 1895086341;
 	unsigned int gsClient::__ROOM_LEAVE_HASH = 938124572;
+	gsClientRoom* gsClient::GetRoomByRoomId(unsigned int nRoomId)
+	{
+		for (int i = 0; i < __pRoomVector->GetSize(); i++)
+		{
+			gsClientRoom* pRoom = __pRoomVector->Get(i);
+			if (pRoom->__nRoomId == nRoomId)
+				return pRoom;
+		}
+		return 0;
+	}
+
 	gsSyncInner* gsClient::GetSyncInnerBySyncId(unsigned int nSyncId)
 	{
 		for (int i = 0; i < __pSyncInnerVector->GetSize(); i++)

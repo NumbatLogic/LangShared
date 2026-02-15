@@ -20,6 +20,10 @@ namespace NumbatLogic
 			__pClient = pClient;
 		}
 
+		public virtual void OnSync(uint nSyncId, uint nMessageType, gsBlob pMessageBlob)
+		{
+		}
+
 		public uint __nRoomId;
 		public InternalString __sRoomType;
 		public uint __nRoomTypeHash;

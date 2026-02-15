@@ -37,6 +37,10 @@ namespace NumbatLogic
 		__pClient = pClient;
 	}
 
+	void gsClientRoom::OnSync(unsigned int nSyncId, unsigned int nMessageType, gsBlob* pMessageBlob)
+	{
+	}
+
 	gsClientRoom::~gsClientRoom()
 	{
 		if (__sRoomType) delete __sRoomType;
