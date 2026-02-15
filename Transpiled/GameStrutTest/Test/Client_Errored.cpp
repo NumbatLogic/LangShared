@@ -13,9 +13,8 @@ namespace NumbatLogic
 	class gsServerClient;
 	class gsServerRoom;
 	class gsBlob;
-	class Client_Errored_Client;
-	class gsClient;
 	class Client_Errored;
+	class gsClient;
 	class GameStrutTestUtil;
 	class Assert;
 }
@@ -41,15 +40,6 @@ namespace NumbatLogic
 		Send(pRoom, 2223003848, pBlob);
 		if (pRoom) delete pRoom;
 		if (pBlob) delete pBlob;
-	}
-
-	Client_Errored_Client::Client_Errored_Client(const char* sxAddress, unsigned short nPort, unsigned short nVersion) : gsClient(sxAddress, nPort, nVersion)
-	{
-	}
-
-	gsClientRoom* Client_Errored_Client::OnRoomJoin(unsigned int nRoomId, unsigned int nRoomTypeHash, bool bPrimary, gsBlob* pJoinBlob)
-	{
-		return gsClient::OnRoomJoin(nRoomId, nRoomTypeHash, bPrimary, pJoinBlob);
 	}
 
 	void Client_Errored::Run()

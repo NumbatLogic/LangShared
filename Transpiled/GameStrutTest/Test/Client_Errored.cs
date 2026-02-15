@@ -26,18 +26,6 @@ namespace NumbatLogic
 		}
 
 	}
-	class Client_Errored_Client : gsClient
-	{
-		public Client_Errored_Client(string sxAddress, ushort nPort, ushort nVersion) : base(sxAddress, nPort, nVersion)
-		{
-		}
-
-		public override gsClientRoom OnRoomJoin(uint nRoomId, uint nRoomTypeHash, bool bPrimary, gsBlob pJoinBlob)
-		{
-			return base.OnRoomJoin(nRoomId, nRoomTypeHash, bPrimary, pJoinBlob);
-		}
-
-	}
 	class Client_Errored
 	{
 		public static void Run()

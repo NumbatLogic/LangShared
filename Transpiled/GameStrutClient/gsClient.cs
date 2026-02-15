@@ -18,7 +18,6 @@ namespace NumbatLogic
 			__pClientSocket.Connect(sxAddress, nPort);
 			__nVersion = nVersion;
 			__eState = State.CONNECT;
-			__sErrorMessage = null;
 			__pSyncInnerVector = new OwnedVector<gsSyncInner>();
 		}
 
@@ -123,52 +122,19 @@ namespace NumbatLogic
 								Assert.Plz(false);
 							if (nRoomId == 0)
 							{
-								if (nMessageType == __ROOM_JOIN_HASH)
+								bool bHandled = OnSync(nSyncId, nMessageType, pMessageBlob);
+								if (!bHandled)
 								{
-									uint nRoomType = 0;
-									bool bPrimary = false;
-									if (!pMessageBlob.UnpackUint32(ref nRoomId) || !pMessageBlob.UnpackUint32(ref nRoomType) || !pMessageBlob.UnpackBool(ref bPrimary))
-										Assert.Plz(false);
-									gsBlob pJoinBlob = new gsBlob();
-									if (!pMessageBlob.UnpackBlob(pJoinBlob))
-										Assert.Plz(false);
-									gsClientRoom pRoom = OnRoomJoin(nRoomId, nRoomType, bPrimary, pJoinBlob);
-									Assert.Plz(pRoom != null);
-									NumbatLogic.gsClientRoom __3925306145 = pRoom;
-									pRoom = null;
-									__pRoomVector.PushBack(__3925306145);
+									ErrorDisconnect("Unhandled sync message");
+									return;
 								}
-								else
-									if (nMessageType == __ROOM_LEAVE_HASH)
-									{
-										uint nLeaveRoomId = 0;
-										uint nLeaveRoomType = 0;
-										if (!pMessageBlob.UnpackUint32(ref nLeaveRoomId) || !pMessageBlob.UnpackUint32(ref nLeaveRoomType))
-											Assert.Plz(false);
-										bool bRemoved = false;
-										for (int i = 0; i < __pRoomVector.GetSize(); i++)
-										{
-											gsClientRoom pRoom = __pRoomVector.Get(i);
-											if (pRoom.__nRoomId == nLeaveRoomId)
-											{
-												__pRoomVector.Erase(i);
-												bRemoved = true;
-												break;
-											}
-										}
-										Assert.Plz(bRemoved);
-									}
-									else
-									{
-										OnSync(nSyncId, nMessageType, pMessageBlob);
-									}
 							}
 							else
 							{
 								gsClientRoom pRoom = GetRoomByRoomId(nRoomId);
 								if (pRoom == null)
 								{
-									ErrorDisconnect("Bad room");
+									ErrorDisconnect("Bad room id");
 									return;
 								}
 								pRoom.OnSync(nSyncId, nMessageType, pMessageBlob);
@@ -223,8 +189,48 @@ namespace NumbatLogic
 			}
 		}
 
-		public virtual void OnSync(uint nSyncId, uint nMessageType, gsBlob pMessageBlob)
+		public virtual bool OnSync(uint nSyncId, uint nMessageType, gsBlob pMessageBlob)
 		{
+			if (nMessageType == __ROOM_JOIN_HASH)
+			{
+				uint nRoomId = 0;
+				uint nRoomType = 0;
+				bool bPrimary = false;
+				if (!pMessageBlob.UnpackUint32(ref nRoomId) || !pMessageBlob.UnpackUint32(ref nRoomType) || !pMessageBlob.UnpackBool(ref bPrimary))
+					return false;
+				gsBlob pJoinBlob = new gsBlob();
+				if (!pMessageBlob.UnpackBlob(pJoinBlob))
+				{
+					return false;
+				}
+				gsClientRoom pRoom = OnRoomJoin(nRoomId, nRoomType, bPrimary, pJoinBlob);
+				if (pRoom == null)
+				{
+					return false;
+				}
+				NumbatLogic.gsClientRoom __3933305262 = pRoom;
+				pRoom = null;
+				__pRoomVector.PushBack(__3933305262);
+				return true;
+			}
+			if (nMessageType == __ROOM_LEAVE_HASH)
+			{
+				uint nLeaveRoomId = 0;
+				uint nLeaveRoomType = 0;
+				if (!pMessageBlob.UnpackUint32(ref nLeaveRoomId) || !pMessageBlob.UnpackUint32(ref nLeaveRoomType))
+					return false;
+				for (int i = 0; i < __pRoomVector.GetSize(); i++)
+				{
+					gsClientRoom pRoom = __pRoomVector.Get(i);
+					if (pRoom.__nRoomId == nLeaveRoomId)
+					{
+						__pRoomVector.Erase(i);
+						return true;
+					}
+				}
+				return false;
+			}
+			return false;
 		}
 
 		public delegate void CompleteCallback();
@@ -311,6 +317,8 @@ namespace NumbatLogic
 
 		public void ErrorDisconnect(string sxErrorMessage)
 		{
+			Console.Log("Error disconnect");
+			Console.Log(sxErrorMessage);
 			__sErrorMessage = new InternalString(sxErrorMessage);
 			__eState = State.ERRORED;
 			__pClientSocket.Disconnect();

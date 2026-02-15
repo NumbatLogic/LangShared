@@ -58,12 +58,16 @@ namespace NumbatLogic
 		m_nTestValue = 0;
 	}
 
-	void Sync_Server_Client::OnSync(unsigned int nSyncId, unsigned int nMessageType, gsBlob* pMessageBlob)
+	bool Sync_Server_Client::OnSync(unsigned int nSyncId, unsigned int nMessageType, gsBlob* pMessageBlob)
 	{
+		if (gsClient::OnSync(nSyncId, nMessageType, pMessageBlob))
+			return true;
 		if (nMessageType == 1986771282)
 		{
 			Assert::Plz(pMessageBlob->UnpackUint32(m_nTestValue));
+			return true;
 		}
+		return false;
 	}
 
 	void Sync_Server::Run()

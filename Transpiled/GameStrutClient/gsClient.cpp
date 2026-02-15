@@ -39,7 +39,6 @@ namespace NumbatLogic
 		__pClientSocket->Connect(sxAddress, nPort);
 		__nVersion = nVersion;
 		__eState = State::CONNECT;
-		__sErrorMessage = 0;
 		__pSyncInnerVector = new OwnedVector<gsSyncInner*>();
 	}
 
@@ -154,54 +153,21 @@ namespace NumbatLogic
 							Assert::Plz(false);
 						if (nRoomId == 0)
 						{
-							if (nMessageType == __ROOM_JOIN_HASH)
+							bool bHandled = OnSync(nSyncId, nMessageType, pMessageBlob);
+							if (!bHandled)
 							{
-								unsigned int nRoomType = 0;
-								bool bPrimary = false;
-								if (!pMessageBlob->UnpackUint32(nRoomId) || !pMessageBlob->UnpackUint32(nRoomType) || !pMessageBlob->UnpackBool(bPrimary))
-									Assert::Plz(false);
-								gsBlob* pJoinBlob = new gsBlob();
-								if (!pMessageBlob->UnpackBlob(pJoinBlob))
-									Assert::Plz(false);
-								gsClientRoom* pRoom = OnRoomJoin(nRoomId, nRoomType, bPrimary, pJoinBlob);
-								Assert::Plz(pRoom != 0);
-								NumbatLogic::gsClientRoom* __3925306145 = pRoom;
-								pRoom = 0;
-								__pRoomVector->PushBack(__3925306145);
-								if (pJoinBlob) delete pJoinBlob;
-								if (pRoom) delete pRoom;
+								ErrorDisconnect("Unhandled sync message");
+								if (pMessageBlob) delete pMessageBlob;
+								if (pReceiveBlob) delete pReceiveBlob;
+								return;
 							}
-							else
-								if (nMessageType == __ROOM_LEAVE_HASH)
-								{
-									unsigned int nLeaveRoomId = 0;
-									unsigned int nLeaveRoomType = 0;
-									if (!pMessageBlob->UnpackUint32(nLeaveRoomId) || !pMessageBlob->UnpackUint32(nLeaveRoomType))
-										Assert::Plz(false);
-									bool bRemoved = false;
-									for (int i = 0; i < __pRoomVector->GetSize(); i++)
-									{
-										gsClientRoom* pRoom = __pRoomVector->Get(i);
-										if (pRoom->__nRoomId == nLeaveRoomId)
-										{
-											__pRoomVector->Erase(i);
-											bRemoved = true;
-											break;
-										}
-									}
-									Assert::Plz(bRemoved);
-								}
-								else
-								{
-									OnSync(nSyncId, nMessageType, pMessageBlob);
-								}
 						}
 						else
 						{
 							gsClientRoom* pRoom = GetRoomByRoomId(nRoomId);
 							if (pRoom == 0)
 							{
-								ErrorDisconnect("Bad room");
+								ErrorDisconnect("Bad room id");
 								if (pMessageBlob) delete pMessageBlob;
 								if (pReceiveBlob) delete pReceiveBlob;
 								return;
@@ -260,8 +226,53 @@ namespace NumbatLogic
 		}
 	}
 
-	void gsClient::OnSync(unsigned int nSyncId, unsigned int nMessageType, gsBlob* pMessageBlob)
+	bool gsClient::OnSync(unsigned int nSyncId, unsigned int nMessageType, gsBlob* pMessageBlob)
 	{
+		if (nMessageType == __ROOM_JOIN_HASH)
+		{
+			unsigned int nRoomId = 0;
+			unsigned int nRoomType = 0;
+			bool bPrimary = false;
+			if (!pMessageBlob->UnpackUint32(nRoomId) || !pMessageBlob->UnpackUint32(nRoomType) || !pMessageBlob->UnpackBool(bPrimary))
+				return false;
+			gsBlob* pJoinBlob = new gsBlob();
+			if (!pMessageBlob->UnpackBlob(pJoinBlob))
+			{
+				if (pJoinBlob) delete pJoinBlob;
+				return false;
+			}
+			gsClientRoom* pRoom = OnRoomJoin(nRoomId, nRoomType, bPrimary, pJoinBlob);
+			if (pRoom == 0)
+			{
+				if (pJoinBlob) delete pJoinBlob;
+				if (pRoom) delete pRoom;
+				return false;
+			}
+			NumbatLogic::gsClientRoom* __3933305262 = pRoom;
+			pRoom = 0;
+			__pRoomVector->PushBack(__3933305262);
+			if (pJoinBlob) delete pJoinBlob;
+			if (pRoom) delete pRoom;
+			return true;
+		}
+		if (nMessageType == __ROOM_LEAVE_HASH)
+		{
+			unsigned int nLeaveRoomId = 0;
+			unsigned int nLeaveRoomType = 0;
+			if (!pMessageBlob->UnpackUint32(nLeaveRoomId) || !pMessageBlob->UnpackUint32(nLeaveRoomType))
+				return false;
+			for (int i = 0; i < __pRoomVector->GetSize(); i++)
+			{
+				gsClientRoom* pRoom = __pRoomVector->Get(i);
+				if (pRoom->__nRoomId == nLeaveRoomId)
+				{
+					__pRoomVector->Erase(i);
+					return true;
+				}
+			}
+			return false;
+		}
+		return false;
 	}
 
 	void gsClient::SyncSend(gsSync* pSync, const char* sxSyncType, gsBlob* pBlob, bool mayChangeRoom, gsClientRoom* pRoom)
@@ -340,6 +351,8 @@ namespace NumbatLogic
 
 	void gsClient::ErrorDisconnect(const char* sxErrorMessage)
 	{
+		Console::Log("Error disconnect");
+		Console::Log(sxErrorMessage);
 		__sErrorMessage = new InternalString(sxErrorMessage);
 		__eState = State::ERRORED;
 		__pClientSocket->Disconnect();

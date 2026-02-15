@@ -31,7 +31,7 @@ namespace NumbatLogic
 		public: gsClient(const char* sxAddress, unsigned short nPort, unsigned short nVersion);
 		public: virtual ~gsClient();
 		public: void Update();
-		public: virtual void OnSync(unsigned int nSyncId, unsigned int nMessageType, gsBlob* pMessageBlob);
+		public: virtual bool OnSync(unsigned int nSyncId, unsigned int nMessageType, gsBlob* pMessageBlob);
 		public: typedef void (CompleteCallback)();
 		public: void SyncSend(gsSync* pSync, const char* sxSyncType, gsBlob* pBlob, bool mayChangeRoom, gsClientRoom* pRoom);
 		public: bool GetPending();
