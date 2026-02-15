@@ -6,7 +6,8 @@ namespace NumbatLogic
 			CONNECT,
 			HANDSHAKE,
 			CONNECTED,
-			DISCONNECTED
+			DISCONNECTED,
+			ERRORED
 		}
 
 		public construct(string sxAddress, Uint16 nPort, Uint16 nVersion)
@@ -17,7 +18,6 @@ namespace NumbatLogic
 			__pClientSocket.Connect(sxAddress, nPort);
 			__nVersion = nVersion;
 			__eState = State::CONNECT;
-
 			__pSyncInnerVector = own new OwnedVector<gsSyncInner>();
 		}
 
@@ -186,7 +186,11 @@ namespace NumbatLogic
 							else
 							{
 								gsClientRoom pRoom = GetRoomByRoomId(nRoomId);
-								Assert::Plz(pRoom != null);
+								if (pRoom == null)
+								{
+									ErrorDisconnect("Bad room id");
+									return;
+								}
 								pRoom.OnSync(nSyncId, nMessageType, pMessageBlob);
 							}
 						}
@@ -225,6 +229,10 @@ namespace NumbatLogic
 					break;
 				}
 				case State::DISCONNECTED:
+				{
+					break;
+				}
+				case State::ERRORED:
 				{
 					break;
 				}
@@ -323,6 +331,7 @@ namespace NumbatLogic
 		
 
 		public State __eState;
+		public InternalString* __sErrorMessage;
 
 		public static Uint32 __ROOM_JOIN_HASH = tthash("__RoomJoin");
 		public static Uint32 __ROOM_LEAVE_HASH = tthash("__RoomLeave");
@@ -338,6 +347,21 @@ namespace NumbatLogic
 					return pRoom;
 			}
 			return null;
+		}
+
+		public void ErrorDisconnect(string sxErrorMessage)
+		{
+			Console::Log("Error disconnect");
+			Console::Log(sxErrorMessage);
+			__sErrorMessage = own new InternalString(sxErrorMessage);
+			__eState = State::ERRORED;
+			__pClientSocket.Disconnect();
+		}
+
+		public string GetErrorMessage()
+		{
+			Assert::Plz(__eState == State::ERRORED);
+			return __sErrorMessage.GetExternalString();
 		}
 
 		public gsSyncInner GetSyncInnerBySyncId(Uint32 nSyncId)

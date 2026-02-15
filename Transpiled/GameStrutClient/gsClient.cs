@@ -8,6 +8,7 @@ namespace NumbatLogic
 			HANDSHAKE,
 			CONNECTED,
 			DISCONNECTED,
+			ERRORED,
 		}
 
 		public gsClient(string sxAddress, ushort nPort, ushort nVersion)
@@ -17,6 +18,7 @@ namespace NumbatLogic
 			__pClientSocket.Connect(sxAddress, nPort);
 			__nVersion = nVersion;
 			__eState = State.CONNECT;
+			__sErrorMessage = null;
 			__pSyncInnerVector = new OwnedVector<gsSyncInner>();
 		}
 
@@ -132,9 +134,9 @@ namespace NumbatLogic
 										Assert.Plz(false);
 									gsClientRoom pRoom = OnRoomJoin(nRoomId, nRoomType, bPrimary, pJoinBlob);
 									Assert.Plz(pRoom != null);
-									NumbatLogic.gsClientRoom __3925240554 = pRoom;
+									NumbatLogic.gsClientRoom __3925306145 = pRoom;
 									pRoom = null;
-									__pRoomVector.PushBack(__3925240554);
+									__pRoomVector.PushBack(__3925306145);
 								}
 								else
 									if (nMessageType == __ROOM_LEAVE_HASH)
@@ -164,7 +166,11 @@ namespace NumbatLogic
 							else
 							{
 								gsClientRoom pRoom = GetRoomByRoomId(nRoomId);
-								Assert.Plz(pRoom != null);
+								if (pRoom == null)
+								{
+									ErrorDisconnect("Bad room");
+									return;
+								}
 								pRoom.OnSync(nSyncId, nMessageType, pMessageBlob);
 							}
 						}
@@ -203,6 +209,11 @@ namespace NumbatLogic
 					break;
 				}
 
+				case State.ERRORED:
+				{
+					break;
+				}
+
 				default:
 				{
 					Assert.Plz(false);
@@ -231,9 +242,9 @@ namespace NumbatLogic
 			pSendBlob.PackBlob(pBlob);
 			__pClientSocket.Send(pSendBlob);
 			pSyncInner.__pSync.__pSyncInner = pSyncInner;
-			NumbatLogic.gsSyncInner __3131166948 = pSyncInner;
+			NumbatLogic.gsSyncInner __3131232547 = pSyncInner;
 			pSyncInner = null;
-			__pSyncInnerVector.PushBack(__3131166948);
+			__pSyncInnerVector.PushBack(__3131232547);
 		}
 
 		public bool GetPending()
@@ -284,6 +295,7 @@ namespace NumbatLogic
 		public uint __nLastSyncId;
 		public OwnedVector<gsSyncInner> __pSyncInnerVector;
 		public State __eState;
+		public InternalString __sErrorMessage;
 		public static uint __ROOM_JOIN_HASH = 1895086341;
 		public static uint __ROOM_LEAVE_HASH = 938124572;
 		public gsClientRoom GetRoomByRoomId(uint nRoomId)
@@ -295,6 +307,19 @@ namespace NumbatLogic
 					return pRoom;
 			}
 			return null;
+		}
+
+		public void ErrorDisconnect(string sxErrorMessage)
+		{
+			__sErrorMessage = new InternalString(sxErrorMessage);
+			__eState = State.ERRORED;
+			__pClientSocket.Disconnect();
+		}
+
+		public string GetErrorMessage()
+		{
+			Assert.Plz(__eState == State.ERRORED);
+			return __sErrorMessage.GetExternalString();
 		}
 
 		public gsSyncInner GetSyncInnerBySyncId(uint nSyncId)

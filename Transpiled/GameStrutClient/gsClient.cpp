@@ -3,8 +3,8 @@
 #include "../Vector/OwnedVector.hpp"
 #include "../../GameStrutClient/CPP/gsClientSocket.hpp"
 #include "gsSync.hpp"
-#include "../../Blob/CPP/Blob.hpp"
 #include "../../InternalString/CPP/InternalString.hpp"
+#include "../../Blob/CPP/Blob.hpp"
 #include "../../Assert/CPP/Assert.hpp"
 #include "../../Console/CPP/Console.hpp"
 
@@ -33,11 +33,13 @@ namespace NumbatLogic
 		__nLastSyncId = 0;
 		__pSyncInnerVector = 0;
 		__eState = State::CONNECT;
+		__sErrorMessage = 0;
 		__pRoomVector = new OwnedVector<gsClientRoom*>();
 		__pClientSocket = new gsClientSocket();
 		__pClientSocket->Connect(sxAddress, nPort);
 		__nVersion = nVersion;
 		__eState = State::CONNECT;
+		__sErrorMessage = 0;
 		__pSyncInnerVector = new OwnedVector<gsSyncInner*>();
 	}
 
@@ -47,6 +49,7 @@ namespace NumbatLogic
 		if (__pRoomVector) delete __pRoomVector;
 		if (__pClientSocket) delete __pClientSocket;
 		if (__pSyncInnerVector) delete __pSyncInnerVector;
+		if (__sErrorMessage) delete __sErrorMessage;
 	}
 
 	void gsClient::Update()
@@ -162,9 +165,9 @@ namespace NumbatLogic
 									Assert::Plz(false);
 								gsClientRoom* pRoom = OnRoomJoin(nRoomId, nRoomType, bPrimary, pJoinBlob);
 								Assert::Plz(pRoom != 0);
-								NumbatLogic::gsClientRoom* __3925240554 = pRoom;
+								NumbatLogic::gsClientRoom* __3925306145 = pRoom;
 								pRoom = 0;
-								__pRoomVector->PushBack(__3925240554);
+								__pRoomVector->PushBack(__3925306145);
 								if (pJoinBlob) delete pJoinBlob;
 								if (pRoom) delete pRoom;
 							}
@@ -196,7 +199,13 @@ namespace NumbatLogic
 						else
 						{
 							gsClientRoom* pRoom = GetRoomByRoomId(nRoomId);
-							Assert::Plz(pRoom != 0);
+							if (pRoom == 0)
+							{
+								ErrorDisconnect("Bad room");
+								if (pMessageBlob) delete pMessageBlob;
+								if (pReceiveBlob) delete pReceiveBlob;
+								return;
+							}
 							pRoom->OnSync(nSyncId, nMessageType, pMessageBlob);
 						}
 						if (pMessageBlob) delete pMessageBlob;
@@ -237,6 +246,11 @@ namespace NumbatLogic
 				break;
 			}
 
+			case State::ERRORED:
+			{
+				break;
+			}
+
 			default:
 			{
 				Assert::Plz(false);
@@ -264,9 +278,9 @@ namespace NumbatLogic
 		pSendBlob->PackBlob(pBlob);
 		__pClientSocket->Send(pSendBlob);
 		pSyncInner->__pSync->__pSyncInner = pSyncInner;
-		NumbatLogic::gsSyncInner* __3131166948 = pSyncInner;
+		NumbatLogic::gsSyncInner* __3131232547 = pSyncInner;
 		pSyncInner = 0;
-		__pSyncInnerVector->PushBack(__3131166948);
+		__pSyncInnerVector->PushBack(__3131232547);
 		if (pSyncInner) delete pSyncInner;
 		if (pSendBlob) delete pSendBlob;
 	}
@@ -322,6 +336,19 @@ namespace NumbatLogic
 				return pRoom;
 		}
 		return 0;
+	}
+
+	void gsClient::ErrorDisconnect(const char* sxErrorMessage)
+	{
+		__sErrorMessage = new InternalString(sxErrorMessage);
+		__eState = State::ERRORED;
+		__pClientSocket->Disconnect();
+	}
+
+	const char* gsClient::GetErrorMessage()
+	{
+		Assert::Plz(__eState == State::ERRORED);
+		return __sErrorMessage->GetExternalString();
 	}
 
 	gsSyncInner* gsClient::GetSyncInnerBySyncId(unsigned int nSyncId)

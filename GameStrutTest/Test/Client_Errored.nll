@@ -1,0 +1,40 @@
+namespace NumbatLogic
+{
+	class Client_Errored_Server : gsServer
+	{
+		public construct(string sxAddress, Uint16 nPort, Uint16 nVersion, string sxDatabasePath) : base (sxAddress, nPort, nVersion, sxDatabasePath)
+		{
+		}
+
+		public override gsServerClient** OnCreateServerClient(Uint32 nClientId, gsClientSocket pClientSocket, gsServer pServer)
+		{
+			return new Client_Errored_ServerClient(nClientId, pClientSocket, pServer);
+		}
+	}
+
+	class Client_Errored_ServerClient : gsServerClient
+	{
+		public construct(Uint32 nClientId, gsClientSocket pClientSocket, gsServer pServer) : base (nClientId, pClientSocket, pServer)
+		{
+		}
+
+		public override void OnInitialJoin()
+		{
+			gsServerRoom* pRoom = own new gsServerRoom(1234, "Client_Errored_Room", __pServer);
+			gsBlob* pBlob = own new gsBlob();
+			Send(pRoom, tthash("Dummy"), pBlob);
+		}
+	}
+
+	class Client_Errored
+	{
+		public static void Run()
+		{
+			gsServer* pServer = own new Client_Errored_Server("localhost", 9878, 0, "");
+			gsClient* pClient = own new gsClient("localhost", 9878, 0);
+
+			GameStrutTestUtil::Update(pServer, pClient);
+			Assert::Plz(pClient.__eState == gsClient::State::ERRORED);
+		}
+	}
+}
