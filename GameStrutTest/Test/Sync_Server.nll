@@ -1,0 +1,74 @@
+namespace NumbatLogic
+{
+	class Sync_Server_Server : gsServer
+	{
+		public construct(string sxAddress, Uint16 nPort, Uint16 nVersion, string sxDatabasePath) : base (sxAddress, nPort, nVersion, sxDatabasePath)
+		{
+		}
+
+		public override gsServerClient** OnCreateServerClient(Uint32 nClientId, gsClientSocket pClientSocket, gsServer pServer)
+		{
+			return new Sync_Server_ServerClient(nClientId, pClientSocket, pServer);
+		}
+	}
+
+	class Sync_Server_ServerClient : gsServerClient
+	{
+		public construct(Uint32 nClientId, gsClientSocket pClientSocket, gsServer pServer) : base (nClientId, pClientSocket, pServer)
+		{
+		}
+
+		public override void OnInitialJoin()
+		{
+			gsServerRoom* pOwnedServerRoom = own new gsServerRoom(__pServer.__nLastRoomId++, "Sync_Server_Room", __pServer);
+			gsServerRoom pServerRoom = pOwnedServerRoom;
+			__pServer.__pRoomVector.PushBack(disown pOwnedServerRoom);
+			__pServer.__ClientJoin(this, pServerRoom);
+
+			gsBlob* pTestBlob = own new gsBlob();
+			pTestBlob.PackUint32(42);
+			Send(pServerRoom, tthash("Test"), pTestBlob);
+		}
+	}
+
+	class Sync_Server_Client : gsClient
+	{
+		public Uint32 m_nTestValue;
+		
+		public construct(string sxAddress, Uint16 nPort, Uint16 nVersion) : base (sxAddress, nPort, nVersion)
+		{
+		}
+
+		public override void OnSync(Uint32 nSyncId, Uint32 nMessageType, gsBlob pMessageBlob)
+		{
+			if (nMessageType == tthash("Test"))
+			{
+				Assert::Plz(pMessageBlob.UnpackUint32(ref m_nTestValue));
+			}
+		}
+
+		
+	}
+
+	class Sync_Server
+	{
+		public static void Run()
+		{
+			gsServer* pServer = own new Sync_Server_Server("localhost", 9877, 0, "");
+			gsClient* pClient = own new Sync_Server_Client("localhost", 9877, 0);
+
+			Assert::Plz(pServer.__pRoomVector.GetSize() == 0);
+
+			GameStrutTestUtil::Update(pServer, pClient);
+
+			Assert::Plz(pServer.__pClientVector.GetSize() == 1);
+			Assert::Plz(pServer.__pRoomVector.GetSize() == 1);
+			Assert::Plz(pClient.__eState == gsClient::State::CONNECTED);
+			Assert::Plz(pClient.__pRoomVector.GetSize() == 1);
+
+			Sync_Server_Client pSyncClient = cast Sync_Server_Client(pClient);
+			Assert::Plz(pSyncClient != null);
+			Assert::Plz(pSyncClient.m_nTestValue == 42);
+		}
+	}
+}
