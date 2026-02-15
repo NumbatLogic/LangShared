@@ -13,6 +13,7 @@ namespace NumbatLogic
 	template <class T>
 	class OwnedVector;
 	class gsClientSocket;
+	class InternalString;
 }
 namespace NumbatLogic
 {
@@ -24,6 +25,7 @@ namespace NumbatLogic
 			HANDSHAKE,
 			CONNECTED,
 			DISCONNECTED,
+			ERRORED,
 		};
 
 		public: gsClient(const char* sxAddress, unsigned short nPort, unsigned short nVersion);
@@ -44,9 +46,12 @@ namespace NumbatLogic
 		public: unsigned int __nLastSyncId;
 		public: OwnedVector<gsSyncInner*>* __pSyncInnerVector;
 		public: State __eState;
+		public: InternalString* __sErrorMessage;
 		public: static unsigned int __ROOM_JOIN_HASH;
 		public: static unsigned int __ROOM_LEAVE_HASH;
 		public: gsClientRoom* GetRoomByRoomId(unsigned int nRoomId);
+		public: void ErrorDisconnect(const char* sxErrorMessage);
+		public: const char* GetErrorMessage();
 		public: gsSyncInner* GetSyncInnerBySyncId(unsigned int nSyncId);
 	};
 }
