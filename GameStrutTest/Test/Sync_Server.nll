@@ -39,12 +39,16 @@ namespace NumbatLogic
 		{
 		}
 
-		public override void OnSync(Uint32 nSyncId, Uint32 nMessageType, gsBlob pMessageBlob)
+		public override bool OnSync(Uint32 nSyncId, Uint32 nMessageType, gsBlob pMessageBlob)
 		{
+			if (base.OnSync(nSyncId, nMessageType, pMessageBlob))
+				return true;
 			if (nMessageType == tthash("Test"))
 			{
 				Assert::Plz(pMessageBlob.UnpackUint32(ref m_nTestValue));
+				return true;
 			}
+			return false;
 		}
 
 		

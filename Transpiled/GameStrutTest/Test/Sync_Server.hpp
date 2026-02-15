@@ -28,7 +28,7 @@ namespace NumbatLogic
 	{
 		public: unsigned int m_nTestValue;
 		public: Sync_Server_Client(const char* sxAddress, unsigned short nPort, unsigned short nVersion);
-		public: virtual void OnSync(unsigned int nSyncId, unsigned int nMessageType, gsBlob* pMessageBlob);
+		public: virtual bool OnSync(unsigned int nSyncId, unsigned int nMessageType, gsBlob* pMessageBlob);
 	};
 	class Sync_Server
 	{
