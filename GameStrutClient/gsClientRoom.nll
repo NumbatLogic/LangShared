@@ -1,5 +1,19 @@
 namespace NumbatLogic
 {
+	class gsClientRoom_SyncHandler
+	{
+		public delegate bool SyncHandler(gsClient pClient, gsClientRoom pRoom, Uint32 nSyncId, gsBlob pMessageBlob);
+
+		public Uint32 __nHash;
+		public SyncHandler __pHandler;
+
+		public construct(Uint32 nHash, SyncHandler pHandler)
+		{
+			__nHash = nHash;
+			__pHandler = pHandler;
+		}
+	}
+
 	class gsClientRoom
 	{
 		public construct(Uint32 nRoomId, string sxRoomType, Uint32 nRoomTypeHash, bool bPrimary, gsClient pClient)
@@ -18,10 +32,32 @@ namespace NumbatLogic
 			__nRoomTypeHash = nRoomTypeHash;
 			__bPrimary = bPrimary;
 			__pClient = pClient;
+			__pSyncHandlerVector = own new OwnedVector<gsClientRoom_SyncHandler>();
 		}
 
 		public virtual void OnSync(Uint32 nSyncId, Uint32 nMessageType, gsBlob pMessageBlob)
 		{
+		}
+
+		public void RegisterHandler(Uint32 nMessageType, gsClientRoom_SyncHandler::SyncHandler pHandler)
+		{
+			if (__GetSyncHandler(nMessageType) != null)
+			{
+				Console::Log("Room sync handler hash already registered!");
+				Assert::Plz(false);
+			}
+			__pSyncHandlerVector.PushBack(new gsClientRoom_SyncHandler(nMessageType, pHandler));
+		}
+
+		public gsClientRoom_SyncHandler __GetSyncHandler(Uint32 nMessageType)
+		{
+			for (int i = 0; i < __pSyncHandlerVector.GetSize(); i++)
+			{
+				gsClientRoom_SyncHandler pInfo = __pSyncHandlerVector.Get(i);
+				if (pInfo.__nHash == nMessageType)
+					return pInfo;
+			}
+			return null;
 		}
 
 		// SEKRIT
@@ -31,6 +67,7 @@ namespace NumbatLogic
 		public Uint32 __nRoomTypeHash;
 		public bool __bPrimary;
 		public gsClient __pClient;
+		public OwnedVector<gsClientRoom_SyncHandler>* __pSyncHandlerVector;
 		
 	}
 }

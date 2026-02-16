@@ -48,7 +48,7 @@ namespace NumbatLogic
 		__pServer->__ClientJoin(this, pServerRoom);
 		gsBlob* pTestBlob = new gsBlob();
 		pTestBlob->PackUint32(42);
-		Send(pServerRoom, 1986771282, pTestBlob);
+		Send(0, 1986771282, pTestBlob);
 		if (pOwnedServerRoom) delete pOwnedServerRoom;
 		if (pTestBlob) delete pTestBlob;
 	}
@@ -59,12 +59,11 @@ namespace NumbatLogic
 		RegisterHandler(1986771282, OnTest);
 	}
 
-	bool Sync_ClientHandler_Client::OnTest(gsClient* pClient, unsigned int nSyncId, gsBlob* pMessageBlob)
+	void Sync_ClientHandler_Client::OnTest(gsClient* pClient, unsigned int nSyncId, gsBlob* pMessageBlob)
 	{
 		Sync_ClientHandler_Client* pSyncClient = (Sync_ClientHandler_Client*)(pClient);
 		Assert::Plz(pSyncClient != 0);
 		Assert::Plz(pMessageBlob->UnpackUint32(pSyncClient->m_nTestValue));
-		return true;
 	}
 
 	void Sync_ClientHandler::Run()

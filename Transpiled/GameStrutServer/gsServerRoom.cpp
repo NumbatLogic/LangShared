@@ -2,9 +2,11 @@
 #include "../../Vector/CPP/Vector.hpp"
 #include "gsServerClient.hpp"
 #include "../../Blob/CPP/Blob.hpp"
+#include "../../Console/CPP/Console.hpp"
+#include "../../Assert/CPP/Assert.hpp"
+#include "../Vector/OwnedVector.hpp"
 #include "../../ExternalString/CPP/ExternalString.hpp"
 #include "../../InternalString/CPP/InternalString.hpp"
-#include "../../Assert/CPP/Assert.hpp"
 #include "../GameStrutClient/gsClient.hpp"
 #include "gsServer.hpp"
 
@@ -14,15 +16,27 @@ namespace NumbatLogic
 	template <class T>
 	class Vector;
 	class gsServerClient;
+	class Console;
+	class Assert;
+	template <class T>
+	class OwnedVector;
+	class gsServerRoom_SyncHandler;
 	class ExternalString;
 	class InternalString;
-	class Assert;
 	class gsBlob;
 	class gsClient;
 	class gsServer;
 }
 namespace NumbatLogic
 {
+	gsServerRoom_SyncHandler::gsServerRoom_SyncHandler(unsigned int nHash, SyncHandler* pHandler)
+	{
+		__nHash = 0;
+		__pHandler = 0;
+		__nHash = nHash;
+		__pHandler = pHandler;
+	}
+
 	gsServerClient* gsServerRoom::GetClientByClientId(unsigned int nClientId)
 	{
 		for (int i = 0; i < __pClientVector->GetSize(); i++)
@@ -43,8 +57,25 @@ namespace NumbatLogic
 	{
 	}
 
-	void gsServerRoom::OnSync(unsigned int nSyncId, unsigned int nSyncType, gsBlob* pInBlob, gsServerClient* pServerClient)
+	void gsServerRoom::RegisterHandler(unsigned int nSyncType, gsServerRoom_SyncHandler::SyncHandler* pHandler)
 	{
+		if (__GetSyncHandler(nSyncType) != 0)
+		{
+			Console::Log("Server room sync handler hash already registered!");
+			Assert::Plz(false);
+		}
+		__pSyncHandlerVector->PushBack(new gsServerRoom_SyncHandler(nSyncType, pHandler));
+	}
+
+	gsServerRoom_SyncHandler* gsServerRoom::__GetSyncHandler(unsigned int nSyncType)
+	{
+		for (int i = 0; i < __pSyncHandlerVector->GetSize(); i++)
+		{
+			gsServerRoom_SyncHandler* pInfo = __pSyncHandlerVector->Get(i);
+			if (pInfo->__nHash == nSyncType)
+				return pInfo;
+		}
+		return 0;
 	}
 
 	gsServerRoom::gsServerRoom(unsigned int nRoomId, const char* sxRoomType, gsServer* pServer)
@@ -54,11 +85,13 @@ namespace NumbatLogic
 		__sRoomType = 0;
 		__pServer = 0;
 		__pClientVector = 0;
+		__pSyncHandlerVector = 0;
 		__nRoomId = nRoomId;
 		__nRoomType = ExternalString::GetChecksum(sxRoomType);
 		__sRoomType = new InternalString(sxRoomType);
 		__pServer = pServer;
 		__pClientVector = new Vector<gsServerClient*>();
+		__pSyncHandlerVector = new OwnedVector<gsServerRoom_SyncHandler*>();
 	}
 
 	void gsServerRoom::__ClientJoin(gsServerClient* pClient)
@@ -108,6 +141,7 @@ namespace NumbatLogic
 	{
 		if (__sRoomType) delete __sRoomType;
 		if (__pClientVector) delete __pClientVector;
+		if (__pSyncHandlerVector) delete __pSyncHandlerVector;
 	}
 
 }

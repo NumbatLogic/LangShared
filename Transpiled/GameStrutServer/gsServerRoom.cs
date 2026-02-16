@@ -1,5 +1,17 @@
 namespace NumbatLogic
 {
+	class gsServerRoom_SyncHandler
+	{
+		public delegate void SyncHandler(gsServerRoom pRoom, uint nSyncId, uint nSyncType, gsBlob pInBlob, gsServerClient pServerClient);
+		public uint __nHash;
+		public SyncHandler __pHandler;
+		public gsServerRoom_SyncHandler(uint nHash, SyncHandler pHandler)
+		{
+			__nHash = nHash;
+			__pHandler = pHandler;
+		}
+
+	}
 	class gsServerRoom
 	{
 		public gsServerClient GetClientByClientId(uint nClientId)
@@ -22,8 +34,25 @@ namespace NumbatLogic
 		{
 		}
 
-		public virtual void OnSync(uint nSyncId, uint nSyncType, gsBlob pInBlob, gsServerClient pServerClient)
+		public void RegisterHandler(uint nSyncType, gsServerRoom_SyncHandler.SyncHandler pHandler)
 		{
+			if (__GetSyncHandler(nSyncType) != null)
+			{
+				Console.Log("Server room sync handler hash already registered!");
+				Assert.Plz(false);
+			}
+			__pSyncHandlerVector.PushBack(new gsServerRoom_SyncHandler(nSyncType, pHandler));
+		}
+
+		public gsServerRoom_SyncHandler __GetSyncHandler(uint nSyncType)
+		{
+			for (int i = 0; i < __pSyncHandlerVector.GetSize(); i++)
+			{
+				gsServerRoom_SyncHandler pInfo = __pSyncHandlerVector.Get(i);
+				if (pInfo.__nHash == nSyncType)
+					return pInfo;
+			}
+			return null;
 		}
 
 		public uint __nRoomId;
@@ -31,6 +60,7 @@ namespace NumbatLogic
 		public InternalString __sRoomType;
 		public gsServer __pServer;
 		public Vector<gsServerClient> __pClientVector;
+		public OwnedVector<gsServerRoom_SyncHandler> __pSyncHandlerVector;
 		public gsServerRoom(uint nRoomId, string sxRoomType, gsServer pServer)
 		{
 			__nRoomId = nRoomId;
@@ -38,6 +68,7 @@ namespace NumbatLogic
 			__sRoomType = new InternalString(sxRoomType);
 			__pServer = pServer;
 			__pClientVector = new Vector<gsServerClient>();
+			__pSyncHandlerVector = new OwnedVector<gsServerRoom_SyncHandler>();
 		}
 
 		public void __ClientJoin(gsServerClient pClient)

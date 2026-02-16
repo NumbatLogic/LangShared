@@ -1,0 +1,91 @@
+namespace NumbatLogic
+{
+	class Sync_ClientRoomHandler_Server : gsServer
+	{
+		public construct(string sxAddress, Uint16 nPort, Uint16 nVersion, string sxDatabasePath) : base (sxAddress, nPort, nVersion, sxDatabasePath)
+		{
+		}
+
+		public override gsServerClient** OnCreateServerClient(Uint32 nClientId, gsClientSocket pClientSocket, gsServer pServer)
+		{
+			return new Sync_ClientRoomHandler_ServerClient(nClientId, pClientSocket, pServer);
+		}
+	}
+
+	class Sync_ClientRoomHandler_ServerClient : gsServerClient
+	{
+		public construct(Uint32 nClientId, gsClientSocket pClientSocket, gsServer pServer) : base (nClientId, pClientSocket, pServer)
+		{
+		}
+
+		public override void OnInitialJoin()
+		{
+			gsServerRoom* pOwnedServerRoom = own new gsServerRoom(__pServer.__nLastRoomId++, "Sync_ClientRoomHandler_Room", __pServer);
+			gsServerRoom pServerRoom = pOwnedServerRoom;
+			__pServer.__pRoomVector.PushBack(disown pOwnedServerRoom);
+			__pServer.__ClientJoin(this, pServerRoom);
+
+			gsBlob* pTestBlob = own new gsBlob();
+			pTestBlob.PackUint32(42);
+			Send(pServerRoom, tthash("RoomTest"), pTestBlob);
+		}
+	}
+
+	class Sync_ClientRoomHandler_ClientRoom : gsClientRoom
+	{
+		public static const string ROOM_TYPE = "Sync_ClientRoomHandler_Room";
+		public static const Uint32 ROOM_TYPE_HASH = tthash("Sync_ClientRoomHandler_Room");
+
+		public Uint32 m_nTestValue;
+
+		public construct(Uint32 nRoomId, bool bPrimary, gsBlob pJoinBlob, gsClient pClient) : base (nRoomId, ROOM_TYPE, ROOM_TYPE_HASH, bPrimary, pClient)
+		{
+			RegisterHandler(tthash("RoomTest"), OnRoomTest);
+		}
+
+		private static bool OnRoomTest(gsClient pClient, gsClientRoom pRoom, Uint32 nSyncId, gsBlob pMessageBlob)
+		{
+			Sync_ClientRoomHandler_ClientRoom pRoomTyped = cast Sync_ClientRoomHandler_ClientRoom(pRoom);
+			Assert::Plz(pRoomTyped != null);
+			Assert::Plz(pMessageBlob.UnpackUint32(ref pRoomTyped.m_nTestValue));
+			return true;
+		}
+	}
+
+	class Sync_ClientRoomHandler_Client : gsClient
+	{
+		public construct(string sxAddress, Uint16 nPort, Uint16 nVersion) : base (sxAddress, nPort, nVersion)
+		{
+		}
+
+		public override gsClientRoom** OnRoomJoin(Uint32 nRoomId, Uint32 nRoomTypeHash, bool bPrimary, gsBlob pJoinBlob)
+		{
+			if (nRoomTypeHash == Sync_ClientRoomHandler_ClientRoom::ROOM_TYPE_HASH)
+				return new Sync_ClientRoomHandler_ClientRoom(nRoomId, bPrimary, pJoinBlob, this);
+			return base.OnRoomJoin(nRoomId, nRoomTypeHash, bPrimary, pJoinBlob);
+		}
+	}
+
+	class Sync_ClientRoomHandler
+	{
+		public static void Run()
+		{
+			gsServer* pServer = own new Sync_ClientRoomHandler_Server("localhost", 9878, 0, "");
+			gsClient* pClient = own new Sync_ClientRoomHandler_Client("localhost", 9878, 0);
+
+			Assert::Plz(pServer.__pRoomVector.GetSize() == 0);
+
+			GameStrutTestUtil::Update(pServer, pClient);
+
+			Assert::Plz(pServer.__pClientVector.GetSize() == 1);
+			Assert::Plz(pServer.__pRoomVector.GetSize() == 1);
+			Assert::Plz(pClient.__eState == gsClient::State::CONNECTED);
+			Assert::Plz(pClient.__pRoomVector.GetSize() == 1);
+
+			gsClientRoom pRoom = pClient.__pRoomVector.Get(0);
+			Sync_ClientRoomHandler_ClientRoom pRoomTyped = cast Sync_ClientRoomHandler_ClientRoom(pRoom);
+			Assert::Plz(pRoomTyped != null);
+			Assert::Plz(pRoomTyped.m_nTestValue == 42);
+		}
+	}
+}

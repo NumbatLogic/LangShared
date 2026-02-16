@@ -28,7 +28,7 @@ namespace NumbatLogic
 	{
 		public: unsigned int m_nTestValue;
 		public: Sync_ClientHandler_Client(const char* sxAddress, unsigned short nPort, unsigned short nVersion);
-		protected: static bool OnTest(gsClient* pClient, unsigned int nSyncId, gsBlob* pMessageBlob);
+		protected: static void OnTest(gsClient* pClient, unsigned int nSyncId, gsBlob* pMessageBlob);
 	};
 	class Sync_ClientHandler
 	{
