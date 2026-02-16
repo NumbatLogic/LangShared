@@ -1,0 +1,25 @@
+namespace NumbatLogic
+{
+	class ServerSocket_DisconnectClient
+	{
+		public static void Run()
+		{
+			gsServerSocket pServerSocket = new gsServerSocket();
+			pServerSocket.Start(9877);
+			gsClientSocket pClientSocket = new gsClientSocket();
+			pClientSocket.Connect("localhost", 9877);
+			GameStrutTestUtil.Update(pServerSocket, pClientSocket);
+			gsClientSocket pServerClientSocket = pServerSocket.Accept();
+			Assert.Plz(pServerClientSocket != null);
+			Assert.Plz(pServerClientSocket.GetConnected());
+			Assert.Plz(pClientSocket.GetConnected());
+			pServerClientSocket.Disconnect();
+			GameStrutTestUtil.Update(pServerSocket, pClientSocket);
+			Assert.Plz(!pClientSocket.GetConnected());
+			Assert.Plz(!pServerClientSocket.GetConnected());
+			pServerSocket.Stop();
+		}
+
+	}
+}
+

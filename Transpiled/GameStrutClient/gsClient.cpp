@@ -339,6 +339,8 @@ namespace NumbatLogic
 
 	bool gsClient::GetPending()
 	{
+		if (__eState == State::ERRORED)
+			return false;
 		if (__pClientSocket->Pending())
 			return true;
 		for (int i = 0; i < __pSyncInnerVector->GetSize(); i++)
