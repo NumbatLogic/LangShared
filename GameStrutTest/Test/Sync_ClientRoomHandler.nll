@@ -43,12 +43,11 @@ namespace NumbatLogic
 			RegisterHandler(tthash("RoomTest"), OnRoomTest);
 		}
 
-		private static bool OnRoomTest(gsClient pClient, gsClientRoom pRoom, Uint32 nSyncId, gsBlob pMessageBlob)
+		private static void OnRoomTest(gsClient pClient, gsClientRoom pRoom, Uint32 nSyncId, gsBlob pMessageBlob)
 		{
 			Sync_ClientRoomHandler_ClientRoom pRoomTyped = cast Sync_ClientRoomHandler_ClientRoom(pRoom);
 			Assert::Plz(pRoomTyped != null);
 			Assert::Plz(pMessageBlob.UnpackUint32(ref pRoomTyped.m_nTestValue));
-			return true;
 		}
 	}
 

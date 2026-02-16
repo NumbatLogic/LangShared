@@ -2,7 +2,7 @@ namespace NumbatLogic
 {
 	class gsClientRoom_SyncHandler
 	{
-		public delegate bool SyncHandler(gsClient pClient, gsClientRoom pRoom, uint nSyncId, gsBlob pMessageBlob);
+		public delegate void SyncHandler(gsClient pClient, gsClientRoom pRoom, uint nSyncId, gsBlob pMessageBlob);
 		public uint __nHash;
 		public SyncHandler __pHandler;
 		public gsClientRoom_SyncHandler(uint nHash, SyncHandler pHandler)
@@ -31,10 +31,6 @@ namespace NumbatLogic
 			__bPrimary = bPrimary;
 			__pClient = pClient;
 			__pSyncHandlerVector = new OwnedVector<gsClientRoom_SyncHandler>();
-		}
-
-		public virtual void OnSync(uint nSyncId, uint nMessageType, gsBlob pMessageBlob)
-		{
 		}
 
 		public void RegisterHandler(uint nMessageType, gsClientRoom_SyncHandler.SyncHandler pHandler)

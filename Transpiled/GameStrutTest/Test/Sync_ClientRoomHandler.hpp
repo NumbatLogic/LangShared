@@ -32,7 +32,7 @@ namespace NumbatLogic
 		public: static const unsigned int ROOM_TYPE_HASH = 3638174234;
 		public: unsigned int m_nTestValue;
 		public: Sync_ClientRoomHandler_ClientRoom(unsigned int nRoomId, bool bPrimary, gsBlob* pJoinBlob, gsClient* pClient);
-		protected: static bool OnRoomTest(gsClient* pClient, gsClientRoom* pRoom, unsigned int nSyncId, gsBlob* pMessageBlob);
+		protected: static void OnRoomTest(gsClient* pClient, gsClientRoom* pRoom, unsigned int nSyncId, gsBlob* pMessageBlob);
 	};
 	class Sync_ClientRoomHandler_Client : public gsClient
 	{

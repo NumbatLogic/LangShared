@@ -53,10 +53,6 @@ namespace NumbatLogic
 		__pSyncHandlerVector = new OwnedVector<gsClientRoom_SyncHandler*>();
 	}
 
-	void gsClientRoom::OnSync(unsigned int nSyncId, unsigned int nMessageType, gsBlob* pMessageBlob)
-	{
-	}
-
 	void gsClientRoom::RegisterHandler(unsigned int nMessageType, gsClientRoom_SyncHandler::SyncHandler* pHandler)
 	{
 		if (__GetSyncHandler(nMessageType) != 0)

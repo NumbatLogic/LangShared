@@ -189,21 +189,14 @@ namespace NumbatLogic
 								return;
 							}
 							gsClientRoom_SyncHandler* pHandler = pRoom->__GetSyncHandler(nMessageType);
-							if (pHandler != 0)
+							if (pHandler == 0)
 							{
-								bool bHandled = pHandler->__pHandler(this, pRoom, nSyncId, pMessageBlob);
-								if (!bHandled)
-								{
-									ErrorDisconnect("Unhandled room sync message");
-									if (pMessageBlob) delete pMessageBlob;
-									if (pReceiveBlob) delete pReceiveBlob;
-									return;
-								}
+								ErrorDisconnect("No handler registered for room sync message");
+								if (pMessageBlob) delete pMessageBlob;
+								if (pReceiveBlob) delete pReceiveBlob;
+								return;
 							}
-							else
-							{
-								pRoom->OnSync(nSyncId, nMessageType, pMessageBlob);
-							}
+							pHandler->__pHandler(this, pRoom, nSyncId, pMessageBlob);
 						}
 						if (pMessageBlob) delete pMessageBlob;
 					}
@@ -270,9 +263,9 @@ namespace NumbatLogic
 				gsClientRoom* pRoom = pClient->OnRoomJoin(nRoomId, nRoomType, bPrimary, pJoinBlob);
 				if (pRoom != 0)
 				{
-					NumbatLogic::gsClientRoom* __3933502056 = pRoom;
+					NumbatLogic::gsClientRoom* __3933436460 = pRoom;
 					pRoom = 0;
-					pClient->__pRoomVector->PushBack(__3933502056);
+					pClient->__pRoomVector->PushBack(__3933436460);
 					if (pRoom) delete pRoom;
 					if (pJoinBlob) delete pJoinBlob;
 					return;
@@ -337,9 +330,9 @@ namespace NumbatLogic
 		pSendBlob->PackBlob(pBlob);
 		__pClientSocket->Send(pSendBlob);
 		pSyncInner->__pSync->__pSyncInner = pSyncInner;
-		NumbatLogic::gsSyncInner* __3139166057 = pSyncInner;
+		NumbatLogic::gsSyncInner* __3139100461 = pSyncInner;
 		pSyncInner = 0;
-		__pSyncInnerVector->PushBack(__3139166057);
+		__pSyncInnerVector->PushBack(__3139100461);
 		if (pSyncInner) delete pSyncInner;
 		if (pSendBlob) delete pSendBlob;
 	}

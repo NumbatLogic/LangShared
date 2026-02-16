@@ -175,19 +175,12 @@ namespace NumbatLogic
 									return;
 								}
 								gsClientRoom_SyncHandler pHandler = pRoom.__GetSyncHandler(nMessageType);
-								if (pHandler != null)
+								if (pHandler == null)
 								{
-									bool bHandled = pHandler.__pHandler(this, pRoom, nSyncId, pMessageBlob);
-									if (!bHandled)
-									{
-										ErrorDisconnect("Unhandled room sync message");
-										return;
-									}
+									ErrorDisconnect("No handler registered for room sync message");
+									return;
 								}
-								else
-								{
-									pRoom.OnSync(nSyncId, nMessageType, pMessageBlob);
-								}
+								pHandler.__pHandler(this, pRoom, nSyncId, pMessageBlob);
 							}
 						}
 					}

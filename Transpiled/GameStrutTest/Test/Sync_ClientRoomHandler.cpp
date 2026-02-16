@@ -62,12 +62,11 @@ namespace NumbatLogic
 		RegisterHandler(395751469, OnRoomTest);
 	}
 
-	bool Sync_ClientRoomHandler_ClientRoom::OnRoomTest(gsClient* pClient, gsClientRoom* pRoom, unsigned int nSyncId, gsBlob* pMessageBlob)
+	void Sync_ClientRoomHandler_ClientRoom::OnRoomTest(gsClient* pClient, gsClientRoom* pRoom, unsigned int nSyncId, gsBlob* pMessageBlob)
 	{
 		Sync_ClientRoomHandler_ClientRoom* pRoomTyped = (Sync_ClientRoomHandler_ClientRoom*)(pRoom);
 		Assert::Plz(pRoomTyped != 0);
 		Assert::Plz(pMessageBlob->UnpackUint32(pRoomTyped->m_nTestValue));
-		return true;
 	}
 
 	Sync_ClientRoomHandler_Client::Sync_ClientRoomHandler_Client(const char* sxAddress, unsigned short nPort, unsigned short nVersion) : gsClient(sxAddress, nPort, nVersion)

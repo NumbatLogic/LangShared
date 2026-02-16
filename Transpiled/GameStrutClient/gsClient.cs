@@ -154,19 +154,12 @@ namespace NumbatLogic
 									return;
 								}
 								gsClientRoom_SyncHandler pHandler = pRoom.__GetSyncHandler(nMessageType);
-								if (pHandler != null)
+								if (pHandler == null)
 								{
-									bool bHandled = pHandler.__pHandler(this, pRoom, nSyncId, pMessageBlob);
-									if (!bHandled)
-									{
-										ErrorDisconnect("Unhandled room sync message");
-										return;
-									}
+									ErrorDisconnect("No handler registered for room sync message");
+									return;
 								}
-								else
-								{
-									pRoom.OnSync(nSyncId, nMessageType, pMessageBlob);
-								}
+								pHandler.__pHandler(this, pRoom, nSyncId, pMessageBlob);
 							}
 						}
 					}
@@ -231,9 +224,9 @@ namespace NumbatLogic
 					gsClientRoom pRoom = pClient.OnRoomJoin(nRoomId, nRoomType, bPrimary, pJoinBlob);
 					if (pRoom != null)
 					{
-						NumbatLogic.gsClientRoom __3933502056 = pRoom;
+						NumbatLogic.gsClientRoom __3933436460 = pRoom;
 						pRoom = null;
-						pClient.__pRoomVector.PushBack(__3933502056);
+						pClient.__pRoomVector.PushBack(__3933436460);
 						return;
 					}
 				}
@@ -295,9 +288,9 @@ namespace NumbatLogic
 			pSendBlob.PackBlob(pBlob);
 			__pClientSocket.Send(pSendBlob);
 			pSyncInner.__pSync.__pSyncInner = pSyncInner;
-			NumbatLogic.gsSyncInner __3139166057 = pSyncInner;
+			NumbatLogic.gsSyncInner __3139100461 = pSyncInner;
 			pSyncInner = null;
-			__pSyncInnerVector.PushBack(__3139166057);
+			__pSyncInnerVector.PushBack(__3139100461);
 		}
 
 		public bool GetPending()
