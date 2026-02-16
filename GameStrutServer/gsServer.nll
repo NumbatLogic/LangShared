@@ -13,6 +13,7 @@ namespace NumbatLogic
 
 			__pRoomVector = own new OwnedVector<gsServerRoom>();
 			__pClientVector = own new OwnedVector<gsServerClient>();
+			__nLastClientId = 1;
 			__nLastRoomId = 1;
 		}
 

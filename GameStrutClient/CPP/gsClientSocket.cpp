@@ -203,7 +203,7 @@ namespace NumbatLogic
 		}
 
 		// Process read buffer
-		/*int bytesAvailable = 0;
+		int bytesAvailable = 0;
 		#ifdef NB_WINDOWS
 			ioctlsocket(m_nSocket, FIONREAD, (u_long*)&bytesAvailable);
 		#else
@@ -215,16 +215,16 @@ namespace NumbatLogic
 				}
 			}
 		#endif
-*/
 
-int bytesAvailable = 200;
-		if (bytesAvailable > 0)
+		// When 0 bytes available, still try recv() once to detect peer close (recv returns 0)
+		int bytesToRead = bytesAvailable > 0 ? bytesAvailable : 1;
+		if (bytesToRead > 0)
 		{
 			// Ensure buffer is large enough
-			if (m_nReadDataSize + bytesAvailable > m_nReadBufferSize)
+			if (m_nReadDataSize + bytesToRead > m_nReadBufferSize)
 			{
 				unsigned int newSize = m_nReadBufferSize * 2;
-				while (newSize < m_nReadDataSize + bytesAvailable)
+				while (newSize < m_nReadDataSize + bytesToRead)
 					newSize *= 2;
 
 				unsigned char* newBuffer = new unsigned char[newSize];
@@ -234,10 +234,15 @@ int bytesAvailable = 200;
 				m_nReadBufferSize = newSize;
 			}
 
-			int bytesRead = recv(m_nSocket, (char*)m_pReadBuffer + m_nReadDataSize, bytesAvailable, 0);
+			int bytesRead = recv(m_nSocket, (char*)m_pReadBuffer + m_nReadDataSize, bytesToRead, 0);
 			if (bytesRead > 0)
 			{
 				m_nReadDataSize += bytesRead;
+			}
+			else if (bytesRead == 0)
+			{
+				// Peer closed the connection
+				Disconnect();
 			}
 			else if (bytesRead < 0)
 			{
@@ -245,12 +250,12 @@ int bytesAvailable = 200;
 					int error = WSAGetLastError();
 					if (error != WSAEWOULDBLOCK) {
 						printf("Recv error: %d\n", error);
-						// Handle recv error appropriately
+						Disconnect();
 					}
 				#else
 					if (errno != EAGAIN && errno != EWOULDBLOCK) {
 						printf("Recv error: %s\n", strerror(errno));
-						// Handle recv error appropriately
+						Disconnect();
 					}
 				#endif
 			}

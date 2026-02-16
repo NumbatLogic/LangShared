@@ -45,6 +45,7 @@ namespace NumbatLogic
 		__pServerSocket->Start(__nPort);
 		__pRoomVector = new OwnedVector<gsServerRoom*>();
 		__pClientVector = new OwnedVector<gsServerClient*>();
+		__nLastClientId = 1;
 		__nLastRoomId = 1;
 	}
 
@@ -66,9 +67,9 @@ namespace NumbatLogic
 			{
 				gsServerClient* pServerClient = OnCreateServerClient(__nLastClientId++, pClientSocket, this);
 				Assert::Plz(pServerClient != 0);
-				NumbatLogic::gsServerClient* __1702162431 = pServerClient;
+				NumbatLogic::gsServerClient* __1702162432 = pServerClient;
 				pServerClient = 0;
-				__pClientVector->PushBack(__1702162431);
+				__pClientVector->PushBack(__1702162432);
 				if (pServerClient) delete pServerClient;
 			}
 		}
@@ -129,9 +130,9 @@ namespace NumbatLogic
 		gsServerRoom* pOwnedRoom = OnCreateRoom(++__nLastRoomId, nRoomType, pCreateBlob);
 		Assert::Plz(pOwnedRoom != 0);
 		gsServerRoom* pRoom = pOwnedRoom;
-		NumbatLogic::gsServerRoom* __4188406599 = pOwnedRoom;
+		NumbatLogic::gsServerRoom* __4188472189 = pOwnedRoom;
 		pOwnedRoom = 0;
-		__pRoomVector->PushBack(__4188406599);
+		__pRoomVector->PushBack(__4188472189);
 		if (pOwnedRoom) delete pOwnedRoom;
 		return pRoom;
 	}

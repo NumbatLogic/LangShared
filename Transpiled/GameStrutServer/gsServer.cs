@@ -11,6 +11,7 @@ namespace NumbatLogic
 			__pServerSocket.Start(__nPort);
 			__pRoomVector = new OwnedVector<gsServerRoom>();
 			__pClientVector = new OwnedVector<gsServerClient>();
+			__nLastClientId = 1;
 			__nLastRoomId = 1;
 		}
 
@@ -36,9 +37,9 @@ namespace NumbatLogic
 				{
 					gsServerClient pServerClient = OnCreateServerClient(__nLastClientId++, pClientSocket, this);
 					Assert.Plz(pServerClient != null);
-					NumbatLogic.gsServerClient __1702162431 = pServerClient;
+					NumbatLogic.gsServerClient __1702162432 = pServerClient;
 					pServerClient = null;
-					__pClientVector.PushBack(__1702162431);
+					__pClientVector.PushBack(__1702162432);
 				}
 			}
 			for (int i = 0; i < __pClientVector.GetSize(); i++)
@@ -106,9 +107,9 @@ namespace NumbatLogic
 			gsServerRoom pOwnedRoom = OnCreateRoom(++__nLastRoomId, nRoomType, pCreateBlob);
 			Assert.Plz(pOwnedRoom != null);
 			gsServerRoom pRoom = pOwnedRoom;
-			NumbatLogic.gsServerRoom __4188406599 = pOwnedRoom;
+			NumbatLogic.gsServerRoom __4188472189 = pOwnedRoom;
 			pOwnedRoom = null;
-			__pRoomVector.PushBack(__4188406599);
+			__pRoomVector.PushBack(__4188472189);
 			return pRoom;
 		}
 
