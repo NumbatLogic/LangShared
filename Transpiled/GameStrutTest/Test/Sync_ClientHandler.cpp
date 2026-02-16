@@ -1,4 +1,4 @@
-#include "Sync_FromServer.hpp"
+#include "Sync_ClientHandler.hpp"
 #include "../../GameStrutServer/gsServer.hpp"
 #include "../../GameStrutServer/gsServerRoom.hpp"
 #include "../../Vector/OwnedVector.hpp"
@@ -9,38 +9,38 @@
 
 namespace NumbatLogic
 {
-	class Sync_FromServer_Server;
+	class Sync_ClientHandler_Server;
 	class gsServer;
-	class Sync_FromServer_ServerClient;
+	class Sync_ClientHandler_ServerClient;
 	class gsServerClient;
 	class gsServerRoom;
 	template <class T>
 	class OwnedVector;
 	class gsBlob;
 	class gsClient;
-	class Sync_FromServer_Client;
+	class Sync_ClientHandler_Client;
 	class Assert;
-	class Sync_FromServer;
+	class Sync_ClientHandler;
 	class GameStrutTestUtil;
 }
 namespace NumbatLogic
 {
-	Sync_FromServer_Server::Sync_FromServer_Server(const char* sxAddress, unsigned short nPort, unsigned short nVersion, const char* sxDatabasePath) : gsServer(sxAddress, nPort, nVersion, sxDatabasePath)
+	Sync_ClientHandler_Server::Sync_ClientHandler_Server(const char* sxAddress, unsigned short nPort, unsigned short nVersion, const char* sxDatabasePath) : gsServer(sxAddress, nPort, nVersion, sxDatabasePath)
 	{
 	}
 
-	gsServerClient* Sync_FromServer_Server::OnCreateServerClient(unsigned int nClientId, gsClientSocket* pClientSocket, gsServer* pServer)
+	gsServerClient* Sync_ClientHandler_Server::OnCreateServerClient(unsigned int nClientId, gsClientSocket* pClientSocket, gsServer* pServer)
 	{
-		return new Sync_FromServer_ServerClient(nClientId, pClientSocket, pServer);
+		return new Sync_ClientHandler_ServerClient(nClientId, pClientSocket, pServer);
 	}
 
-	Sync_FromServer_ServerClient::Sync_FromServer_ServerClient(unsigned int nClientId, gsClientSocket* pClientSocket, gsServer* pServer) : gsServerClient(nClientId, pClientSocket, pServer)
+	Sync_ClientHandler_ServerClient::Sync_ClientHandler_ServerClient(unsigned int nClientId, gsClientSocket* pClientSocket, gsServer* pServer) : gsServerClient(nClientId, pClientSocket, pServer)
 	{
 	}
 
-	void Sync_FromServer_ServerClient::OnInitialJoin()
+	void Sync_ClientHandler_ServerClient::OnInitialJoin()
 	{
-		gsServerRoom* pOwnedServerRoom = new gsServerRoom(__pServer->__nLastRoomId++, "Sync_FromServer_Room", __pServer);
+		gsServerRoom* pOwnedServerRoom = new gsServerRoom(__pServer->__nLastRoomId++, "Sync_ClientHandler_Room", __pServer);
 		gsServerRoom* pServerRoom = pOwnedServerRoom;
 		NumbatLogic::gsServerRoom* __1621810262 = pOwnedServerRoom;
 		pOwnedServerRoom = 0;
@@ -53,31 +53,31 @@ namespace NumbatLogic
 		if (pTestBlob) delete pTestBlob;
 	}
 
-	Sync_FromServer_Client::Sync_FromServer_Client(const char* sxAddress, unsigned short nPort, unsigned short nVersion) : gsClient(sxAddress, nPort, nVersion)
+	Sync_ClientHandler_Client::Sync_ClientHandler_Client(const char* sxAddress, unsigned short nPort, unsigned short nVersion) : gsClient(sxAddress, nPort, nVersion)
 	{
 		m_nTestValue = 0;
 		RegisterHandler(1986771282, OnTest);
 	}
 
-	bool Sync_FromServer_Client::OnTest(gsClient* pClient, unsigned int nSyncId, gsBlob* pMessageBlob)
+	bool Sync_ClientHandler_Client::OnTest(gsClient* pClient, unsigned int nSyncId, gsBlob* pMessageBlob)
 	{
-		Sync_FromServer_Client* pSyncClient = (Sync_FromServer_Client*)(pClient);
+		Sync_ClientHandler_Client* pSyncClient = (Sync_ClientHandler_Client*)(pClient);
 		Assert::Plz(pSyncClient != 0);
 		Assert::Plz(pMessageBlob->UnpackUint32(pSyncClient->m_nTestValue));
 		return true;
 	}
 
-	void Sync_FromServer::Run()
+	void Sync_ClientHandler::Run()
 	{
-		gsServer* pServer = new Sync_FromServer_Server("localhost", 9877, 0, "");
-		gsClient* pClient = new Sync_FromServer_Client("localhost", 9877, 0);
+		gsServer* pServer = new Sync_ClientHandler_Server("localhost", 9877, 0, "");
+		gsClient* pClient = new Sync_ClientHandler_Client("localhost", 9877, 0);
 		Assert::Plz(pServer->__pRoomVector->GetSize() == 0);
 		GameStrutTestUtil::Update(pServer, pClient);
 		Assert::Plz(pServer->__pClientVector->GetSize() == 1);
 		Assert::Plz(pServer->__pRoomVector->GetSize() == 1);
 		Assert::Plz(pClient->__eState == gsClient::State::CONNECTED);
 		Assert::Plz(pClient->__pRoomVector->GetSize() == 1);
-		Sync_FromServer_Client* pSyncClient = (Sync_FromServer_Client*)(pClient);
+		Sync_ClientHandler_Client* pSyncClient = (Sync_ClientHandler_Client*)(pClient);
 		Assert::Plz(pSyncClient != 0);
 		Assert::Plz(pSyncClient->m_nTestValue == 42);
 		if (pServer) delete pServer;

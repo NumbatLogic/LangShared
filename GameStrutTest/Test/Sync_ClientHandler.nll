@@ -1,6 +1,6 @@
 namespace NumbatLogic
 {
-	class Sync_FromServer_Server : gsServer
+	class Sync_ClientHandler_Server : gsServer
 	{
 		public construct(string sxAddress, Uint16 nPort, Uint16 nVersion, string sxDatabasePath) : base (sxAddress, nPort, nVersion, sxDatabasePath)
 		{
@@ -8,11 +8,11 @@ namespace NumbatLogic
 
 		public override gsServerClient** OnCreateServerClient(Uint32 nClientId, gsClientSocket pClientSocket, gsServer pServer)
 		{
-			return new Sync_FromServer_ServerClient(nClientId, pClientSocket, pServer);
+			return new Sync_ClientHandler_ServerClient(nClientId, pClientSocket, pServer);
 		}
 	}
 
-	class Sync_FromServer_ServerClient : gsServerClient
+	class Sync_ClientHandler_ServerClient : gsServerClient
 	{
 		public construct(Uint32 nClientId, gsClientSocket pClientSocket, gsServer pServer) : base (nClientId, pClientSocket, pServer)
 		{
@@ -20,7 +20,7 @@ namespace NumbatLogic
 
 		public override void OnInitialJoin()
 		{
-			gsServerRoom* pOwnedServerRoom = own new gsServerRoom(__pServer.__nLastRoomId++, "Sync_FromServer_Room", __pServer);
+			gsServerRoom* pOwnedServerRoom = own new gsServerRoom(__pServer.__nLastRoomId++, "Sync_ClientHandler_Room", __pServer);
 			gsServerRoom pServerRoom = pOwnedServerRoom;
 			__pServer.__pRoomVector.PushBack(disown pOwnedServerRoom);
 			__pServer.__ClientJoin(this, pServerRoom);
@@ -31,7 +31,7 @@ namespace NumbatLogic
 		}
 	}
 
-	class Sync_FromServer_Client : gsClient
+	class Sync_ClientHandler_Client : gsClient
 	{
 		public Uint32 m_nTestValue;
 		
@@ -42,19 +42,19 @@ namespace NumbatLogic
 
 		private static bool OnTest(gsClient pClient, Uint32 nSyncId, gsBlob pMessageBlob)
 		{
-			Sync_FromServer_Client pSyncClient = cast Sync_FromServer_Client(pClient);
+			Sync_ClientHandler_Client pSyncClient = cast Sync_ClientHandler_Client(pClient);
 			Assert::Plz(pSyncClient != null);
 			Assert::Plz(pMessageBlob.UnpackUint32(ref pSyncClient.m_nTestValue));
 			return true;
 		}
 	}
 
-	class Sync_FromServer
+	class Sync_ClientHandler
 	{
 		public static void Run()
 		{
-			gsServer* pServer = own new Sync_FromServer_Server("localhost", 9877, 0, "");
-			gsClient* pClient = own new Sync_FromServer_Client("localhost", 9877, 0);
+			gsServer* pServer = own new Sync_ClientHandler_Server("localhost", 9877, 0, "");
+			gsClient* pClient = own new Sync_ClientHandler_Client("localhost", 9877, 0);
 
 			Assert::Plz(pServer.__pRoomVector.GetSize() == 0);
 
@@ -65,7 +65,7 @@ namespace NumbatLogic
 			Assert::Plz(pClient.__eState == gsClient::State::CONNECTED);
 			Assert::Plz(pClient.__pRoomVector.GetSize() == 1);
 
-			Sync_FromServer_Client pSyncClient = cast Sync_FromServer_Client(pClient);
+			Sync_ClientHandler_Client pSyncClient = cast Sync_ClientHandler_Client(pClient);
 			Assert::Plz(pSyncClient != null);
 			Assert::Plz(pSyncClient.m_nTestValue == 42);
 		}

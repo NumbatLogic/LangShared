@@ -11,17 +11,17 @@ namespace NumbatLogic
 }
 namespace NumbatLogic
 {
-	class Client_Errored_Server : public gsServer
+	class Sync_ClientHandler_Error_Server : public gsServer
 	{
-		public: Client_Errored_Server(const char* sxAddress, unsigned short nPort, unsigned short nVersion, const char* sxDatabasePath);
+		public: Sync_ClientHandler_Error_Server(const char* sxAddress, unsigned short nPort, unsigned short nVersion, const char* sxDatabasePath);
 		public: virtual gsServerClient* OnCreateServerClient(unsigned int nClientId, gsClientSocket* pClientSocket, gsServer* pServer);
 	};
-	class Client_Errored_ServerClient : public gsServerClient
+	class Sync_ClientHandler_Error_ServerClient : public gsServerClient
 	{
-		public: Client_Errored_ServerClient(unsigned int nClientId, gsClientSocket* pClientSocket, gsServer* pServer);
+		public: Sync_ClientHandler_Error_ServerClient(unsigned int nClientId, gsClientSocket* pClientSocket, gsServer* pServer);
 		public: virtual void OnInitialJoin();
 	};
-	class Client_Errored
+	class Sync_ClientHandler_Error
 	{
 		public: static void Run();
 	};
