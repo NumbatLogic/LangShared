@@ -4,11 +4,11 @@ namespace NumbatLogic
 {
 	class Math
 	{
-		public static const double PI = 3.14159265358979323846;
-		public static const double DEG_TO_RAD = 0.01745329251994329577;
+		public const double PI = 3.14159265358979323846;
+		public const double DEG_TO_RAD = 0.01745329251994329577;
 
-		public static const float PI_F = 3.14159265358979323846f;
-		public static const float DEG_TO_RAD_F = 0.01745329251994329577f;
+		public const float PI_F = 3.14159265358979323846f;
+		public const float DEG_TO_RAD_F = 0.01745329251994329577f;
 
 		public static double Abs(double fX)
 		{
