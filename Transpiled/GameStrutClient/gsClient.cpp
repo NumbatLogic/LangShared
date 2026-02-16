@@ -11,12 +11,13 @@
 namespace NumbatLogic
 {
 	class gsClient;
+	class gsBlob;
 	class gsClientRoom;
 	template <class T>
 	class OwnedVector;
 	class gsClientSocket;
 	class gsSyncInner;
-	class gsBlob;
+	class gsClient_SyncHandler;
 	class InternalString;
 	class Assert;
 	class Console;
@@ -24,6 +25,14 @@ namespace NumbatLogic
 }
 namespace NumbatLogic
 {
+	gsClient_SyncHandler::gsClient_SyncHandler(unsigned int nHash, SyncHandler* pHandler)
+	{
+		__nHash = 0;
+		__pHandler = 0;
+		__nHash = nHash;
+		__pHandler = pHandler;
+	}
+
 	gsClient::gsClient(const char* sxAddress, unsigned short nPort, unsigned short nVersion)
 	{
 		__pRoomVector = 0;
@@ -32,6 +41,7 @@ namespace NumbatLogic
 		__nClientId = 0;
 		__nLastSyncId = 0;
 		__pSyncInnerVector = 0;
+		__pSyncHandlerVector = 0;
 		__eState = State::CONNECT;
 		__sErrorMessage = 0;
 		__pRoomVector = new OwnedVector<gsClientRoom*>();
@@ -40,6 +50,9 @@ namespace NumbatLogic
 		__nVersion = nVersion;
 		__eState = State::CONNECT;
 		__pSyncInnerVector = new OwnedVector<gsSyncInner*>();
+		__pSyncHandlerVector = new OwnedVector<gsClient_SyncHandler*>();
+		RegisterHandler(__ROOM_JOIN_HASH, __OnRoomJoin);
+		RegisterHandler(__ROOM_LEAVE_HASH, __OnRoomLeave);
 	}
 
 	gsClient::~gsClient()
@@ -48,6 +61,7 @@ namespace NumbatLogic
 		if (__pRoomVector) delete __pRoomVector;
 		if (__pClientSocket) delete __pClientSocket;
 		if (__pSyncInnerVector) delete __pSyncInnerVector;
+		if (__pSyncHandlerVector) delete __pSyncHandlerVector;
 		if (__sErrorMessage) delete __sErrorMessage;
 	}
 
@@ -153,7 +167,15 @@ namespace NumbatLogic
 							Assert::Plz(false);
 						if (nRoomId == 0)
 						{
-							bool bHandled = OnSync(nSyncId, nMessageType, pMessageBlob);
+							gsClient_SyncHandler* pHandler = __GetSyncHandler(nMessageType);
+							if (pHandler == 0)
+							{
+								ErrorDisconnect("No handler registered for sync message");
+								if (pMessageBlob) delete pMessageBlob;
+								if (pReceiveBlob) delete pReceiveBlob;
+								return;
+							}
+							bool bHandled = pHandler->__pHandler(this, nSyncId, pMessageBlob);
 							if (!bHandled)
 							{
 								ErrorDisconnect("Unhandled sync message");
@@ -226,52 +248,75 @@ namespace NumbatLogic
 		}
 	}
 
-	bool gsClient::OnSync(unsigned int nSyncId, unsigned int nMessageType, gsBlob* pMessageBlob)
+	bool gsClient::__OnRoomJoin(gsClient* pClient, unsigned int nSyncId, gsBlob* pMessageBlob)
 	{
-		if (nMessageType == __ROOM_JOIN_HASH)
+		unsigned int nRoomId = 0;
+		unsigned int nRoomType = 0;
+		bool bPrimary = false;
+		if (!pMessageBlob->UnpackUint32(nRoomId) || !pMessageBlob->UnpackUint32(nRoomType) || !pMessageBlob->UnpackBool(bPrimary))
+			return false;
+		gsBlob* pJoinBlob = new gsBlob();
+		if (!pMessageBlob->UnpackBlob(pJoinBlob))
 		{
-			unsigned int nRoomId = 0;
-			unsigned int nRoomType = 0;
-			bool bPrimary = false;
-			if (!pMessageBlob->UnpackUint32(nRoomId) || !pMessageBlob->UnpackUint32(nRoomType) || !pMessageBlob->UnpackBool(bPrimary))
-				return false;
-			gsBlob* pJoinBlob = new gsBlob();
-			if (!pMessageBlob->UnpackBlob(pJoinBlob))
-			{
-				if (pJoinBlob) delete pJoinBlob;
-				return false;
-			}
-			gsClientRoom* pRoom = OnRoomJoin(nRoomId, nRoomType, bPrimary, pJoinBlob);
-			if (pRoom == 0)
-			{
-				if (pJoinBlob) delete pJoinBlob;
-				if (pRoom) delete pRoom;
-				return false;
-			}
-			NumbatLogic::gsClientRoom* __3933305262 = pRoom;
-			pRoom = 0;
-			__pRoomVector->PushBack(__3933305262);
 			if (pJoinBlob) delete pJoinBlob;
-			if (pRoom) delete pRoom;
-			return true;
-		}
-		if (nMessageType == __ROOM_LEAVE_HASH)
-		{
-			unsigned int nLeaveRoomId = 0;
-			unsigned int nLeaveRoomType = 0;
-			if (!pMessageBlob->UnpackUint32(nLeaveRoomId) || !pMessageBlob->UnpackUint32(nLeaveRoomType))
-				return false;
-			for (int i = 0; i < __pRoomVector->GetSize(); i++)
-			{
-				gsClientRoom* pRoom = __pRoomVector->Get(i);
-				if (pRoom->__nRoomId == nLeaveRoomId)
-				{
-					__pRoomVector->Erase(i);
-					return true;
-				}
-			}
 			return false;
 		}
+		gsClientRoom* pRoom = pClient->OnRoomJoin(nRoomId, nRoomType, bPrimary, pJoinBlob);
+		if (pRoom == 0)
+		{
+			if (pJoinBlob) delete pJoinBlob;
+			if (pRoom) delete pRoom;
+			return false;
+		}
+		NumbatLogic::gsClientRoom* __3933502051 = pRoom;
+		pRoom = 0;
+		pClient->__pRoomVector->PushBack(__3933502051);
+		if (pJoinBlob) delete pJoinBlob;
+		if (pRoom) delete pRoom;
+		return true;
+	}
+
+	bool gsClient::__OnRoomLeave(gsClient* pClient, unsigned int nSyncId, gsBlob* pMessageBlob)
+	{
+		unsigned int nLeaveRoomId = 0;
+		unsigned int nLeaveRoomType = 0;
+		if (!pMessageBlob->UnpackUint32(nLeaveRoomId) || !pMessageBlob->UnpackUint32(nLeaveRoomType))
+			return false;
+		for (int i = 0; i < pClient->__pRoomVector->GetSize(); i++)
+		{
+			gsClientRoom* pRoom = pClient->__pRoomVector->Get(i);
+			if (pRoom->__nRoomId == nLeaveRoomId)
+			{
+				pClient->__pRoomVector->Erase(i);
+				return true;
+			}
+		}
+		return false;
+	}
+
+	void gsClient::RegisterHandler(unsigned int nMessageType, gsClient_SyncHandler::SyncHandler* pHandler)
+	{
+		if (__GetSyncHandler(nMessageType) != 0)
+		{
+			Console::Log("Sync handler hash already registered!");
+			Assert::Plz(false);
+		}
+		__pSyncHandlerVector->PushBack(new gsClient_SyncHandler(nMessageType, pHandler));
+	}
+
+	gsClient_SyncHandler* gsClient::__GetSyncHandler(unsigned int nMessageType)
+	{
+		for (int i = 0; i < __pSyncHandlerVector->GetSize(); i++)
+		{
+			gsClient_SyncHandler* pInfo = __pSyncHandlerVector->Get(i);
+			if (pInfo->__nHash == nMessageType)
+				return pInfo;
+		}
+		return 0;
+	}
+
+	bool gsClient::OnSync(unsigned int nSyncId, unsigned int nMessageType, gsBlob* pMessageBlob)
+	{
 		return false;
 	}
 
@@ -289,9 +334,9 @@ namespace NumbatLogic
 		pSendBlob->PackBlob(pBlob);
 		__pClientSocket->Send(pSendBlob);
 		pSyncInner->__pSync->__pSyncInner = pSyncInner;
-		NumbatLogic::gsSyncInner* __3131232547 = pSyncInner;
+		NumbatLogic::gsSyncInner* __3139166054 = pSyncInner;
 		pSyncInner = 0;
-		__pSyncInnerVector->PushBack(__3131232547);
+		__pSyncInnerVector->PushBack(__3139166054);
 		if (pSyncInner) delete pSyncInner;
 		if (pSendBlob) delete pSendBlob;
 	}

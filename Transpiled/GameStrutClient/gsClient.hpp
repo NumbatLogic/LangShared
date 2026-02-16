@@ -1,5 +1,6 @@
 #pragma once
 
+#include "gsClient.hpp"
 #include "../Vector/OwnedVector.hpp"
 #include "gsClientRoom.hpp"
 #include "gsSync.hpp"
@@ -8,6 +9,8 @@ namespace NumbatLogic
 {
 	class gsClientRoom;
 	class gsSyncInner;
+	class gsClient_SyncHandler;
+	class gsClient;
 	class gsBlob;
 	class gsSync;
 	template <class T>
@@ -17,6 +20,13 @@ namespace NumbatLogic
 }
 namespace NumbatLogic
 {
+	class gsClient_SyncHandler
+	{
+		public: typedef bool (SyncHandler)(gsClient* pClient, unsigned int nSyncId, gsBlob* pMessageBlob);
+		public: unsigned int __nHash;
+		public: SyncHandler* __pHandler;
+		public: gsClient_SyncHandler(unsigned int nHash, SyncHandler* pHandler);
+	};
 	class gsClient
 	{
 		public: enum State
@@ -31,6 +41,10 @@ namespace NumbatLogic
 		public: gsClient(const char* sxAddress, unsigned short nPort, unsigned short nVersion);
 		public: virtual ~gsClient();
 		public: void Update();
+		public: static bool __OnRoomJoin(gsClient* pClient, unsigned int nSyncId, gsBlob* pMessageBlob);
+		public: static bool __OnRoomLeave(gsClient* pClient, unsigned int nSyncId, gsBlob* pMessageBlob);
+		public: void RegisterHandler(unsigned int nMessageType, gsClient_SyncHandler::SyncHandler* pHandler);
+		public: gsClient_SyncHandler* __GetSyncHandler(unsigned int nMessageType);
 		public: virtual bool OnSync(unsigned int nSyncId, unsigned int nMessageType, gsBlob* pMessageBlob);
 		public: typedef void (CompleteCallback)();
 		public: void SyncSend(gsSync* pSync, const char* sxSyncType, gsBlob* pBlob, bool mayChangeRoom, gsClientRoom* pRoom);
@@ -45,6 +59,7 @@ namespace NumbatLogic
 		public: unsigned int __nClientId;
 		public: unsigned int __nLastSyncId;
 		public: OwnedVector<gsSyncInner*>* __pSyncInnerVector;
+		public: OwnedVector<gsClient_SyncHandler*>* __pSyncHandlerVector;
 		public: State __eState;
 		public: InternalString* __sErrorMessage;
 		public: static unsigned int __ROOM_JOIN_HASH;
