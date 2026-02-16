@@ -42,12 +42,11 @@ namespace NumbatLogic
 			RegisterHandler(395751469, OnRoomTest);
 		}
 
-		protected static bool OnRoomTest(gsClient pClient, gsClientRoom pRoom, uint nSyncId, gsBlob pMessageBlob)
+		protected static void OnRoomTest(gsClient pClient, gsClientRoom pRoom, uint nSyncId, gsBlob pMessageBlob)
 		{
 			Sync_ClientRoomHandler_ClientRoom pRoomTyped = (Sync_ClientRoomHandler_ClientRoom)(pRoom);
 			Assert.Plz(pRoomTyped != null);
 			Assert.Plz(pMessageBlob.UnpackUint32(ref pRoomTyped.m_nTestValue));
-			return true;
 		}
 
 	}

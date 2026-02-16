@@ -17,7 +17,7 @@ namespace NumbatLogic
 {
 	class gsClientRoom_SyncHandler
 	{
-		public: typedef bool (SyncHandler)(gsClient* pClient, gsClientRoom* pRoom, unsigned int nSyncId, gsBlob* pMessageBlob);
+		public: typedef void (SyncHandler)(gsClient* pClient, gsClientRoom* pRoom, unsigned int nSyncId, gsBlob* pMessageBlob);
 		public: unsigned int __nHash;
 		public: SyncHandler* __pHandler;
 		public: gsClientRoom_SyncHandler(unsigned int nHash, SyncHandler* pHandler);
@@ -25,7 +25,6 @@ namespace NumbatLogic
 	class gsClientRoom
 	{
 		public: gsClientRoom(unsigned int nRoomId, const char* sxRoomType, unsigned int nRoomTypeHash, bool bPrimary, gsClient* pClient);
-		public: virtual void OnSync(unsigned int nSyncId, unsigned int nMessageType, gsBlob* pMessageBlob);
 		public: void RegisterHandler(unsigned int nMessageType, gsClientRoom_SyncHandler::SyncHandler* pHandler);
 		public: gsClientRoom_SyncHandler* __GetSyncHandler(unsigned int nMessageType);
 		public: unsigned int __nRoomId;
