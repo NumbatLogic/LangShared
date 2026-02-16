@@ -45,7 +45,6 @@ namespace NumbatLogic
 		public: static bool __OnRoomLeave(gsClient* pClient, unsigned int nSyncId, gsBlob* pMessageBlob);
 		public: void RegisterHandler(unsigned int nMessageType, gsClient_SyncHandler::SyncHandler* pHandler);
 		public: gsClient_SyncHandler* __GetSyncHandler(unsigned int nMessageType);
-		public: virtual bool OnSync(unsigned int nSyncId, unsigned int nMessageType, gsBlob* pMessageBlob);
 		public: typedef void (CompleteCallback)();
 		public: void SyncSend(gsSync* pSync, const char* sxSyncType, gsBlob* pBlob, bool mayChangeRoom, gsClientRoom* pRoom);
 		public: bool GetPending();

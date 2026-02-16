@@ -315,11 +315,6 @@ namespace NumbatLogic
 		return 0;
 	}
 
-	bool gsClient::OnSync(unsigned int nSyncId, unsigned int nMessageType, gsBlob* pMessageBlob)
-	{
-		return false;
-	}
-
 	void gsClient::SyncSend(gsSync* pSync, const char* sxSyncType, gsBlob* pBlob, bool mayChangeRoom, gsClientRoom* pRoom)
 	{
 		gsSyncInner* pSyncInner = new gsSyncInner(pSync, ++__nLastSyncId, sxSyncType, pRoom, this);
@@ -334,9 +329,9 @@ namespace NumbatLogic
 		pSendBlob->PackBlob(pBlob);
 		__pClientSocket->Send(pSendBlob);
 		pSyncInner->__pSync->__pSyncInner = pSyncInner;
-		NumbatLogic::gsSyncInner* __3139166054 = pSyncInner;
+		NumbatLogic::gsSyncInner* __3139100460 = pSyncInner;
 		pSyncInner = 0;
-		__pSyncInnerVector->PushBack(__3139166054);
+		__pSyncInnerVector->PushBack(__3139100460);
 		if (pSyncInner) delete pSyncInner;
 		if (pSendBlob) delete pSendBlob;
 	}

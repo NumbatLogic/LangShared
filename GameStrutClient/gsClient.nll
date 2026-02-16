@@ -292,11 +292,6 @@ namespace NumbatLogic
 			return null;
 		}
 
-		public virtual bool OnSync(Uint32 nSyncId, Uint32 nMessageType, gsBlob pMessageBlob)
-		{
-			return false;
-		}
-
 		public delegate void CompleteCallback();
 		public void SyncSend(gsSync pSync, string sxSyncType, gsBlob pBlob, bool mayChangeRoom, gsClientRoom pRoom)
 		{
