@@ -27,7 +27,7 @@ namespace NumbatLogic
 
 			gsBlob* pTestBlob = own new gsBlob();
 			pTestBlob.PackUint32(42);
-			Send(pServerRoom, tthash("Test"), pTestBlob);
+			Send(null, tthash("Test"), pTestBlob);
 		}
 	}
 
@@ -40,12 +40,11 @@ namespace NumbatLogic
 			RegisterHandler(tthash("Test"), OnTest);
 		}
 
-		private static bool OnTest(gsClient pClient, Uint32 nSyncId, gsBlob pMessageBlob)
+		private static void OnTest(gsClient pClient, Uint32 nSyncId, gsBlob pMessageBlob)
 		{
 			Sync_ClientHandler_Client pSyncClient = cast Sync_ClientHandler_Client(pClient);
 			Assert::Plz(pSyncClient != null);
 			Assert::Plz(pMessageBlob.UnpackUint32(ref pSyncClient.m_nTestValue));
-			return true;
 		}
 	}
 

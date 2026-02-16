@@ -194,8 +194,13 @@ namespace NumbatLogic
 									ErrorDisconnect("Bad room");
 									return;
 								}
-									
-								pRoom.OnSync(nSyncId, nSyncType, pSyncBlob, this);
+								gsServerRoom_SyncHandler pHandler = pRoom.__GetSyncHandler(nSyncType);
+								if (pHandler == null)
+								{
+									ErrorDisconnect("No handler for room sync");
+									return;
+								}
+								pHandler.__pHandler(pRoom, nSyncId, nSyncType, pSyncBlob, this);
 							}
 							else
 							{

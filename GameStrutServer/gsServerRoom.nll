@@ -1,5 +1,19 @@
 namespace NumbatLogic
 {
+	class gsServerRoom_SyncHandler
+	{
+		public delegate void SyncHandler(gsServerRoom pRoom, Uint32 nSyncId, Uint32 nSyncType, gsBlob pInBlob, gsServerClient pServerClient);
+
+		public Uint32 __nHash;
+		public SyncHandler __pHandler;
+
+		public construct(Uint32 nHash, SyncHandler pHandler)
+		{
+			__nHash = nHash;
+			__pHandler = pHandler;
+		}
+	}
+
 	class gsServerRoom
 	{
 		public gsServerClient GetClientByClientId(Uint32 nClientId)
@@ -23,9 +37,25 @@ namespace NumbatLogic
 
 		}
 
-		public virtual void OnSync(Uint32 nSyncId, Uint32 nSyncType, gsBlob pInBlob, gsServerClient pServerClient)
+		public void RegisterHandler(Uint32 nSyncType, gsServerRoom_SyncHandler::SyncHandler pHandler)
 		{
-			///return null;
+			if (__GetSyncHandler(nSyncType) != null)
+			{
+				Console::Log("Server room sync handler hash already registered!");
+				Assert::Plz(false);
+			}
+			__pSyncHandlerVector.PushBack(new gsServerRoom_SyncHandler(nSyncType, pHandler));
+		}
+
+		public gsServerRoom_SyncHandler __GetSyncHandler(Uint32 nSyncType)
+		{
+			for (int i = 0; i < __pSyncHandlerVector.GetSize(); i++)
+			{
+				gsServerRoom_SyncHandler pInfo = __pSyncHandlerVector.Get(i);
+				if (pInfo.__nHash == nSyncType)
+					return pInfo;
+			}
+			return null;
 		}
 
 		// SEKRIT
@@ -35,6 +65,7 @@ namespace NumbatLogic
 		//public bool __bPrimary;
 		public gsServer __pServer;
 		public Vector<gsServerClient>* __pClientVector;
+		public OwnedVector<gsServerRoom_SyncHandler>* __pSyncHandlerVector;
 
 		public construct(Uint32 nRoomId, string sxRoomType, gsServer pServer)
 		{
@@ -43,6 +74,7 @@ namespace NumbatLogic
 			__sRoomType = own new InternalString(sxRoomType);
 			__pServer = pServer;
 			__pClientVector = own new Vector<gsServerClient>();
+			__pSyncHandlerVector = own new OwnedVector<gsServerRoom_SyncHandler>();
 		}
 		
 		public void __ClientJoin(gsServerClient pClient)

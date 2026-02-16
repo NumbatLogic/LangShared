@@ -11,16 +11,17 @@
 namespace NumbatLogic
 {
 	class gsClient;
-	class gsBlob;
 	class gsClientRoom;
 	template <class T>
 	class OwnedVector;
 	class gsClientSocket;
 	class gsSyncInner;
 	class gsClient_SyncHandler;
+	class gsBlob;
 	class InternalString;
 	class Assert;
 	class Console;
+	class gsClientRoom_SyncHandler;
 	class gsSync;
 }
 namespace NumbatLogic
@@ -175,14 +176,7 @@ namespace NumbatLogic
 								if (pReceiveBlob) delete pReceiveBlob;
 								return;
 							}
-							bool bHandled = pHandler->__pHandler(this, nSyncId, pMessageBlob);
-							if (!bHandled)
-							{
-								ErrorDisconnect("Unhandled sync message");
-								if (pMessageBlob) delete pMessageBlob;
-								if (pReceiveBlob) delete pReceiveBlob;
-								return;
-							}
+							pHandler->__pHandler(this, nSyncId, pMessageBlob);
 						}
 						else
 						{
@@ -194,7 +188,22 @@ namespace NumbatLogic
 								if (pReceiveBlob) delete pReceiveBlob;
 								return;
 							}
-							pRoom->OnSync(nSyncId, nMessageType, pMessageBlob);
+							gsClientRoom_SyncHandler* pHandler = pRoom->__GetSyncHandler(nMessageType);
+							if (pHandler != 0)
+							{
+								bool bHandled = pHandler->__pHandler(this, pRoom, nSyncId, pMessageBlob);
+								if (!bHandled)
+								{
+									ErrorDisconnect("Unhandled room sync message");
+									if (pMessageBlob) delete pMessageBlob;
+									if (pReceiveBlob) delete pReceiveBlob;
+									return;
+								}
+							}
+							else
+							{
+								pRoom->OnSync(nSyncId, nMessageType, pMessageBlob);
+							}
 						}
 						if (pMessageBlob) delete pMessageBlob;
 					}
@@ -248,50 +257,49 @@ namespace NumbatLogic
 		}
 	}
 
-	bool gsClient::__OnRoomJoin(gsClient* pClient, unsigned int nSyncId, gsBlob* pMessageBlob)
+	void gsClient::__OnRoomJoin(gsClient* pClient, unsigned int nSyncId, gsBlob* pMessageBlob)
 	{
 		unsigned int nRoomId = 0;
 		unsigned int nRoomType = 0;
 		bool bPrimary = false;
-		if (!pMessageBlob->UnpackUint32(nRoomId) || !pMessageBlob->UnpackUint32(nRoomType) || !pMessageBlob->UnpackBool(bPrimary))
-			return false;
-		gsBlob* pJoinBlob = new gsBlob();
-		if (!pMessageBlob->UnpackBlob(pJoinBlob))
+		if (pMessageBlob->UnpackUint32(nRoomId) && pMessageBlob->UnpackUint32(nRoomType) && pMessageBlob->UnpackBool(bPrimary))
 		{
+			gsBlob* pJoinBlob = new gsBlob();
+			if (pMessageBlob->UnpackBlob(pJoinBlob))
+			{
+				gsClientRoom* pRoom = pClient->OnRoomJoin(nRoomId, nRoomType, bPrimary, pJoinBlob);
+				if (pRoom != 0)
+				{
+					NumbatLogic::gsClientRoom* __3933502056 = pRoom;
+					pRoom = 0;
+					pClient->__pRoomVector->PushBack(__3933502056);
+					if (pRoom) delete pRoom;
+					if (pJoinBlob) delete pJoinBlob;
+					return;
+				}
+				if (pRoom) delete pRoom;
+			}
 			if (pJoinBlob) delete pJoinBlob;
-			return false;
 		}
-		gsClientRoom* pRoom = pClient->OnRoomJoin(nRoomId, nRoomType, bPrimary, pJoinBlob);
-		if (pRoom == 0)
-		{
-			if (pJoinBlob) delete pJoinBlob;
-			if (pRoom) delete pRoom;
-			return false;
-		}
-		NumbatLogic::gsClientRoom* __3933502051 = pRoom;
-		pRoom = 0;
-		pClient->__pRoomVector->PushBack(__3933502051);
-		if (pJoinBlob) delete pJoinBlob;
-		if (pRoom) delete pRoom;
-		return true;
+		pClient->ErrorDisconnect("Room join failed");
 	}
 
-	bool gsClient::__OnRoomLeave(gsClient* pClient, unsigned int nSyncId, gsBlob* pMessageBlob)
+	void gsClient::__OnRoomLeave(gsClient* pClient, unsigned int nSyncId, gsBlob* pMessageBlob)
 	{
 		unsigned int nLeaveRoomId = 0;
 		unsigned int nLeaveRoomType = 0;
-		if (!pMessageBlob->UnpackUint32(nLeaveRoomId) || !pMessageBlob->UnpackUint32(nLeaveRoomType))
-			return false;
-		for (int i = 0; i < pClient->__pRoomVector->GetSize(); i++)
+		if (pMessageBlob->UnpackUint32(nLeaveRoomId) && pMessageBlob->UnpackUint32(nLeaveRoomType))
 		{
-			gsClientRoom* pRoom = pClient->__pRoomVector->Get(i);
-			if (pRoom->__nRoomId == nLeaveRoomId)
+			for (int i = 0; i < pClient->__pRoomVector->GetSize(); i++)
 			{
-				pClient->__pRoomVector->Erase(i);
-				return true;
+				if (pClient->__pRoomVector->Get(i)->__nRoomId == nLeaveRoomId)
+				{
+					pClient->__pRoomVector->Erase(i);
+					return;
+				}
 			}
 		}
-		return false;
+		pClient->ErrorDisconnect("Room leave failed");
 	}
 
 	void gsClient::RegisterHandler(unsigned int nMessageType, gsClient_SyncHandler::SyncHandler* pHandler)
@@ -329,9 +337,9 @@ namespace NumbatLogic
 		pSendBlob->PackBlob(pBlob);
 		__pClientSocket->Send(pSendBlob);
 		pSyncInner->__pSync->__pSyncInner = pSyncInner;
-		NumbatLogic::gsSyncInner* __3139100460 = pSyncInner;
+		NumbatLogic::gsSyncInner* __3139166057 = pSyncInner;
 		pSyncInner = 0;
-		__pSyncInnerVector->PushBack(__3139100460);
+		__pSyncInnerVector->PushBack(__3139166057);
 		if (pSyncInner) delete pSyncInner;
 		if (pSendBlob) delete pSendBlob;
 	}

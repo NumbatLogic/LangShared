@@ -23,6 +23,7 @@ namespace NumbatLogic
 	class InternalString;
 	class Console;
 	class gsError;
+	class gsServerRoom_SyncHandler;
 	class Assert;
 }
 namespace NumbatLogic
@@ -180,7 +181,15 @@ namespace NumbatLogic
 								if (pReceiveBlob) delete pReceiveBlob;
 								return;
 							}
-							pRoom->OnSync(nSyncId, nSyncType, pSyncBlob, this);
+							gsServerRoom_SyncHandler* pHandler = pRoom->__GetSyncHandler(nSyncType);
+							if (pHandler == 0)
+							{
+								ErrorDisconnect("No handler for room sync");
+								if (pSyncBlob) delete pSyncBlob;
+								if (pReceiveBlob) delete pReceiveBlob;
+								return;
+							}
+							pHandler->__pHandler(pRoom, nSyncId, nSyncType, pSyncBlob, this);
 						}
 						else
 						{
