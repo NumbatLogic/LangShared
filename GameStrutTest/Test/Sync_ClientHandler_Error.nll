@@ -35,6 +35,7 @@ namespace NumbatLogic
 
 			GameStrutTestUtil::Update(pServer, pClient);
 			Assert::Plz(pClient.__eState == gsClient::State::ERRORED);
+			Assert::Plz(!pClient.__pClientSocket.GetConnected());
 		}
 	}
 }

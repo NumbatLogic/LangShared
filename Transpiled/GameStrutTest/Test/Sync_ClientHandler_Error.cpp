@@ -4,6 +4,7 @@
 #include "../../GameStrutClient/gsClient.hpp"
 #include "../GameStrutTestUtil.hpp"
 #include "../../../Assert/CPP/Assert.hpp"
+#include "../../../GameStrutClient/CPP/gsClientSocket.hpp"
 
 namespace NumbatLogic
 {
@@ -17,6 +18,7 @@ namespace NumbatLogic
 	class gsClient;
 	class GameStrutTestUtil;
 	class Assert;
+	class gsClientSocket;
 }
 namespace NumbatLogic
 {
@@ -48,6 +50,7 @@ namespace NumbatLogic
 		gsClient* pClient = new gsClient("localhost", 9878, 0);
 		GameStrutTestUtil::Update(pServer, pClient);
 		Assert::Plz(pClient->__eState == gsClient::State::ERRORED);
+		Assert::Plz(!pClient->__pClientSocket->GetConnected());
 		if (pServer) delete pServer;
 		if (pClient) delete pClient;
 	}

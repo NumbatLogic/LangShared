@@ -343,6 +343,8 @@ namespace NumbatLogic
 			return false;
 		if (__pClientSocket->Pending())
 			return true;
+		if (!__pClientSocket->GetConnected())
+			return false;
 		for (int i = 0; i < __pSyncInnerVector->GetSize(); i++)
 		{
 			gsSyncInner* pSyncInner = __pSyncInnerVector->Get(i);

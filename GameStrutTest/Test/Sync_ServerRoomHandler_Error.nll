@@ -1,0 +1,76 @@
+namespace NumbatLogic
+{
+	class Sync_ServerRoomHandler_Error_Server : gsServer
+	{
+		public construct(string sxAddress, Uint16 nPort, Uint16 nVersion, string sxDatabasePath) : base (sxAddress, nPort, nVersion, sxDatabasePath)
+		{
+		}
+
+		public override gsServerClient** OnCreateServerClient(Uint32 nClientId, gsClientSocket pClientSocket, gsServer pServer)
+		{
+			return new Sync_ServerRoomHandler_Error_ServerClient(nClientId, pClientSocket, pServer);
+		}
+	}
+
+	class Sync_ServerRoomHandler_Error_ServerClient : gsServerClient
+	{
+		public construct(Uint32 nClientId, gsClientSocket pClientSocket, gsServer pServer) : base (nClientId, pClientSocket, pServer)
+		{
+		}
+
+		public override void OnInitialJoin()
+		{
+			gsServerRoom* pOwnedServerRoom = own new gsServerRoom(__pServer.__nLastRoomId++, "Sync_ServerRoomHandler_Error_Room", __pServer);
+			gsServerRoom pServerRoom = pOwnedServerRoom;
+			__pServer.__pRoomVector.PushBack(disown pOwnedServerRoom);
+			__pServer.__ClientJoin(this, pServerRoom);
+		}
+	}
+
+	class Sync_ServerRoomHandler_Error_ClientRoom : gsClientRoom
+	{
+		public static const string ROOM_TYPE = "Sync_ServerRoomHandler_Error_Room";
+		public static const Uint32 ROOM_TYPE_HASH = tthash("Sync_ServerRoomHandler_Error_Room");
+
+		public construct(Uint32 nRoomId, bool bPrimary, gsBlob pJoinBlob, gsClient pClient) : base (nRoomId, ROOM_TYPE, ROOM_TYPE_HASH, bPrimary, pClient)
+		{
+		}
+	}
+
+	class Sync_ServerRoomHandler_Error_Client : gsClient
+	{
+		public gsSync* __pDummySync;
+
+		public construct(string sxAddress, Uint16 nPort, Uint16 nVersion) : base (sxAddress, nPort, nVersion)
+		{
+			//__pDummySync = null;
+		}
+
+		public override gsClientRoom** OnRoomJoin(Uint32 nRoomId, Uint32 nRoomTypeHash, bool bPrimary, gsBlob pJoinBlob)
+		{
+			if (nRoomTypeHash == Sync_ServerRoomHandler_Error_ClientRoom::ROOM_TYPE_HASH)
+			{
+				gsClientRoom* pRoom = own new Sync_ServerRoomHandler_Error_ClientRoom(nRoomId, bPrimary, pJoinBlob, this);
+				__pDummySync = own new gsSync();
+				gsBlob* pBlob = own new gsBlob();
+				SyncSend(__pDummySync, "Dummy", pBlob, false, pRoom);
+				return disown pRoom;
+			}
+			return base.OnRoomJoin(nRoomId, nRoomTypeHash, bPrimary, pJoinBlob);
+		}
+	}
+
+	class Sync_ServerRoomHandler_Error
+	{
+		public static void Run()
+		{
+			gsServer* pServer = own new Sync_ServerRoomHandler_Error_Server("localhost", 9879, 0, "");
+			gsClient* pClient = own new Sync_ServerRoomHandler_Error_Client("localhost", 9879, 0);
+
+			GameStrutTestUtil::Update(pServer, pClient);
+
+			Assert::Plz(!pClient.__pClientSocket.GetConnected());
+			Assert::Plz(pServer.__pClientVector.GetSize() == 0);
+		}
+	}
+}
