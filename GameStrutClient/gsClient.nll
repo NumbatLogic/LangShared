@@ -126,9 +126,16 @@ namespace NumbatLogic
 							if (!pReceiveBlob.UnpackUint8(ref nResult))
 								Assert::Plz(false);
 
-							bool bAwaitRoomChange;
-							if (!pReceiveBlob.UnpackBool(ref bAwaitRoomChange))
+							Uint8 nResponseRaw;
+							if (!pReceiveBlob.UnpackUint8(ref nResponseRaw))
 								Assert::Plz(false);
+							gsSync::Response eResponse = cast gsSync::Response(nResponseRaw);
+
+							if (nResult == gsSync::RESULT_SUCCESS && eResponse != pSyncInner.__eResponse)
+							{
+								ErrorDisconnect("Response expectation mismatch");
+								return;
+							}
 
 							bool bHasBlob;
 							if (!pReceiveBlob.UnpackBool(ref bHasBlob))
@@ -142,7 +149,13 @@ namespace NumbatLogic
 									Assert::Plz(false);
 							}
 
-							pSyncInner.OnComplete(nResult, bAwaitRoomChange, pSyncBlob);
+							if (eResponse != gsSync::Response::EXPECT_ROOM_CHANGE)
+								pSyncInner.__bComplete = true;
+
+							// Don't call on complete on error??
+							pSyncInner.__nResult = nResult;
+							if (pSyncInner.__pSync != null)
+								pSyncInner.__pSync.OnComplete(nResult, pSyncBlob);
 						}
 						else
 						{
@@ -189,7 +202,7 @@ namespace NumbatLogic
 					while (i < __pSyncInnerVector.GetSize())
 					{
 						gsSyncInner pSyncInner = __pSyncInnerVector.Get(i);
-						if (pSyncInner.__bAwaitRoomChange && !pSyncInner.__bComplete)
+						if (pSyncInner.__eResponse == gsSync::Response::EXPECT_ROOM_CHANGE && !pSyncInner.__bComplete)
 						{
 							int j;
 							for (j = 0; j < __pRoomVector.GetSize(); j++)
@@ -201,7 +214,7 @@ namespace NumbatLogic
 
 							if (j == __pRoomVector.GetSize())
 							{
-								pSyncInner.__bAwaitRoomChange = false;
+								pSyncInner.__eResponse = gsSync::Response::NO_RESPONSE;
 								pSyncInner.__bComplete = true;
 							}
 						}
@@ -293,9 +306,10 @@ namespace NumbatLogic
 			return null;
 		}
 
-		public void SyncSend(gsSync pSync, string sxSyncType, gsBlob pBlob, bool mayChangeRoom, gsClientRoom pRoom)
+		public void SyncSend(gsSync pSync, string sxSyncType, gsBlob pBlob, gsSync::Response eResponse, gsClientRoom pRoom)
 		{
 			gsSyncInner* pSyncInner = own new gsSyncInner(pSync, ++__nLastSyncId, sxSyncType, pRoom, this);
+			pSyncInner.__eResponse = eResponse;
 			
 			gsBlob* pSendBlob = own new gsBlob();
 			pSendBlob.PackUint32(pSyncInner.__nSyncId);
@@ -309,8 +323,10 @@ namespace NumbatLogic
 
 			__pClientSocket.Send(pSendBlob);
 
-
 			pSyncInner.__pSync.__pSyncInner = pSyncInner;
+
+			if (pSyncInner.__eResponse == gsSync::Response::NO_RESPONSE)
+				pSyncInner.__bComplete = true;
 
 			__pSyncInnerVector.PushBack(disown pSyncInner);
 		}

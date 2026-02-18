@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../GameStrutClient/gsSync.hpp"
 #include "../GameStrutClient/gsClient.hpp"
 #include "../../Vector/CPP/Vector.hpp"
 #include "gsServerRoom.hpp"
@@ -8,6 +9,7 @@ namespace NumbatLogic
 {
 	class gsServerRoom;
 	class gsBlob;
+	class gsSync;
 	class gsServer;
 	class gsClientSocket;
 	class gsClient;
@@ -21,7 +23,7 @@ namespace NumbatLogic
 		public: void Send(gsServerRoom* pRoom, unsigned int nMessageTypeHash, gsBlob* pBlob);
 		public: virtual void OnInitialJoin();
 		public: gsServerRoom* GetRoomByRoomId(unsigned int nRoomId);
-		public: void SyncRespond(unsigned int nSyncId, unsigned char nResult, bool bAwaitRoomChange, gsBlob* pBlob);
+		public: void SyncRespond(unsigned int nSyncId, unsigned char nResult, gsSync::Response eResponse, gsBlob* pBlob);
 		public: unsigned int __nClientId;
 		public: gsServer* __pServer;
 		public: gsClientSocket* __pClientSocket;

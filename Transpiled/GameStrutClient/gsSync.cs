@@ -2,6 +2,13 @@ namespace NumbatLogic
 {
 	class gsSync
 	{
+		public enum Response
+		{
+			NO_RESPONSE = 0,
+			EXPECT_RESPONSE,
+			EXPECT_ROOM_CHANGE,
+		}
+
 		public const byte RESULT_SUCCESS = 0;
 		public gsSync()
 		{
@@ -24,7 +31,7 @@ namespace NumbatLogic
 			return __pSyncInner != null ? __pSyncInner.__nResult : RESULT_SUCCESS;
 		}
 
-		public virtual void OnComplete(byte nResult, bool bAwaitRoomChange, gsBlob pBlob)
+		public virtual void OnComplete(byte nResult, gsBlob pBlob)
 		{
 		}
 
@@ -40,6 +47,7 @@ namespace NumbatLogic
 			__nSyncType = ExternalString.GetChecksum(sxSyncType);
 			__nRoomId = pRoom != null ? pRoom.__nRoomId : 0;
 			__nResult = gsSync.RESULT_SUCCESS;
+			__eResponse = gsSync.Response.NO_RESPONSE;
 		}
 
 		~gsSyncInner()
@@ -48,23 +56,12 @@ namespace NumbatLogic
 				__pSync.__pSyncInner = null;
 		}
 
-		public virtual void OnComplete(byte nResult, bool bAwaitRoomChange, gsBlob pBlob)
-		{
-			__nResult = nResult;
-			if (__pSync != null)
-				__pSync.OnComplete(nResult, bAwaitRoomChange, pBlob);
-			if (bAwaitRoomChange)
-				__bAwaitRoomChange = true;
-			else
-				__bComplete = true;
-		}
-
 		public gsSync __pSync;
 		public uint __nSyncId;
 		public InternalString __sSyncType;
 		public uint __nSyncType;
 		public bool __bComplete;
-		public bool __bAwaitRoomChange;
+		public gsSync.Response __eResponse;
 		public uint __nRoomId;
 		public byte __nResult;
 	}

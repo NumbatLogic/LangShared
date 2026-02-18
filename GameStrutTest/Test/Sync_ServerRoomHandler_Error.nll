@@ -53,7 +53,7 @@ namespace NumbatLogic
 				gsClientRoom* pRoom = own new Sync_ServerRoomHandler_Error_ClientRoom(nRoomId, bPrimary, pJoinBlob, this);
 				__pDummySync = own new gsSync();
 				gsBlob* pBlob = own new gsBlob();
-				SyncSend(__pDummySync, "Dummy", pBlob, false, pRoom);
+				SyncSend(__pDummySync, "Dummy", pBlob, gsSync::Response::EXPECT_RESPONSE, pRoom);
 				return disown pRoom;
 			}
 			return base.OnRoomJoin(nRoomId, nRoomTypeHash, bPrimary, pJoinBlob);

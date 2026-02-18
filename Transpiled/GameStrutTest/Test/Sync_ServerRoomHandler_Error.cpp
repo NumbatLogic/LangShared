@@ -72,7 +72,7 @@ namespace NumbatLogic
 			gsClientRoom* pRoom = new Sync_ServerRoomHandler_Error_ClientRoom(nRoomId, bPrimary, pJoinBlob, this);
 			__pDummySync = new gsSync();
 			gsBlob* pBlob = new gsBlob();
-			SyncSend(__pDummySync, "Dummy", pBlob, false, pRoom);
+			SyncSend(__pDummySync, "Dummy", pBlob, gsSync::Response::EXPECT_RESPONSE, pRoom);
 			NumbatLogic::gsClientRoom* __2731727373 = pRoom;
 			pRoom = 0;
 			if (pBlob) delete pBlob;
