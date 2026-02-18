@@ -293,7 +293,6 @@ namespace NumbatLogic
 			return null;
 		}
 
-		public delegate void CompleteCallback();
 		public void SyncSend(gsSync pSync, string sxSyncType, gsBlob pBlob, bool mayChangeRoom, gsClientRoom pRoom)
 		{
 			gsSyncInner* pSyncInner = own new gsSyncInner(pSync, ++__nLastSyncId, sxSyncType, pRoom, this);

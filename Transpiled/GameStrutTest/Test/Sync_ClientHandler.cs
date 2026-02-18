@@ -20,7 +20,7 @@ namespace NumbatLogic
 
 		public override void OnInitialJoin()
 		{
-			gsServerRoom pOwnedServerRoom = new gsServerRoom(__pServer.__nLastRoomId++, "Sync_ClientHandler_Room", __pServer);
+			gsServerRoom pOwnedServerRoom = new gsServerRoom(++__pServer.__nLastRoomId, "Sync_ClientHandler_Room", __pServer);
 			gsServerRoom pServerRoom = pOwnedServerRoom;
 			NumbatLogic.gsServerRoom __1621810262 = pOwnedServerRoom;
 			pOwnedServerRoom = null;

@@ -46,7 +46,7 @@ namespace NumbatLogic
 
 	void Sync_ServerRoomHandler_Error_ServerClient::OnInitialJoin()
 	{
-		gsServerRoom* pOwnedServerRoom = new gsServerRoom(__pServer->__nLastRoomId++, "Sync_ServerRoomHandler_Error_Room", __pServer);
+		gsServerRoom* pOwnedServerRoom = new gsServerRoom(++__pServer->__nLastRoomId, "Sync_ServerRoomHandler_Error_Room", __pServer);
 		gsServerRoom* pServerRoom = pOwnedServerRoom;
 		NumbatLogic::gsServerRoom* __1621810262 = pOwnedServerRoom;
 		pOwnedServerRoom = 0;

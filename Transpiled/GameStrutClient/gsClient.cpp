@@ -330,9 +330,9 @@ namespace NumbatLogic
 		pSendBlob->PackBlob(pBlob);
 		__pClientSocket->Send(pSendBlob);
 		pSyncInner->__pSync->__pSyncInner = pSyncInner;
-		NumbatLogic::gsSyncInner* __3139100461 = pSyncInner;
+		NumbatLogic::gsSyncInner* __3139100460 = pSyncInner;
 		pSyncInner = 0;
-		__pSyncInnerVector->PushBack(__3139100461);
+		__pSyncInnerVector->PushBack(__3139100460);
 		if (pSyncInner) delete pSyncInner;
 		if (pSendBlob) delete pSendBlob;
 	}

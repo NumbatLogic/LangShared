@@ -44,7 +44,7 @@ namespace NumbatLogic
 
 	void Client_Connect_ServerClient::OnInitialJoin()
 	{
-		gsServerRoom* pOwnedServerRoom = new gsServerRoom(__pServer->__nLastRoomId++, "Client_Connect_Room", __pServer);
+		gsServerRoom* pOwnedServerRoom = new gsServerRoom(++__pServer->__nLastRoomId, "Client_Connect_Room", __pServer);
 		gsServerRoom* pServerRoom = pOwnedServerRoom;
 		NumbatLogic::gsServerRoom* __1621810262 = pOwnedServerRoom;
 		pOwnedServerRoom = 0;
