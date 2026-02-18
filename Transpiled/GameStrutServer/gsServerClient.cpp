@@ -56,13 +56,13 @@ namespace NumbatLogic
 		return 0;
 	}
 
-	void gsServerClient::SyncRespond(unsigned int nSyncId, unsigned char nResult, bool bAwaitRoomChange, gsBlob* pBlob)
+	void gsServerClient::SyncRespond(unsigned int nSyncId, unsigned char nResult, gsSync::Response eResponse, gsBlob* pBlob)
 	{
 		gsBlob* pRespondBlob = new gsBlob();
 		pRespondBlob->PackBool(true);
 		pRespondBlob->PackUint32(nSyncId);
 		pRespondBlob->PackUint8(nResult);
-		pRespondBlob->PackBool(bAwaitRoomChange);
+		pRespondBlob->PackUint8((unsigned char)(eResponse));
 		if (pBlob != 0)
 		{
 			pRespondBlob->PackBool(true);

@@ -37,7 +37,7 @@ namespace NumbatLogic
 		return __pSyncInner != 0 ? __pSyncInner->__nResult : RESULT_SUCCESS;
 	}
 
-	void gsSync::OnComplete(unsigned char nResult, bool bAwaitRoomChange, gsBlob* pBlob)
+	void gsSync::OnComplete(unsigned char nResult, gsBlob* pBlob)
 	{
 	}
 
@@ -48,7 +48,7 @@ namespace NumbatLogic
 		__sSyncType = 0;
 		__nSyncType = 0;
 		__bComplete = false;
-		__bAwaitRoomChange = false;
+		__eResponse = gsSync::Response::NO_RESPONSE;
 		__nRoomId = 0;
 		__nResult = 0;
 		__pSync = pSync;
@@ -57,6 +57,7 @@ namespace NumbatLogic
 		__nSyncType = ExternalString::GetChecksum(sxSyncType);
 		__nRoomId = pRoom != 0 ? pRoom->__nRoomId : 0;
 		__nResult = gsSync::RESULT_SUCCESS;
+		__eResponse = gsSync::Response::NO_RESPONSE;
 	}
 
 	gsSyncInner::~gsSyncInner()
@@ -64,17 +65,6 @@ namespace NumbatLogic
 		if (__pSync != 0)
 			__pSync->__pSyncInner = 0;
 		if (__sSyncType) delete __sSyncType;
-	}
-
-	void gsSyncInner::OnComplete(unsigned char nResult, bool bAwaitRoomChange, gsBlob* pBlob)
-	{
-		__nResult = nResult;
-		if (__pSync != 0)
-			__pSync->OnComplete(nResult, bAwaitRoomChange, pBlob);
-		if (bAwaitRoomChange)
-			__bAwaitRoomChange = true;
-		else
-			__bComplete = true;
 	}
 
 }

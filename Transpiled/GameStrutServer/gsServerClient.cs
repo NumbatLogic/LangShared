@@ -29,13 +29,13 @@ namespace NumbatLogic
 			return null;
 		}
 
-		public void SyncRespond(uint nSyncId, byte nResult, bool bAwaitRoomChange, gsBlob pBlob)
+		public void SyncRespond(uint nSyncId, byte nResult, gsSync.Response eResponse, gsBlob pBlob)
 		{
 			gsBlob pRespondBlob = new gsBlob();
 			pRespondBlob.PackBool(true);
 			pRespondBlob.PackUint32(nSyncId);
 			pRespondBlob.PackUint8(nResult);
-			pRespondBlob.PackBool(bAwaitRoomChange);
+			pRespondBlob.PackUint8((byte)(eResponse));
 			if (pBlob != null)
 			{
 				pRespondBlob.PackBool(true);

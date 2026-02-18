@@ -1,9 +1,9 @@
 #pragma once
 
 #include "gsClient.hpp"
+#include "gsSync.hpp"
 #include "../Vector/OwnedVector.hpp"
 #include "gsClientRoom.hpp"
-#include "gsSync.hpp"
 
 namespace NumbatLogic
 {
@@ -45,7 +45,7 @@ namespace NumbatLogic
 		public: static void __OnRoomLeave(gsClient* pClient, unsigned int nSyncId, gsBlob* pMessageBlob);
 		public: void RegisterHandler(unsigned int nMessageType, gsClient_SyncHandler::SyncHandler* pHandler);
 		public: gsClient_SyncHandler* __GetSyncHandler(unsigned int nMessageType);
-		public: void SyncSend(gsSync* pSync, const char* sxSyncType, gsBlob* pBlob, bool mayChangeRoom, gsClientRoom* pRoom);
+		public: void SyncSend(gsSync* pSync, const char* sxSyncType, gsBlob* pBlob, gsSync::Response eResponse, gsClientRoom* pRoom);
 		public: bool GetPending();
 		public: bool HasActiveSync();
 		public: bool HasActiveSyncByRoom(gsClientRoom* pRoom);
