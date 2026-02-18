@@ -20,7 +20,7 @@ namespace NumbatLogic
 
 		public override void OnInitialJoin()
 		{
-			gsServerRoom* pOwnedServerRoom = own new gsServerRoom(__pServer.__nLastRoomId++, "Sync_ServerRoomHandler_Error_Room", __pServer);
+			gsServerRoom* pOwnedServerRoom = own new gsServerRoom(++__pServer.__nLastRoomId, "Sync_ServerRoomHandler_Error_Room", __pServer);
 			gsServerRoom pServerRoom = pOwnedServerRoom;
 			__pServer.__pRoomVector.PushBack(disown pOwnedServerRoom);
 			__pServer.__ClientJoin(this, pServerRoom);

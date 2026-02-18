@@ -11,8 +11,6 @@ namespace NumbatLogic
 			__pServerSocket.Start(__nPort);
 			__pRoomVector = new OwnedVector<gsServerRoom>();
 			__pClientVector = new OwnedVector<gsServerClient>();
-			__nLastClientId = 1;
-			__nLastRoomId = 1;
 		}
 
 		~gsServer()
@@ -35,11 +33,11 @@ namespace NumbatLogic
 				gsClientSocket pClientSocket = __pServerSocket.Accept();
 				if (pClientSocket != null)
 				{
-					gsServerClient pServerClient = OnCreateServerClient(__nLastClientId++, pClientSocket, this);
+					gsServerClient pServerClient = OnCreateServerClient(++__nLastClientId, pClientSocket, this);
 					Assert.Plz(pServerClient != null);
-					NumbatLogic.gsServerClient __1702162432 = pServerClient;
+					NumbatLogic.gsServerClient __1702162430 = pServerClient;
 					pServerClient = null;
-					__pClientVector.PushBack(__1702162432);
+					__pClientVector.PushBack(__1702162430);
 				}
 			}
 			for (int i = 0; i < __pClientVector.GetSize(); i++)
@@ -69,7 +67,7 @@ namespace NumbatLogic
 
 		public virtual gsServerClient OnCreateServerClient(uint nClientId, gsClientSocket pClientSocket, gsServer pServer)
 		{
-			return new gsServerClient(__nLastClientId++, pClientSocket, this);
+			return new gsServerClient(nClientId, pClientSocket, this);
 		}
 
 		public virtual gsServerRoom OnCreateRoom(uint nRoomId, uint nRoomType, gsBlob pCreateBlob)
@@ -107,9 +105,9 @@ namespace NumbatLogic
 			gsServerRoom pOwnedRoom = OnCreateRoom(++__nLastRoomId, nRoomType, pCreateBlob);
 			Assert.Plz(pOwnedRoom != null);
 			gsServerRoom pRoom = pOwnedRoom;
-			NumbatLogic.gsServerRoom __4188472189 = pOwnedRoom;
+			NumbatLogic.gsServerRoom __4188406598 = pOwnedRoom;
 			pOwnedRoom = null;
-			__pRoomVector.PushBack(__4188472189);
+			__pRoomVector.PushBack(__4188406598);
 			return pRoom;
 		}
 
