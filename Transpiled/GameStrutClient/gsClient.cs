@@ -133,7 +133,7 @@ namespace NumbatLogic
 							if (eResponse != gsSync.Response.EXPECT_ROOM_CHANGE)
 								pSyncInner.__bComplete = true;
 							pSyncInner.__nResult = nResult;
-							if (pSyncInner.__pSync != null)
+							if (nResult == gsSync.RESULT_SUCCESS && pSyncInner.__pSync != null)
 								pSyncInner.__pSync.OnComplete(nResult, pSyncBlob);
 						}
 						else
@@ -234,9 +234,9 @@ namespace NumbatLogic
 					gsClientRoom pRoom = pClient.OnRoomJoin(nRoomId, nRoomType, bPrimary, pJoinBlob);
 					if (pRoom != null)
 					{
-						NumbatLogic.gsClientRoom __3933567651 = pRoom;
+						NumbatLogic.gsClientRoom __3933567650 = pRoom;
 						pRoom = null;
-						pClient.__pRoomVector.PushBack(__3933567651);
+						pClient.__pRoomVector.PushBack(__3933567650);
 						return;
 					}
 				}
@@ -300,9 +300,9 @@ namespace NumbatLogic
 			pSyncInner.__pSync.__pSyncInner = pSyncInner;
 			if (pSyncInner.__eResponse == gsSync.Response.NO_RESPONSE)
 				pSyncInner.__bComplete = true;
-			NumbatLogic.gsSyncInner __3139231654 = pSyncInner;
+			NumbatLogic.gsSyncInner __3139231653 = pSyncInner;
 			pSyncInner = null;
-			__pSyncInnerVector.PushBack(__3139231654);
+			__pSyncInnerVector.PushBack(__3139231653);
 		}
 
 		public bool GetPending()

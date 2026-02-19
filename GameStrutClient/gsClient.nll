@@ -152,9 +152,8 @@ namespace NumbatLogic
 							if (eResponse != gsSync::Response::EXPECT_ROOM_CHANGE)
 								pSyncInner.__bComplete = true;
 
-							// Don't call on complete on error??
 							pSyncInner.__nResult = nResult;
-							if (pSyncInner.__pSync != null)
+							if (nResult == gsSync::RESULT_SUCCESS && pSyncInner.__pSync != null)
 								pSyncInner.__pSync.OnComplete(nResult, pSyncBlob);
 						}
 						else
