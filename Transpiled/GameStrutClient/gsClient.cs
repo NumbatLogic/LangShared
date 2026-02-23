@@ -285,6 +285,8 @@ namespace NumbatLogic
 
 		public void SyncSend(gsSync pSync, string sxSyncType, gsBlob pBlob, gsSync.Response eResponse, gsClientRoom pRoom)
 		{
+			if (eResponse == gsSync.Response.EXPECT_ROOM_CHANGE)
+				Assert.Plz(!HasRoomChangeSyncInFlight(pRoom));
 			gsSyncInner pSyncInner = new gsSyncInner(pSync, ++__nLastSyncId, sxSyncType, pRoom, this);
 			pSyncInner.__eResponse = eResponse;
 			gsBlob pSendBlob = new gsBlob();
@@ -300,9 +302,9 @@ namespace NumbatLogic
 			pSyncInner.__pSync.__pSyncInner = pSyncInner;
 			if (pSyncInner.__eResponse == gsSync.Response.NO_RESPONSE)
 				pSyncInner.__bComplete = true;
-			NumbatLogic.gsSyncInner __3139231653 = pSyncInner;
+			NumbatLogic.gsSyncInner __3139231656 = pSyncInner;
 			pSyncInner = null;
-			__pSyncInnerVector.PushBack(__3139231653);
+			__pSyncInnerVector.PushBack(__3139231656);
 		}
 
 		public bool GetPending()
@@ -339,6 +341,18 @@ namespace NumbatLogic
 			{
 				gsSyncInner pSyncInner = __pSyncInnerVector.Get(i);
 				if (pSyncInner.__nRoomId == pRoom.__nRoomId && !pSyncInner.__bComplete)
+					return true;
+			}
+			return false;
+		}
+
+		public bool HasRoomChangeSyncInFlight(gsClientRoom pRoom)
+		{
+			uint nRoomId = pRoom != null ? pRoom.__nRoomId : 0;
+			for (int i = 0; i < __pSyncInnerVector.GetSize(); i++)
+			{
+				gsSyncInner pSyncInner = __pSyncInnerVector.Get(i);
+				if (pSyncInner.__eResponse == gsSync.Response.EXPECT_ROOM_CHANGE && !pSyncInner.__bComplete && pSyncInner.__nRoomId == nRoomId)
 					return true;
 			}
 			return false;
