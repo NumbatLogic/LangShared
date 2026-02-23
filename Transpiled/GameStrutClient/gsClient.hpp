@@ -49,6 +49,7 @@ namespace NumbatLogic
 		public: bool GetPending();
 		public: bool HasActiveSync();
 		public: bool HasActiveSyncByRoom(gsClientRoom* pRoom);
+		public: bool HasRoomChangeSyncInFlight(gsClientRoom* pRoom);
 		public: virtual gsClientRoom* OnRoomJoin(unsigned int nRoomId, unsigned int nRoomTypeHash, bool bPrimary, gsBlob* pJoinBlob);
 		public: static const unsigned short MAGIC_WORD = 619;
 		public: OwnedVector<gsClientRoom*>* __pRoomVector;
