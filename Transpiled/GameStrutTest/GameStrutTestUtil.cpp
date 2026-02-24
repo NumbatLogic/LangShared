@@ -1,6 +1,7 @@
 #include "GameStrutTestUtil.hpp"
 #include "../../GameStrutClient/CPP/gsServerSocket.hpp"
 #include "../../GameStrutClient/CPP/gsClientSocket.hpp"
+#include "../../Utils/CPP/Utils.hpp"
 #include "../GameStrutServer/gsServer.hpp"
 #include "../GameStrutClient/gsClient.hpp"
 #include "../Vector/OwnedVector.hpp"
@@ -10,6 +11,7 @@ namespace NumbatLogic
 	class GameStrutTestUtil;
 	class gsServerSocket;
 	class gsClientSocket;
+	class Utils;
 	class gsServer;
 	class gsClient;
 	template <class T>
@@ -20,7 +22,7 @@ namespace NumbatLogic
 	void GameStrutTestUtil::Update(gsServerSocket* pServerSocket, gsClientSocket* pClientSocket)
 	{
 		int nNotPendingCount = 0;
-		while (nNotPendingCount < 5)
+		while (nNotPendingCount < 10)
 		{
 			pServerSocket->Update();
 			pClientSocket->Update();
@@ -28,13 +30,14 @@ namespace NumbatLogic
 				nNotPendingCount = 0;
 			else
 				nNotPendingCount++;
+			Utils::Sleep(5);
 		}
 	}
 
 	void GameStrutTestUtil::Update(gsServer* pServer, gsClient* pClient)
 	{
 		int nNotPendingCount = 0;
-		while (nNotPendingCount < 5)
+		while (nNotPendingCount < 10)
 		{
 			pServer->Update();
 			pClient->Update();
@@ -42,13 +45,14 @@ namespace NumbatLogic
 				nNotPendingCount = 0;
 			else
 				nNotPendingCount++;
+			Utils::Sleep(5);
 		}
 	}
 
 	void GameStrutTestUtil::UpdateVector(gsServer* pServer, OwnedVector<gsClient*>* pClientVector)
 	{
 		int nNotPendingCount = 0;
-		while (nNotPendingCount < 5)
+		while (nNotPendingCount < 10)
 		{
 			pServer->Update();
 			for (int i = 0; i < pClientVector->GetSize(); i++)
@@ -73,6 +77,7 @@ namespace NumbatLogic
 				nNotPendingCount = 0;
 			else
 				nNotPendingCount++;
+			Utils::Sleep(5);
 		}
 	}
 
