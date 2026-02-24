@@ -65,7 +65,8 @@ namespace NumbatLogic
 				{
 					gsClientSocket pClientSocket = new gsClientSocket();
 					pClientSocket.__pSocket = pIncomingSocket;
-					
+					pClientSocket.__bConnected = true;
+					pIncomingSocket.Blocking = false;
 					__pClientSockets.Add(pClientSocket);
 					return pClientSocket;
 				}

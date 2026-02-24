@@ -12,6 +12,7 @@ namespace NumbatLogic
 		public int __nRecieveOffset = 0;
 
 		public bool __bRecentSend = false;
+		public bool __bConnected = false;
 
 
 		public void Connect(string sHost, int nPort)
@@ -23,15 +24,28 @@ namespace NumbatLogic
 			__pSocket = new Socket(pIPEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 			__pSocket.Connect(pIPEndPoint);
 			__pSocket.Blocking = false;
+			__bConnected = true;
 		}
 
 		public void Disconnect()
 		{
+			if (!__bConnected)
+				return;
+			if (__pSocket != null)
+			{
+				try { __pSocket.Shutdown(SocketShutdown.Both); } catch { }
+				try { __pSocket.Close(); } catch { }
+				__pSocket = null;
+			}
+			__bConnected = false;
 		}
 
 		public void Update()
 		{
 			__bRecentSend = false;
+
+			if (!__bConnected || __pSocket == null)
+				return;
 
 			if (__pSocket.Poll(0, SelectMode.SelectRead))
 			{
@@ -47,18 +61,26 @@ namespace NumbatLogic
 				}
 
 				int nReadSize = __pSocket.Receive(__pRecieveBuffer, __nRecieveOffset, __pRecieveBuffer.Length - __nRecieveOffset, SocketFlags.None);
+				if (nReadSize == 0)
+				{
+					// Peer closed the connection
+					Disconnect();
+					return;
+				}
 				__nRecieveOffset += nReadSize;
 			}
 		}
 
 		public bool Pending()
 		{
-			return !GetConnected() || __bRecentSend;
+			if (!GetConnected())
+				return false;
+			return __bRecentSend;
 		}
 
 		public bool GetConnected()
 		{
-			return __pSocket != null && __pSocket.Connected;
+			return __bConnected && __pSocket != null;
 		}
 
 		public bool Send(gsBlob pBlob)

@@ -221,12 +221,17 @@ namespace NumbatLogic
 			pBlob.Resize(nSize);
 
 			if (nSize == 0)
+			{
+				pBlob.__nOffset = 0;
 				return true;
+			}
 
 			if (nSize > __nSize - __nOffset)
 				return false;
-			
-			System.Buffer.BlockCopy(pBlob.__pBuffer, 0, __pBuffer, __nOffset, nSize);
+
+			System.Buffer.BlockCopy(__pBuffer, __nOffset, pBlob.__pBuffer, 0, nSize);
+			__nOffset += nSize;
+			pBlob.__nOffset = 0;
 
 			return true;
 		}
