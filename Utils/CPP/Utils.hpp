@@ -14,6 +14,8 @@ namespace NumbatLogic
 			static uint32_t ByteConvertInt32ToUint32(int32_t nValue);
 
 			static void Indent(int nTabDepth, InternalString* sOut);
+
+			static void Sleep(int nMilliseconds);
 	};
 }
 

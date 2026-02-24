@@ -2,6 +2,8 @@
 #include "Utils.hpp"
 
 #include <math.h>
+#include <thread>
+#include <chrono>
 
 namespace NumbatLogic
 {
@@ -30,5 +32,10 @@ namespace NumbatLogic
 		int i;
 		for (i = 0; i < nTabDepth; i++)
 			sOut->AppendChar('\t');
+	}
+
+	void Utils::Sleep(int nMilliseconds)
+	{
+		std::this_thread::sleep_for(std::chrono::milliseconds(nMilliseconds));
 	}
 }

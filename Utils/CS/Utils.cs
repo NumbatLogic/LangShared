@@ -30,5 +30,10 @@ namespace NumbatLogic
             for (int i = 0; i < nTabDepth; i++)
                 sOut.AppendChar('\t');
         }
+
+        public static void Sleep(int nMilliseconds)
+        {
+            System.Threading.Thread.Sleep(nMilliseconds);
+        }
     }
 }

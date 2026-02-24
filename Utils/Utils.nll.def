@@ -8,5 +8,7 @@ namespace NumbatLogic
 		public static Uint32 ByteConvertInt32ToUint32(Int32 nValue);
 
 		public static void Indent(int nTabDepth, InternalString sOut);
+
+		public static void Sleep(int nMilliseconds);
 	}
 }
