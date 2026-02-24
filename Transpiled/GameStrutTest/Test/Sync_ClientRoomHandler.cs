@@ -34,7 +34,7 @@ namespace NumbatLogic
 	}
 	class Sync_ClientRoomHandler_ClientRoom : gsClientRoom
 	{
-		public string ROOM_TYPE = "Sync_ClientRoomHandler_Room";
+		public static string ROOM_TYPE = "Sync_ClientRoomHandler_Room";
 		public const uint ROOM_TYPE_HASH = 3638174234;
 		public uint m_nTestValue;
 		public Sync_ClientRoomHandler_ClientRoom(uint nRoomId, bool bPrimary, gsBlob pJoinBlob, gsClient pClient) : base(nRoomId, ROOM_TYPE, ROOM_TYPE_HASH, bPrimary, pClient)

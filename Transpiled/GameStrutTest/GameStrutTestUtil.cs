@@ -5,7 +5,7 @@ namespace NumbatLogic
 		public static void Update(gsServerSocket pServerSocket, gsClientSocket pClientSocket)
 		{
 			int nNotPendingCount = 0;
-			while (nNotPendingCount < 5)
+			while (nNotPendingCount < 10)
 			{
 				pServerSocket.Update();
 				pClientSocket.Update();
@@ -13,13 +13,14 @@ namespace NumbatLogic
 					nNotPendingCount = 0;
 				else
 					nNotPendingCount++;
+				Utils.Sleep(5);
 			}
 		}
 
 		public static void Update(gsServer pServer, gsClient pClient)
 		{
 			int nNotPendingCount = 0;
-			while (nNotPendingCount < 5)
+			while (nNotPendingCount < 10)
 			{
 				pServer.Update();
 				pClient.Update();
@@ -27,13 +28,14 @@ namespace NumbatLogic
 					nNotPendingCount = 0;
 				else
 					nNotPendingCount++;
+				Utils.Sleep(5);
 			}
 		}
 
 		public static void UpdateVector(gsServer pServer, OwnedVector<gsClient> pClientVector)
 		{
 			int nNotPendingCount = 0;
-			while (nNotPendingCount < 5)
+			while (nNotPendingCount < 10)
 			{
 				pServer.Update();
 				for (int i = 0; i < pClientVector.GetSize(); i++)
@@ -58,6 +60,7 @@ namespace NumbatLogic
 					nNotPendingCount = 0;
 				else
 					nNotPendingCount++;
+				Utils.Sleep(5);
 			}
 		}
 
