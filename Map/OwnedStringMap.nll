@@ -1,0 +1,78 @@
+namespace NumbatLogic
+{
+	class OwnedStringMap<TValue>
+	{
+		private StringMap<TValue*>* m_pMap;
+
+		public construct()
+		{
+			m_pMap = own new StringMap<TValue*>();
+		}
+
+		public destruct()
+		{
+			Clear();
+		}
+
+		public TValue Set(string xKey, TValue** pObject)
+		{
+			if (m_pMap.Contains(xKey))
+			{
+				TValue pOld = m_pMap.Get(xKey);
+				if (pOld != null)
+					delete pOld;
+			}
+
+			m_pMap.Set(xKey, own pObject);
+			return m_pMap.Get(xKey);
+		}
+
+		public int GetSize()
+		{
+			return m_pMap.GetSize();
+		}
+
+		public TValue Get(string xKey)
+		{
+			return m_pMap.Get(xKey);
+		}
+
+		public bool Contains(string xKey)
+		{
+			return m_pMap.Contains(xKey);
+		}
+
+		public void Clear()
+		{
+			while (m_pMap.GetSize() > 0)
+			{
+				string xKey = m_pMap.GetAnyKey();
+				if (xKey == null)
+					break;
+
+				delete m_pMap.Get(xKey);
+				m_pMap.Remove(xKey);
+			}
+		}
+
+		public TValue** Remove(string xKey)
+		{
+			if (!m_pMap.Contains(xKey))
+				return null;
+
+			TValue** pTemp = m_pMap.Get(xKey);
+			m_pMap.Remove(xKey);
+			return pTemp;
+		}
+
+		public void Erase(string xKey)
+		{
+			if (!m_pMap.Contains(xKey))
+				return;
+
+			delete m_pMap.Get(xKey);
+			m_pMap.Remove(xKey);
+		}
+	}
+}
+
