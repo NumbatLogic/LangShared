@@ -1,0 +1,14 @@
+namespace NumbatLogic
+{
+	class StringMap<TValue>
+	{
+		public void Set(string xKey, TValue xValue);
+		public TValue Get(string xKey);
+		public bool Contains(string xKey);
+		public string GetAnyKey();
+		public void Remove(string xKey);
+		public void Clear();
+		public int GetSize();
+	}
+}
+
