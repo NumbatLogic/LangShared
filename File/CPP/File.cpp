@@ -50,7 +50,12 @@ namespace NumbatLogic
 			int i;
 			InternalString* sDirectory = sDirectoryVector->PopBack();
 
-			tinydir_open_sorted(&dir, sDirectory->GetExternalString());
+			if (tinydir_open_sorted(&dir, sDirectory->GetExternalString()) == -1)
+			{
+				delete sDirectory;
+				continue;
+			}
+
 			for (i = 0; i < (int)dir.n_files; i++)
 			{
 				tinydir_file file;
@@ -78,6 +83,7 @@ namespace NumbatLogic
 				}
 				delete sFullPath;
 			}
+			tinydir_close(&dir);
 			delete sDirectory;
 		}
 		delete sDirectoryVector;
@@ -91,7 +97,10 @@ namespace NumbatLogic
 			char* sxDirname = dirname(sxTemp);
 
 			if (!sxDirname || strlen(sxDirname) <= 2)
+			{
+				free(sxTemp);
 				return NULL;
+			}
 
 			InternalString* sDirname = new InternalString(sxDirname);
 			free(sxTemp);
