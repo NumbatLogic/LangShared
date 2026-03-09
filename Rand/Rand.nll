@@ -1,0 +1,42 @@
+namespace NumbatLogic
+{
+	class Rand
+	{
+		// PCG32
+		private static const Uint64 MULTIPLIER = 0x5851f42d4c957f2d;
+		private Uint64 m_nState;
+		private Uint64 m_nInc;
+
+		public construct(Uint32 nSeed)
+		{
+			Seed(nSeed);
+		}
+
+		public void Seed(Uint32 nSeed)
+		{
+			m_nState = 0;
+			m_nInc = (cast Uint64(nSeed) << 1) | 1;
+			NextUint32();
+			m_nState = m_nState + cast Uint64(nSeed);
+			NextUint32();
+		}
+
+		public Uint32 NextUint32()
+		{
+			Uint64 nOldState = m_nState;
+			m_nState = nOldState * MULTIPLIER + m_nInc;
+
+			Uint32 nXorShifted = cast Uint32(((nOldState >> 18) ^ nOldState) >> 27);
+			Uint32 nRot = cast Uint32(nOldState >> 59);
+			Uint32 nRotNeg = (32 - nRot) & 31;
+
+			return (nXorShifted >> nRot) | (nXorShifted << nRotNeg);
+		}
+
+		public double NextDouble()
+		{
+			const double SCALE = 1.0 / 0xFFFFFFFF;
+			return NextUint32() * SCALE;
+		}
+	}
+}
