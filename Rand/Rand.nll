@@ -27,8 +27,8 @@ namespace NumbatLogic
 			m_nState = nOldState * MULTIPLIER + m_nInc;
 
 			Uint32 nXorShifted = cast Uint32(((nOldState >> 18) ^ nOldState) >> 27);
-			Uint32 nRot = cast Uint32(nOldState >> 59);
-			Uint32 nRotNeg = (32 - nRot) & 31;
+			Int32 nRot = cast Int32(nOldState >> 59);
+			Int32 nRotNeg = (32 - nRot) & 31;
 
 			return (nXorShifted >> nRot) | (nXorShifted << nRotNeg);
 		}
