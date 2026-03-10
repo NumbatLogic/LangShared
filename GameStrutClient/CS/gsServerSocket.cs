@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Sockets;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace NumbatLogic
 {
@@ -20,7 +21,27 @@ namespace NumbatLogic
 
 			__pSocket = new Socket(ipEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 			__pSocket.Blocking = false;
-			__pSocket.Bind(ipEndPoint);
+			__pSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+
+			int nNumAttempt = 0;
+			while (true)
+			{
+				try
+				{
+					__pSocket.Bind(ipEndPoint);
+					break;
+				}
+				catch (SocketException ex)
+				{
+					if (ex.SocketErrorCode == SocketError.AddressAlreadyInUse && nNumAttempt < 20)
+					{
+						nNumAttempt++;
+						Thread.Sleep(50);
+						continue;
+					}
+					throw;
+				}
+			}
 			__pSocket.Listen(100);
 		}
 
