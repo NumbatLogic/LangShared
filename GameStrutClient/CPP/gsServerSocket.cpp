@@ -96,8 +96,22 @@ namespace NumbatLogic
 			if (setsockopt(m_nSocket, SOL_SOCKET, SO_REUSEADDR, (const char*)&yes, sizeof(int)) == -1)
 				Assert::Plz(false);		// todo: cleanup
 
-					if (bind(m_nSocket, (struct sockaddr*) &address, sizeof(address)) < 0)
-			Assert::Plz(false);		// todo: cleanup
+			int nNumAttempt = 0;
+			while (true)
+			{
+				if (bind(m_nSocket, (struct sockaddr*) &address, sizeof(address)) == 0)
+					break;
+
+				// If address is already in use, back off briefly and retry
+				if (errno == EADDRINUSE && nNumAttempt < 20)
+				{
+					nNumAttempt++;
+					usleep(50 * 1000);
+					continue;
+				}
+				
+				Assert::Plz(false);		// todo: cleanup
+			}
 
 		// Set server socket to non-blocking mode
 		#ifdef NB_WINDOWS
