@@ -39,8 +39,8 @@ namespace NumbatLogic
 #line 28 "../LangShared/Transpiled/Rand/Rand.nll"
 			m_nState = nOldState * MULTIPLIER + m_nInc;
 			uint nXorShifted = (uint)(((nOldState >> 18) ^ nOldState) >> 27);
-			uint nRot = (uint)(nOldState >> 59);
-			uint nRotNeg = (32 - nRot) & 31;
+			int nRot = (int)(nOldState >> 59);
+			int nRotNeg = (32 - nRot) & 31;
 #line 34 "../LangShared/Transpiled/Rand/Rand.nll"
 			return (nXorShifted >> nRot) | (nXorShifted << nRotNeg);
 		}
