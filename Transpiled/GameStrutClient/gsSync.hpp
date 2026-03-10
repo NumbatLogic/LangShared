@@ -11,13 +11,13 @@ namespace NumbatLogic
 	class gsClient;
 	class InternalString;
 }
-#line 1 "../LangShared/Transpiled/GameStrutClient/gsSync.nll"
+#line 0 "../LangShared/Transpiled/GameStrutClient/gsSync.nll"
 namespace NumbatLogic
 {
-#line 4 "../LangShared/Transpiled/GameStrutClient/gsSync.nll"
+#line 3 "../LangShared/Transpiled/GameStrutClient/gsSync.nll"
 	class gsSync
 	{
-#line 6 "../LangShared/Transpiled/GameStrutClient/gsSync.nll"
+#line 5 "../LangShared/Transpiled/GameStrutClient/gsSync.nll"
 		public: enum Response
 		{
 			NO_RESPONSE = 0,
@@ -25,43 +25,43 @@ namespace NumbatLogic
 			EXPECT_ROOM_CHANGE,
 		};
 
-#line 12 "../LangShared/Transpiled/GameStrutClient/gsSync.nll"
+#line 11 "../LangShared/Transpiled/GameStrutClient/gsSync.nll"
 		public: static const unsigned char RESULT_SUCCESS = 0;
-#line 14 "../LangShared/Transpiled/GameStrutClient/gsSync.nll"
+#line 13 "../LangShared/Transpiled/GameStrutClient/gsSync.nll"
 		public: gsSync();
-#line 18 "../LangShared/Transpiled/GameStrutClient/gsSync.nll"
+#line 17 "../LangShared/Transpiled/GameStrutClient/gsSync.nll"
 		public: virtual ~gsSync();
-#line 24 "../LangShared/Transpiled/GameStrutClient/gsSync.nll"
+#line 23 "../LangShared/Transpiled/GameStrutClient/gsSync.nll"
 		public: bool GetComplete();
-#line 29 "../LangShared/Transpiled/GameStrutClient/gsSync.nll"
+#line 28 "../LangShared/Transpiled/GameStrutClient/gsSync.nll"
 		public: unsigned char GetResult();
-#line 35 "../LangShared/Transpiled/GameStrutClient/gsSync.nll"
+#line 34 "../LangShared/Transpiled/GameStrutClient/gsSync.nll"
 		public: virtual void OnComplete(unsigned char nResult, gsBlob* pBlob);
-#line 38 "../LangShared/Transpiled/GameStrutClient/gsSync.nll"
+#line 37 "../LangShared/Transpiled/GameStrutClient/gsSync.nll"
 		public: gsSyncInner* __pSyncInner;
 	};
-#line 42 "../LangShared/Transpiled/GameStrutClient/gsSync.nll"
+#line 41 "../LangShared/Transpiled/GameStrutClient/gsSync.nll"
 	class gsSyncInner
 	{
-#line 44 "../LangShared/Transpiled/GameStrutClient/gsSync.nll"
+#line 43 "../LangShared/Transpiled/GameStrutClient/gsSync.nll"
 		public: gsSyncInner(gsSync* pSync, unsigned int nSyncId, const char* sxSyncType, gsClientRoom* pRoom, gsClient* pClient);
-#line 55 "../LangShared/Transpiled/GameStrutClient/gsSync.nll"
+#line 54 "../LangShared/Transpiled/GameStrutClient/gsSync.nll"
 		public: virtual ~gsSyncInner();
-#line 63 "../LangShared/Transpiled/GameStrutClient/gsSync.nll"
+#line 62 "../LangShared/Transpiled/GameStrutClient/gsSync.nll"
 		public: gsSync* __pSync;
-#line 65 "../LangShared/Transpiled/GameStrutClient/gsSync.nll"
+#line 64 "../LangShared/Transpiled/GameStrutClient/gsSync.nll"
 		public: unsigned int __nSyncId;
-#line 66 "../LangShared/Transpiled/GameStrutClient/gsSync.nll"
+#line 65 "../LangShared/Transpiled/GameStrutClient/gsSync.nll"
 		public: InternalString* __sSyncType;
-#line 67 "../LangShared/Transpiled/GameStrutClient/gsSync.nll"
+#line 66 "../LangShared/Transpiled/GameStrutClient/gsSync.nll"
 		public: unsigned int __nSyncType;
-#line 69 "../LangShared/Transpiled/GameStrutClient/gsSync.nll"
+#line 68 "../LangShared/Transpiled/GameStrutClient/gsSync.nll"
 		public: bool __bComplete;
-#line 70 "../LangShared/Transpiled/GameStrutClient/gsSync.nll"
+#line 69 "../LangShared/Transpiled/GameStrutClient/gsSync.nll"
 		public: gsSync::Response __eResponse;
-#line 71 "../LangShared/Transpiled/GameStrutClient/gsSync.nll"
+#line 70 "../LangShared/Transpiled/GameStrutClient/gsSync.nll"
 		public: unsigned int __nRoomId;
-#line 72 "../LangShared/Transpiled/GameStrutClient/gsSync.nll"
+#line 71 "../LangShared/Transpiled/GameStrutClient/gsSync.nll"
 		public: unsigned char __nResult;
 	};
 }
