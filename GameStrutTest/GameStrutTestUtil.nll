@@ -14,7 +14,7 @@ namespace NumbatLogic
 					nNotPendingCount = 0;
 				else
 					nNotPendingCount++;
-				Utils::Sleep(5);
+				Utils::Sleep(5 + nNotPendingCount);
 			}
 		}
 
@@ -30,7 +30,7 @@ namespace NumbatLogic
 					nNotPendingCount = 0;
 				else
 					nNotPendingCount++;
-				Utils::Sleep(5);
+				Utils::Sleep(5 + nNotPendingCount);
 			}
 		}
 
@@ -64,7 +64,7 @@ namespace NumbatLogic
 					nNotPendingCount = 0;
 				else
 					nNotPendingCount++;
-				Utils::Sleep(5);
+				Utils::Sleep(5 + nNotPendingCount);
 			}
 		}
 	}
