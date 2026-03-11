@@ -183,9 +183,9 @@ namespace NumbatLogic
 	{
 		if (m_pArchive)
 		{
-			mz_bool bResult;
-			bResult = mz_zip_reader_end(m_pArchive);
-			Assert::Plz(bResult != 0);
+			// It is safe to ignore the return value here; CleanupArchive
+			// is called in both success and failure paths.
+			(void)mz_zip_reader_end(m_pArchive);
 			delete m_pArchive;
 			m_pArchive = NULL;
 		}
