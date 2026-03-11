@@ -1,39 +1,69 @@
-﻿namespace NumbatLogic
+namespace NumbatLogic
 {
     class Zip
     {
         System.IO.Compression.ZipArchive m_pZipArchive = null;
+        System.IO.MemoryStream m_pStream = null;
 
         public Zip()
         {
 
         }
 
-        public bool LoadBlobView(BlobView pBlobView)
+        public bool Load(gsBlob pBlob)
         {
-            System.IO.Stream stream = pBlobView.CreateStream();
+            int nOffset = pBlob.GetOffset();
+            int nSize = pBlob.GetSize() - nOffset;
+            if (nSize <= 0)
+                return false;
+
+            // Clean up any previous archive/stream
+            if (m_pZipArchive != null)
+            {
+                m_pZipArchive.Dispose();
+                m_pZipArchive = null;
+            }
+            if (m_pStream != null)
+            {
+                m_pStream.Dispose();
+                m_pStream = null;
+            }
 
             try
             {
-                m_pZipArchive = new System.IO.Compression.ZipArchive(stream);
+                // Keep the backing stream alive as long as the archive is in use
+                m_pStream = new System.IO.MemoryStream(pBlob.__pBuffer, nOffset, nSize, false);
+                m_pZipArchive = new System.IO.Compression.ZipArchive(m_pStream, System.IO.Compression.ZipArchiveMode.Read, false);
             }
             catch
             {
-                m_pZipArchive = null;
+                if (m_pZipArchive != null)
+                {
+                    m_pZipArchive.Dispose();
+                    m_pZipArchive = null;
+                }
+                if (m_pStream != null)
+                {
+                    m_pStream.Dispose();
+                    m_pStream = null;
+                }
                 return false;
             }
+
+            // For symmetry with C++, we leave blob offset unchanged in C#.
             return true;
         }
 
         public bool LoadFile(string szFileName)
         {
-            Blob pBlob = new Blob(false);
-            if (!pBlob.Load(szFileName))
+            gsBlob blob = new gsBlob();
+            if (!blob.Load(szFileName))
                 return false;
-            return LoadBlobView(pBlob.GetBlobView());
+            blob.SetOffset(0);
+            return Load(blob);
         }
 
-        public bool SaveBlobView(BlobView pBlobView)
+        public bool Save(gsBlob pBlob)
         {
             try
             {
@@ -48,8 +78,10 @@
                     // Get the zip data
                     byte[] zipData = memoryStream.ToArray();
                     
-                    // Write to blob view
-                    pBlobView.PackDataAt(pBlobView.GetOffset(), zipData, zipData.Length);
+                    // Write to gsBlob
+                    pBlob.Reset();
+                    pBlob.Pack(zipData, zipData.Length);
+                    pBlob.SetOffset(0);
                 }
                 return true;
             }
@@ -74,18 +106,21 @@
             return new ZipFileInfo(entry.FullName, (int)entry.Length);
         }
 
-        public bool ExtractFileByIndex(int nIndex, BlobView pOutBlobView)
+        public bool ExtractFileByIndexToBlob(int nIndex, gsBlob pOutBlob)
         {
             if (m_pZipArchive == null)
                 return false;
             try
             {
                 System.IO.Compression.ZipArchiveEntry entry = m_pZipArchive.Entries[nIndex];
-                System.IO.Stream stream = entry.Open();
-
-                byte[] buffer = new byte[entry.Length];
-                stream.Read(buffer, 0, (int)entry.Length);
-                pOutBlobView.PackDataAt(pOutBlobView.GetOffset(), buffer, (int)entry.Length);
+                using (System.IO.Stream stream = entry.Open())
+                {
+                    byte[] buffer = new byte[entry.Length];
+                    stream.Read(buffer, 0, (int)entry.Length);
+                    pOutBlob.Reset();
+                    pOutBlob.Pack(buffer, buffer.Length);
+                    pOutBlob.SetOffset(0);
+                }
             }
             catch
             {
@@ -94,14 +129,14 @@
             return true;
         }
 
-        public bool ExtractFileByName(string szFileName, BlobView pOutBlobView)
+        public bool ExtractFileByNameToBlob(string szFileName, gsBlob pOutBlob)
         {
             if (m_pZipArchive == null)
                 return false;
             for (int i = 0; i < m_pZipArchive.Entries.Count; i++)
             {
                 if (m_pZipArchive.Entries[i].FullName.Equals(szFileName))
-                    return ExtractFileByIndex(i, pOutBlobView);
+                    return ExtractFileByIndexToBlob(i, pOutBlob);
             }
             return false;
         }

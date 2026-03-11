@@ -4,8 +4,7 @@
 	#include "miniz/miniz.h"
 #endif
 
-namespace NumbatLogic { class Blob; }
-namespace NumbatLogic { class BlobView; }
+namespace NumbatLogic { class gsBlob; }
 
 namespace NumbatLogic
 {
@@ -16,8 +15,6 @@ namespace NumbatLogic
 		public:
 			const char* GetFileName();
 			int GetSize();
-
-		//unsigned int GetCrc32();
 
 		protected:
 			#ifndef CLANG_PARSE
@@ -35,26 +32,21 @@ namespace NumbatLogic
 			Zip();
 			~Zip();
 
-			bool LoadBlobView(BlobView* pBlobView);
+			bool Load(gsBlob* pBlob);
+			bool Save(gsBlob* pBlob);
 			bool LoadFile(const char* szFileName);
-			bool SaveBlobView(BlobView* pBlobView);
 
 			int GetNumFile();
 			ZipFileInfo* GetFileInfo(int nIndex);
 
-			bool ExtractFileByIndex(int nIndex, BlobView* pOutBlobView);
-			bool ExtractFileByName(const char* szFileName, BlobView* pOutBlobView);
-
+			bool ExtractFileByIndexToBlob(int nIndex, gsBlob* pOutBlob);
+			bool ExtractFileByNameToBlob(const char* szFileName, gsBlob* pOutBlob);
 			bool ExtractFileByIndexToString(int nIndex, InternalString* sOut);
-
-			bool AddFileFromBlobView(const char* szFileName, BlobView* pBlobView);
 
 		private:
 			#ifndef CLANG_PARSE
 				void CleanupArchive();
-				void Cleanup();
 
-				Blob* m_pBlob;
 				mz_zip_archive* m_pArchive;
 				ZipFileInfo* m_pTempFileInfo;
 			#endif

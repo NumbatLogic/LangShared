@@ -6,7 +6,7 @@
 
 namespace NumbatLogic
 {
-    ZipEntry::ZipEntry(const char* szFileName, Blob* pBlob)
+    ZipEntry::ZipEntry(const char* szFileName, gsBlob* pBlob)
 	{
 		sFileName = new InternalString(szFileName);
 		this->pBlob = pBlob;
@@ -33,7 +33,7 @@ namespace NumbatLogic
 		delete m_pZipEntryVector;
 	}
 
-	bool ZipWriter::AddFileFromBlob(const char* szFileName, Blob* pBlob)
+	bool ZipWriter::AddFileFromBlob(const char* szFileName, gsBlob* pBlob)
 	{
 		try
 		{
@@ -47,8 +47,11 @@ namespace NumbatLogic
 		}
 	}
 
-	bool ZipWriter::SaveBlobView(BlobView* pBlobView)
+	bool ZipWriter::Save(gsBlob* pBlob)
 	{
+		if (!pBlob)
+			return false;
+
 		try
 		{
 			// Create a zip archive for writing to memory
@@ -65,14 +68,20 @@ namespace NumbatLogic
 			for (int i = 0; i < m_pZipEntryVector->GetSize(); i++)
 			{
 				ZipEntry* pEntry = m_pZipEntryVector->Get(i);
-				BlobView* pEntryBlobView = pEntry->pBlob->GetBlobView();
-				
-				pEntryBlobView->SetOffset(0);
+
+				const unsigned char* pData = pEntry->pBlob->GetData();
+				int nOffset = pEntry->pBlob->GetOffset();
+				int nSize = pEntry->pBlob->GetSize() - nOffset;
+				if (!pData || nSize < 0)
+				{
+					mz_zip_writer_end(&zipArchive);
+					return false;
+				}
 				
 				if (!mz_zip_writer_add_mem(&zipArchive, 
 					pEntry->sFileName->GetExternalString(),
-					pEntry->pBlob->GetData() + pEntryBlobView->GetStart() + pEntryBlobView->GetOffset(),
-					pEntryBlobView->GetSize() - pEntryBlobView->GetOffset(),
+					pData + nOffset,
+					(size_t)nSize,
 					MZ_DEFAULT_COMPRESSION))
 				{
 					mz_zip_writer_end(&zipArchive);
@@ -89,8 +98,10 @@ namespace NumbatLogic
 				return false;
 			}
 
-			// Write to blob view
-			pBlobView->PackDataAt(pBlobView->GetOffset(), (unsigned char*)pData, (int)nSize);
+			// Write to gsBlob
+			pBlob->Reset();
+			pBlob->PackData((unsigned char*)pData, (int)nSize);
+			pBlob->SetOffset(0);
 
 			// Clean up
 			mz_free(pData);
