@@ -153,7 +153,16 @@ namespace NumbatLogic
 		public void PackFloat(float val) { Pack(System.BitConverter.GetBytes(val), 4); }
 		public void PackDouble(double val) { Pack(System.BitConverter.GetBytes(val), 8); }
 		
+		public void PackExternalString(string sxString)
+		{
+			if (sxString == null)
+				sxString = "";
 
+			byte[] pData = System.Text.Encoding.UTF8.GetBytes(sxString);
+			PackUint16((ushort)pData.Length);
+			Pack(pData, pData.Length);
+		}
+		
 		public void PackInternalString(InternalString sString)
 		{
 			byte[] pData = System.Text.Encoding.UTF8.GetBytes(sString.GetExternalString());
@@ -166,10 +175,6 @@ namespace NumbatLogic
 			PackUint16((ushort)pBlob.__nSize);
 			Pack(pBlob.__pBuffer, pBlob.__nSize);
 		}
-
-		
-
-
 
 
 		public bool UnpackBool(ref bool val)
