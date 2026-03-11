@@ -67,6 +67,7 @@ namespace NumbatLogic
 #line 39 "../LangShared/Transpiled/Vector/OwnedVector.nll"
 		public: void Set(int nIndex, T pObject)
 		{
+#line 41 "../LangShared/Transpiled/Vector/OwnedVector.nll"
 			T pTemp = m_pVector->Get(nIndex);
 #line 42 "../LangShared/Transpiled/Vector/OwnedVector.nll"
 			if (pTemp != 0)
@@ -85,6 +86,7 @@ namespace NumbatLogic
 #line 49 "../LangShared/Transpiled/Vector/OwnedVector.nll"
 			while (m_pVector->GetSize() > 0)
 			{
+#line 52 "../LangShared/Transpiled/Vector/OwnedVector.nll"
 				T pTemp = m_pVector->PopBack();
 #line 53 "../LangShared/Transpiled/Vector/OwnedVector.nll"
 				if (pTemp != 0)
@@ -106,6 +108,7 @@ namespace NumbatLogic
 #line 63 "../LangShared/Transpiled/Vector/OwnedVector.nll"
 		public: T Remove(int nIndex)
 		{
+#line 65 "../LangShared/Transpiled/Vector/OwnedVector.nll"
 			T pTemp = m_pVector->Get(nIndex);
 #line 66 "../LangShared/Transpiled/Vector/OwnedVector.nll"
 			m_pVector->Erase(nIndex);
