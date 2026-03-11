@@ -16,8 +16,8 @@ namespace NumbatLogic
 	class XmlFile : XmlNode
 	{
 		public construct();
-		public bool Load(BlobView pBlobView);
-		public bool Save(BlobView pBlobView);
+		public bool Load(gsBlob pBlob);
+		public bool Save(gsBlob pBlob);
 		public bool SaveToString(InternalString sOut);
 		public XmlNode CreateElement(string szName);
 	}
