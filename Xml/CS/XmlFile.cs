@@ -1,4 +1,4 @@
-﻿namespace NumbatLogic
+namespace NumbatLogic
 {
 	class XmlFile : XmlNode
 	{
@@ -13,13 +13,27 @@
 			return new XmlNode(newElement);
 		}
 
-		public bool Load(BlobView pBlobView)
+		public bool Load(gsBlob pBlob)
 		{
 			try
 			{
-				System.Xml.XmlDocument pDocument = new System.Xml.XmlDocument();
-				pDocument.Load(pBlobView.CreateStream());
-				m_pNode = pDocument;
+				if (pBlob == null || pBlob.__pBuffer == null)
+					return false;
+
+				int nOffset = pBlob.GetOffset();
+				int nSizeAvailable = pBlob.GetSize() - nOffset;
+				if (nSizeAvailable <= 0)
+					return false;
+
+				int nStart = nOffset;
+				int nCount = nSizeAvailable;
+
+				using (var stream = new System.IO.MemoryStream(pBlob.__pBuffer, nStart, nCount))
+				{
+					System.Xml.XmlDocument pDocument = new System.Xml.XmlDocument();
+					pDocument.Load(stream);
+					m_pNode = pDocument;
+				}
 			}
 			catch (System.Exception)
 			{
@@ -28,25 +42,21 @@
 			return true;
 		}
 
-		public bool Save(BlobView pBlobView)
+		public bool Save(gsBlob pBlob)
 		{
 			try
 			{
+				if (pBlob == null)
+					return false;
+
 				using (System.IO.MemoryStream stream = new System.IO.MemoryStream())
 				{
 					((System.Xml.XmlDocument)m_pNode).Save(stream);
-					stream.Position = 0;
-					
-					// Ensure the blob has enough space
-					int nSize = (int)stream.Length;
-					if (pBlobView.GetBlob().GetSize() < pBlobView.GetStart() + nSize)
-					{
-						pBlobView.GetBlob().Resize(pBlobView.GetStart() + nSize, true);
-					}
-					
-					// Copy the XML data to the blob
 					byte[] buffer = stream.ToArray();
-					System.Array.Copy(buffer, 0, pBlobView.GetBlob().m_pBuffer, pBlobView.GetStart(), nSize);
+
+					pBlob.Resize(buffer.Length);
+					System.Buffer.BlockCopy(buffer, 0, pBlob.__pBuffer, 0, buffer.Length);
+					pBlob.SetOffset(0);
 				}
 			}
 			catch (System.Exception)

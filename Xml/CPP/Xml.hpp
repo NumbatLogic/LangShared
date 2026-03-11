@@ -4,7 +4,7 @@
 	#include "tinyxml2/tinyxml2.h"
 #endif
 
-namespace NumbatLogic { class BlobView; }
+namespace NumbatLogic { class gsBlob; }
 
 namespace NumbatLogic
 {
@@ -40,8 +40,8 @@ namespace NumbatLogic
 			XmlFile();
 			~XmlFile();
 
-			bool Load(BlobView* pBlobView);
-			bool Save(BlobView* pBlobView);
+			bool Load(gsBlob* pBlob);
+			bool Save(gsBlob* pBlob);
 			bool SaveToString(InternalString* sOut);
 			XmlNode* CreateElement(const char* szName);
 

@@ -101,12 +101,21 @@ namespace NumbatLogic
 		Cleanup();
 	}
 
-	bool XmlFile::Load(BlobView* pBlobView)
+	bool XmlFile::Load(gsBlob* pBlob)
 	{
-		const char* szRawXml = (const char*)(pBlobView->GetBlob()->GetData() + pBlobView->GetStart() + pBlobView->GetOffset());
-		size_t nSize = (size_t)(pBlobView->GetSize() - pBlobView->GetOffset());
-		tinyxml2::XMLError error;
+		if (!pBlob)
+			return false;
 
+		const unsigned char* pData = pBlob->GetData();
+		int nOffset = pBlob->GetOffset();
+		int nSizeAvailable = pBlob->GetSize() - nOffset;
+		if (!pData || nSizeAvailable <= 0)
+			return false;
+
+		const char* szRawXml = (const char*)(pData + nOffset);
+		size_t nSize = (size_t)nSizeAvailable;
+
+		tinyxml2::XMLError error;
 		Cleanup();
 
 		m_pDocument = new tinyxml2::XMLDocument();
@@ -118,31 +127,30 @@ namespace NumbatLogic
 		}
 
 		m_pNode = m_pDocument;
-
 		return true;
 	}
 
-	bool XmlFile::Save(BlobView* pBlobView)
+	bool XmlFile::Save(gsBlob* pBlob)
 	{
-		if (!m_pDocument)
+		if (!m_pDocument || !pBlob)
 			return false;
 
-		// Create a memory buffer to hold the XML
 		tinyxml2::XMLPrinter printer;
 		m_pDocument->Print(&printer);
-		
+
 		const char* szXml = printer.CStr();
+		if (!szXml)
+			return false;
+
 		int nSize = (int)strlen(szXml);
-		
-		// Ensure the blob has enough space
-		if (pBlobView->GetBlob()->GetSize() < pBlobView->GetStart() + nSize)
-		{
-			pBlobView->GetBlob()->Resize(pBlobView->GetStart() + nSize, true);
-		}
-		
-		// Copy the XML data to the blob
-		memcpy(pBlobView->GetBlob()->GetData() + pBlobView->GetStart(), szXml, nSize);
-		
+		if (nSize < 0)
+			return false;
+
+		if (!pBlob->Resize(nSize))
+			return false;
+
+		memcpy(pBlob->GetData(), szXml, (size_t)nSize);
+		pBlob->SetOffset(0);
 		return true;
 	}
 
