@@ -7,9 +7,9 @@ namespace NumbatLogic
 		private class ZipEntry
 		{
 			public string FileName;
-			public Blob Blob;
+			public gsBlob Blob;
 
-			public ZipEntry(string fileName, Blob blob)
+			public ZipEntry(string fileName, gsBlob blob)
 			{
 				FileName = fileName;
 				Blob = blob;
@@ -20,7 +20,7 @@ namespace NumbatLogic
 		{
 		}
 
-		public bool AddFileFromBlob(string szFileName, Blob pBlob)
+		public bool AddFileFromBlob(string szFileName, gsBlob pBlob)
 		{
 			try
 			{
@@ -35,7 +35,7 @@ namespace NumbatLogic
 			}
 		}
 
-		public bool SaveBlobView(BlobView pBlobView)
+		public bool Save(gsBlob pBlob)
 		{
 			try
 			{
@@ -50,10 +50,12 @@ namespace NumbatLogic
 							System.IO.Compression.ZipArchiveEntry zipEntry = zipArchive.CreateEntry(entry.FileName);
 							using (System.IO.Stream entryStream = zipEntry.Open())
 							{
-								entry.Blob.GetBlobView().SetOffset(0);
-								System.IO.Stream blobStream = entry.Blob.GetBlobView().CreateStream();
-								blobStream.CopyTo(entryStream);
-								blobStream.Close();
+								int nOffset = entry.Blob.__nOffset;
+								int nSize = entry.Blob.__nSize - nOffset;
+								if (nSize > 0)
+								{
+									entryStream.Write(entry.Blob.__pBuffer, nOffset, nSize);
+								}
 							}
 						}
 					}
@@ -61,8 +63,10 @@ namespace NumbatLogic
 					// Get the zip data
 					byte[] zipData = memoryStream.ToArray();
 					
-					// Write to blob view
-					pBlobView.PackDataAt(pBlobView.GetOffset(), zipData, zipData.Length);
+					// Write to gsBlob
+					pBlob.Reset();
+					pBlob.Pack(zipData, zipData.Length);
+					pBlob.SetOffset(0);
 				}
 				return true;
 			}

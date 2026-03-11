@@ -32,19 +32,21 @@ namespace NumbatLogic
 
 	Zip::Zip()
 	{
-		m_pBlob = NULL;
 		m_pArchive = NULL;
 		m_pTempFileInfo = new ZipFileInfo();
 	}
 
 	Zip::~Zip()
 	{
-		Cleanup();
+		CleanupArchive();
 		delete m_pTempFileInfo;
 	}
 
-	bool Zip::LoadBlobView(BlobView* pBlobView)
+	bool Zip::Load(gsBlob* pBlob)
 	{
+		if (!pBlob)
+			return false;
+
 		CleanupArchive();
 
 		mz_bool bResult;
@@ -52,9 +54,20 @@ namespace NumbatLogic
 		m_pArchive = new mz_zip_archive();
 		mz_zip_zero_struct(m_pArchive);
 
-		bResult = mz_zip_reader_init_mem(m_pArchive, pBlobView->GetBlob()->GetData() + pBlobView->GetStart() + pBlobView->GetOffset(), pBlobView->GetSize() - pBlobView->GetOffset(), 0);
+		const unsigned char* pData = pBlob->GetData();
+		int nOffset = pBlob->GetOffset();
+		int nSizeAvailable = pBlob->GetSize() - nOffset;
+		if (!pData || nSizeAvailable <= 0)
+		{
+			CleanupArchive();
+			return false;
+		}
 
-		pBlobView->SetOffset(pBlobView->GetOffset() + (int)(m_pArchive->m_archive_size));
+		bResult = mz_zip_reader_init_mem(
+			m_pArchive,
+			pData + nOffset,
+			(size_t)nSizeAvailable,
+			0);
 
 		if (!bResult)
 		{
@@ -62,25 +75,26 @@ namespace NumbatLogic
 			return false;
 		}
 
+		// Advance blob offset by archive size so callers can chain reads.
+		pBlob->SetOffset(nOffset + (int)m_pArchive->m_archive_size);
+
 		return true;
 	}
 
 	bool Zip::LoadFile(const char* szFileName)
 	{
-		Cleanup();
-		m_pBlob = new Blob(false);
-
-		if (!m_pBlob->Load(szFileName) || !LoadBlobView(m_pBlob->GetBlobView()))
-		{
-			Cleanup();
+		gsBlob blob;
+		if (!blob.Load(szFileName))
 			return false;
-		}
-
-		return true;
+		blob.SetOffset(0);
+		return Load(&blob);
 	}
 
-	bool Zip::SaveBlobView(BlobView* pBlobView)
+	bool Zip::Save(gsBlob* pBlob)
 	{
+		if (!pBlob)
+			return false;
+
 		// Create a separate archive for writing
 		mz_zip_archive writeArchive;
 		mz_zip_zero_struct(&writeArchive);
@@ -100,8 +114,10 @@ namespace NumbatLogic
 			return false;
 		}
 
-		// Write the zip data to the blob view
-		pBlobView->PackData((uint8_t*)pData, (int)nSize);
+		// Write the zip data to the gsBlob
+		pBlob->Reset();
+		pBlob->PackData((unsigned char*)pData, (int)nSize);
+		pBlob->SetOffset(0);
 
 		// Clean up
 		mz_free(pData);
@@ -122,30 +138,31 @@ namespace NumbatLogic
 		return m_pTempFileInfo;
 	}
 
-	bool Zip::ExtractFileByIndex(int nIndex, BlobView* pOutBlobView)
+	bool Zip::ExtractFileByIndexToBlob(int nIndex, gsBlob* pOutBlob)
 	{
-		// todo: write direct to blob instead of heap
+		if (!pOutBlob)
+			return false;
 
 		size_t nSize = 0;
 		uint8_t* pData = (uint8_t*)mz_zip_reader_extract_to_heap(m_pArchive, nIndex, &nSize, 0);
 		if (!pData)
 			return false;
 
-		pOutBlobView->PackData(pData, (int)nSize);
-		pOutBlobView->SetOffset(0);
+		pOutBlob->Reset();
+		pOutBlob->PackData((unsigned char*)pData, (int)nSize);
+		pOutBlob->SetOffset(0);
 
 		mz_free(pData);
-
 		return true;
 	}
 
-	bool Zip::ExtractFileByName(const char* szFileName, BlobView* pOutBlobView)
+	bool Zip::ExtractFileByNameToBlob(const char* szFileName, gsBlob* pOutBlob)
 	{
 		int nIndex = mz_zip_reader_locate_file(m_pArchive, szFileName, NULL, 0);
 		if (nIndex == -1)
 			return false;
 
-		return ExtractFileByIndex(nIndex, pOutBlobView);
+		return ExtractFileByIndexToBlob(nIndex, pOutBlob);
 	}
 
 	bool Zip::ExtractFileByIndexToString(int nIndex, InternalString* sOut)
@@ -162,59 +179,6 @@ namespace NumbatLogic
 		return true;
 	}
 
-	bool Zip::AddFileFromBlobView(const char* szFileName, BlobView* pBlobView)
-	{
-		// Create a separate archive for writing
-		mz_zip_archive writeArchive;
-		mz_zip_zero_struct(&writeArchive);
-		
-		// Initialize for writing to memory
-		if (!mz_zip_writer_init_heap(&writeArchive, 0, 0))
-		{
-			return false;
-		}
-
-		// Add the file from blob view
-		if (!mz_zip_writer_add_mem(&writeArchive, szFileName, 
-			pBlobView->GetBlob()->GetData() + pBlobView->GetStart() + pBlobView->GetOffset(), 
-			pBlobView->GetSize() - pBlobView->GetOffset(), MZ_DEFAULT_COMPRESSION))
-		{
-			mz_zip_writer_end(&writeArchive);
-			return false;
-		}
-
-		// Finalize the archive
-		void* pData = NULL;
-		size_t nSize = 0;
-		if (!mz_zip_writer_finalize_heap_archive(&writeArchive, &pData, &nSize))
-		{
-			mz_zip_writer_end(&writeArchive);
-			return false;
-		}
-
-		// Clean up the old archive if it exists
-		CleanupArchive();
-
-		// Create new archive for reading
-		m_pArchive = new mz_zip_archive();
-		mz_zip_zero_struct(m_pArchive);
-
-		// Initialize for reading from the new data
-		if (!mz_zip_reader_init_mem(m_pArchive, pData, nSize, 0))
-		{
-			mz_free(pData);
-			mz_zip_writer_end(&writeArchive);
-			CleanupArchive();
-			return false;
-		}
-
-		// Clean up
-		mz_free(pData);
-		mz_zip_writer_end(&writeArchive);
-
-		return true;
-	}
-
 	void Zip::CleanupArchive()
 	{
 		if (m_pArchive)
@@ -224,16 +188,6 @@ namespace NumbatLogic
 			Assert::Plz(bResult != 0);
 			delete m_pArchive;
 			m_pArchive = NULL;
-		}
-	}
-
-	void Zip::Cleanup()
-	{
-		CleanupArchive();
-		if (m_pBlob)
-		{
-			delete m_pBlob;
-			m_pBlob = NULL;
 		}
 	}
 }

@@ -3,7 +3,7 @@ namespace NumbatLogic
 	class ZipWriter
 	{
 		public construct();
-		public bool SaveBlobView(BlobView pBlobView);
-		public bool AddFileFromBlob(string szFileName, Blob** pBlob);
+		public bool Save(gsBlob pBlob);
+		public bool AddFileFromBlob(string szFileName, gsBlob** pBlob);
 	}
 }

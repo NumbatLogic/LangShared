@@ -9,13 +9,13 @@ namespace NumbatLogic
 	class Zip
 	{
 		public construct();
-		public bool LoadBlobView(BlobView pBlobView);
+		public bool Load(gsBlob pBlob);
 		public bool LoadFile(string szFileName);
-		public bool SaveBlobView(BlobView pBlobView);
+		public bool Save(gsBlob pBlob);
 		public int GetNumFile();
 		public ZipFileInfo GetFileInfo(int nIndex);
-		public bool ExtractFileByIndex(int nIndex, BlobView pOutBlobView);
-		public bool ExtractFileByName(string szFileName, BlobView pOutBlobView);
+		public bool ExtractFileByIndexToBlob(int nIndex, gsBlob pOutBlob);
+		public bool ExtractFileByNameToBlob(string szFileName, gsBlob pOutBlob);
 		public bool ExtractFileByIndexToString(int nIndex, InternalString sOut);
 	}
 }

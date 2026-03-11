@@ -2,8 +2,7 @@
 
 #include "miniz/miniz.h"
 
-namespace NumbatLogic { class Blob; }
-namespace NumbatLogic { class BlobView; }
+namespace NumbatLogic { class gsBlob; }
 
 namespace NumbatLogic
 {
@@ -13,9 +12,9 @@ namespace NumbatLogic
 	struct ZipEntry
 	{
 		InternalString* sFileName;
-		Blob* pBlob;
+		gsBlob* pBlob;
 
-		ZipEntry(const char* szFileName, Blob* pBlob);
+		ZipEntry(const char* szFileName, gsBlob* pBlob);
 		~ZipEntry();
 	};
 	
@@ -25,12 +24,10 @@ namespace NumbatLogic
 			ZipWriter();
 			~ZipWriter();
 
-			bool SaveBlobView(BlobView* pBlobView);
-			bool AddFileFromBlob(const char* szFileName, Blob* pBlob);
+			bool Save(gsBlob* pBlob);
+			bool AddFileFromBlob(const char* szFileName, gsBlob* pBlob);
 
 		private:
-			
-
 			Vector<ZipEntry*>* m_pZipEntryVector;
 	};
-} 
+}  

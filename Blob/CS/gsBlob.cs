@@ -112,6 +112,12 @@ namespace NumbatLogic
 			__nOffset = nOffset;
 		}
 
+		public void Reset()
+		{
+			__nSize = 0;
+			__nOffset = 0;
+		}
+
 		public System.IO.Stream CreateStream(int nStart, int nEnd)
 		{
 			return new System.IO.MemoryStream(__pBuffer, nStart, nEnd - nStart);
