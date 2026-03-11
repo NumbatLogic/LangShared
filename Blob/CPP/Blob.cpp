@@ -185,8 +185,8 @@ namespace NumbatLogic
 
 	void gsBlob::PackExternalString(const char* sxString)
 	{
-		int nByteLength = ExternalString::GetByteLength(sxString);
-		PackInt32(nByteLength);
+		unsigned short nByteLength = (unsigned short)ExternalString::GetByteLength(sxString);
+		PackUint16(nByteLength);
 		PackData((unsigned char*)sxString, nByteLength);	
 	}
 
