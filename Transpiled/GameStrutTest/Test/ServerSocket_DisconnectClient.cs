@@ -1,36 +1,39 @@
 #line 1 "../LangShared/Transpiled/GameStrutTest/Test/ServerSocket_DisconnectClient.nll"
 namespace NumbatLogic
 {
-#line 4 "../LangShared/Transpiled/GameStrutTest/Test/ServerSocket_DisconnectClient.nll"
+#line 3 "../LangShared/Transpiled/GameStrutTest/Test/ServerSocket_DisconnectClient.nll"
 	class ServerSocket_DisconnectClient
 	{
-#line 6 "../LangShared/Transpiled/GameStrutTest/Test/ServerSocket_DisconnectClient.nll"
+#line 5 "../LangShared/Transpiled/GameStrutTest/Test/ServerSocket_DisconnectClient.nll"
 		public static void Run()
 		{
+#line 7 "../LangShared/Transpiled/GameStrutTest/Test/ServerSocket_DisconnectClient.nll"
 			gsServerSocket pServerSocket = new gsServerSocket();
-#line 9 "../LangShared/Transpiled/GameStrutTest/Test/ServerSocket_DisconnectClient.nll"
+#line 8 "../LangShared/Transpiled/GameStrutTest/Test/ServerSocket_DisconnectClient.nll"
 			pServerSocket.Start(9877);
+#line 10 "../LangShared/Transpiled/GameStrutTest/Test/ServerSocket_DisconnectClient.nll"
 			gsClientSocket pClientSocket = new gsClientSocket();
-#line 12 "../LangShared/Transpiled/GameStrutTest/Test/ServerSocket_DisconnectClient.nll"
+#line 11 "../LangShared/Transpiled/GameStrutTest/Test/ServerSocket_DisconnectClient.nll"
 			pClientSocket.Connect("localhost", 9877);
-#line 14 "../LangShared/Transpiled/GameStrutTest/Test/ServerSocket_DisconnectClient.nll"
+#line 13 "../LangShared/Transpiled/GameStrutTest/Test/ServerSocket_DisconnectClient.nll"
 			GameStrutTestUtil.Update(pServerSocket, pClientSocket);
+#line 15 "../LangShared/Transpiled/GameStrutTest/Test/ServerSocket_DisconnectClient.nll"
 			gsClientSocket pServerClientSocket = pServerSocket.Accept();
-#line 17 "../LangShared/Transpiled/GameStrutTest/Test/ServerSocket_DisconnectClient.nll"
+#line 16 "../LangShared/Transpiled/GameStrutTest/Test/ServerSocket_DisconnectClient.nll"
 			Assert.Plz(pServerClientSocket != null);
-#line 19 "../LangShared/Transpiled/GameStrutTest/Test/ServerSocket_DisconnectClient.nll"
+#line 18 "../LangShared/Transpiled/GameStrutTest/Test/ServerSocket_DisconnectClient.nll"
 			Assert.Plz(pServerClientSocket.GetConnected());
-#line 20 "../LangShared/Transpiled/GameStrutTest/Test/ServerSocket_DisconnectClient.nll"
+#line 19 "../LangShared/Transpiled/GameStrutTest/Test/ServerSocket_DisconnectClient.nll"
 			Assert.Plz(pClientSocket.GetConnected());
-#line 22 "../LangShared/Transpiled/GameStrutTest/Test/ServerSocket_DisconnectClient.nll"
+#line 21 "../LangShared/Transpiled/GameStrutTest/Test/ServerSocket_DisconnectClient.nll"
 			pServerClientSocket.Disconnect();
-#line 24 "../LangShared/Transpiled/GameStrutTest/Test/ServerSocket_DisconnectClient.nll"
+#line 23 "../LangShared/Transpiled/GameStrutTest/Test/ServerSocket_DisconnectClient.nll"
 			GameStrutTestUtil.Update(pServerSocket, pClientSocket);
-#line 26 "../LangShared/Transpiled/GameStrutTest/Test/ServerSocket_DisconnectClient.nll"
+#line 25 "../LangShared/Transpiled/GameStrutTest/Test/ServerSocket_DisconnectClient.nll"
 			Assert.Plz(!pClientSocket.GetConnected());
-#line 27 "../LangShared/Transpiled/GameStrutTest/Test/ServerSocket_DisconnectClient.nll"
+#line 26 "../LangShared/Transpiled/GameStrutTest/Test/ServerSocket_DisconnectClient.nll"
 			Assert.Plz(!pServerClientSocket.GetConnected());
-#line 29 "../LangShared/Transpiled/GameStrutTest/Test/ServerSocket_DisconnectClient.nll"
+#line 28 "../LangShared/Transpiled/GameStrutTest/Test/ServerSocket_DisconnectClient.nll"
 			pServerSocket.Stop();
 		}
 

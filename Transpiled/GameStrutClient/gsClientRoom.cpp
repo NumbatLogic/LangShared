@@ -55,6 +55,7 @@ namespace NumbatLogic
 		{
 #line 28 "../LangShared/Transpiled/GameStrutClient/gsClientRoom.nll"
 			__sRoomType = new InternalString(sxRoomType);
+#line 29 "../LangShared/Transpiled/GameStrutClient/gsClientRoom.nll"
 			unsigned int nTestChecksum = ExternalString::GetChecksum(sxRoomType);
 #line 30 "../LangShared/Transpiled/GameStrutClient/gsClientRoom.nll"
 			Assert::Plz(nTestChecksum == nRoomTypeHash);
@@ -90,6 +91,7 @@ namespace NumbatLogic
 #line 50 "../LangShared/Transpiled/GameStrutClient/gsClientRoom.nll"
 		for (int i = 0; i < __pSyncHandlerVector->GetSize(); i++)
 		{
+#line 52 "../LangShared/Transpiled/GameStrutClient/gsClientRoom.nll"
 			gsClientRoom_SyncHandler* pInfo = __pSyncHandlerVector->Get(i);
 #line 53 "../LangShared/Transpiled/GameStrutClient/gsClientRoom.nll"
 			if (pInfo->__nHash == nMessageType)

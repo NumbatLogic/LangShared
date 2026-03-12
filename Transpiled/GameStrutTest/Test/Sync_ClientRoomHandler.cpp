@@ -50,7 +50,9 @@ namespace NumbatLogic
 #line 21 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientRoomHandler.nll"
 	void Sync_ClientRoomHandler_ServerClient::OnInitialJoin()
 	{
+#line 23 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientRoomHandler.nll"
 		gsServerRoom* pOwnedServerRoom = new gsServerRoom(++__pServer->__nLastRoomId, "Sync_ClientRoomHandler_Room", __pServer);
+#line 24 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientRoomHandler.nll"
 		gsServerRoom* pServerRoom = pOwnedServerRoom;
 		NumbatLogic::gsServerRoom* __1621810262 = pOwnedServerRoom;
 #line 25 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientRoomHandler.nll"
@@ -59,6 +61,7 @@ namespace NumbatLogic
 		__pServer->__pRoomVector->PushBack(__1621810262);
 #line 26 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientRoomHandler.nll"
 		__pServer->__ClientJoin(this, pServerRoom);
+#line 28 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientRoomHandler.nll"
 		gsBlob* pTestBlob = new gsBlob();
 #line 29 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientRoomHandler.nll"
 		pTestBlob->PackUint32(42);
@@ -82,6 +85,7 @@ namespace NumbatLogic
 #line 46 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientRoomHandler.nll"
 	void Sync_ClientRoomHandler_ClientRoom::OnRoomTest(gsClient* pClient, gsClientRoom* pRoom, unsigned int nSyncId, gsBlob* pMessageBlob)
 	{
+#line 48 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientRoomHandler.nll"
 		Sync_ClientRoomHandler_ClientRoom* pRoomTyped = (Sync_ClientRoomHandler_ClientRoom*)(pRoom);
 #line 49 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientRoomHandler.nll"
 		Assert::Plz(pRoomTyped != 0);
@@ -110,7 +114,9 @@ namespace NumbatLogic
 #line 70 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientRoomHandler.nll"
 	void Sync_ClientRoomHandler::Run()
 	{
+#line 72 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientRoomHandler.nll"
 		gsServer* pServer = new Sync_ClientRoomHandler_Server("localhost", 9878, 0, "");
+#line 73 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientRoomHandler.nll"
 		gsClient* pClient = new Sync_ClientRoomHandler_Client("localhost", 9878, 0);
 #line 75 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientRoomHandler.nll"
 		Assert::Plz(pServer->__pRoomVector->GetSize() == 0);
@@ -124,7 +130,9 @@ namespace NumbatLogic
 		Assert::Plz(pClient->__eState == gsClient::State::CONNECTED);
 #line 82 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientRoomHandler.nll"
 		Assert::Plz(pClient->__pRoomVector->GetSize() == 1);
+#line 84 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientRoomHandler.nll"
 		gsClientRoom* pRoom = pClient->__pRoomVector->Get(0);
+#line 85 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientRoomHandler.nll"
 		Sync_ClientRoomHandler_ClientRoom* pRoomTyped = (Sync_ClientRoomHandler_ClientRoom*)(pRoom);
 #line 86 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientRoomHandler.nll"
 		Assert::Plz(pRoomTyped != 0);

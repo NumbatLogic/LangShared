@@ -33,7 +33,9 @@ namespace NumbatLogic
 #line 5 "../LangShared/Transpiled/GameStrutServer/gsServerClient.nll"
 	void gsServerClient::Send(gsServerRoom* pRoom, unsigned int nMessageTypeHash, gsBlob* pBlob)
 	{
+#line 7 "../LangShared/Transpiled/GameStrutServer/gsServerClient.nll"
 		gsBlob* pSendBlob = new gsBlob();
+#line 9 "../LangShared/Transpiled/GameStrutServer/gsServerClient.nll"
 		unsigned int nSyncId = __nLastSyncId++;
 #line 11 "../LangShared/Transpiled/GameStrutServer/gsServerClient.nll"
 		pSendBlob->PackBool(false);
@@ -61,6 +63,7 @@ namespace NumbatLogic
 #line 32 "../LangShared/Transpiled/GameStrutServer/gsServerClient.nll"
 		for (int i = 0; i < __pRoomVector->GetSize(); i++)
 		{
+#line 34 "../LangShared/Transpiled/GameStrutServer/gsServerClient.nll"
 			gsServerRoom* pRoom = __pRoomVector->Get(i);
 #line 35 "../LangShared/Transpiled/GameStrutServer/gsServerClient.nll"
 			if (pRoom->__nRoomId == nRoomId)
@@ -74,6 +77,7 @@ namespace NumbatLogic
 #line 43 "../LangShared/Transpiled/GameStrutServer/gsServerClient.nll"
 	void gsServerClient::SyncRespond(unsigned int nSyncId, unsigned char nResult, gsSync::Response eResponse, gsBlob* pBlob)
 	{
+#line 45 "../LangShared/Transpiled/GameStrutServer/gsServerClient.nll"
 		gsBlob* pRespondBlob = new gsBlob();
 #line 47 "../LangShared/Transpiled/GameStrutServer/gsServerClient.nll"
 		pRespondBlob->PackBool(true);
@@ -140,12 +144,16 @@ namespace NumbatLogic
 
 			case gsClient::State::HANDSHAKE:
 			{
+#line 117 "../LangShared/Transpiled/GameStrutServer/gsServerClient.nll"
 				gsBlob* pReceiveBlob = __pClientSocket->Receive();
 #line 118 "../LangShared/Transpiled/GameStrutServer/gsServerClient.nll"
 				if (pReceiveBlob != 0)
 				{
+#line 120 "../LangShared/Transpiled/GameStrutServer/gsServerClient.nll"
 					unsigned short nMagic = 0;
+#line 121 "../LangShared/Transpiled/GameStrutServer/gsServerClient.nll"
 					unsigned short nVersion = 0;
+#line 122 "../LangShared/Transpiled/GameStrutServer/gsServerClient.nll"
 					unsigned char nAuthMode = 0;
 #line 124 "../LangShared/Transpiled/GameStrutServer/gsServerClient.nll"
 					if (pReceiveBlob->UnpackUint16(nMagic) && pReceiveBlob->UnpackUint16(nVersion) && pReceiveBlob->UnpackUint8(nAuthMode))
@@ -156,7 +164,9 @@ namespace NumbatLogic
 #line 129 "../LangShared/Transpiled/GameStrutServer/gsServerClient.nll"
 							if (nAuthMode == 0)
 							{
+#line 131 "../LangShared/Transpiled/GameStrutServer/gsServerClient.nll"
 								InternalString* sName = new InternalString("");
+#line 132 "../LangShared/Transpiled/GameStrutServer/gsServerClient.nll"
 								InternalString* sPassword = new InternalString("");
 #line 134 "../LangShared/Transpiled/GameStrutServer/gsServerClient.nll"
 								if (pReceiveBlob->UnpackInternalString(sName))
@@ -164,6 +174,7 @@ namespace NumbatLogic
 #line 136 "../LangShared/Transpiled/GameStrutServer/gsServerClient.nll"
 									if (pReceiveBlob->UnpackInternalString(sPassword))
 									{
+#line 140 "../LangShared/Transpiled/GameStrutServer/gsServerClient.nll"
 										gsBlob* pSendBlob = new gsBlob();
 #line 141 "../LangShared/Transpiled/GameStrutServer/gsServerClient.nll"
 										pSendBlob->PackUint16(gsClient::MAGIC_WORD);
@@ -195,6 +206,7 @@ namespace NumbatLogic
 					{
 #line 158 "../LangShared/Transpiled/GameStrutServer/gsServerClient.nll"
 						Console::Log("Bad handshake, disconnecting");
+#line 159 "../LangShared/Transpiled/GameStrutServer/gsServerClient.nll"
 						gsBlob* pResponseBlob = new gsBlob();
 #line 160 "../LangShared/Transpiled/GameStrutServer/gsServerClient.nll"
 						pResponseBlob->PackUint8((unsigned char)(gsError::Error::BAD_HANDSHAKE));
@@ -216,14 +228,20 @@ namespace NumbatLogic
 
 			case gsClient::State::CONNECTED:
 			{
+#line 173 "../LangShared/Transpiled/GameStrutServer/gsServerClient.nll"
 				gsBlob* pReceiveBlob = __pClientSocket->Receive();
 #line 174 "../LangShared/Transpiled/GameStrutServer/gsServerClient.nll"
 				if (pReceiveBlob != 0)
 				{
+#line 176 "../LangShared/Transpiled/GameStrutServer/gsServerClient.nll"
 					unsigned int nSyncId = 0;
+#line 177 "../LangShared/Transpiled/GameStrutServer/gsServerClient.nll"
 					unsigned int nLastSyncId = 0;
+#line 178 "../LangShared/Transpiled/GameStrutServer/gsServerClient.nll"
 					unsigned int nRoomId = 0;
+#line 179 "../LangShared/Transpiled/GameStrutServer/gsServerClient.nll"
 					unsigned int nSyncType = 0;
+#line 180 "../LangShared/Transpiled/GameStrutServer/gsServerClient.nll"
 					gsBlob* pSyncBlob = new gsBlob();
 #line 182 "../LangShared/Transpiled/GameStrutServer/gsServerClient.nll"
 					if (pReceiveBlob->UnpackUint32(nSyncId) && pReceiveBlob->UnpackUint32(nLastSyncId) && pReceiveBlob->UnpackUint32(nRoomId) && pReceiveBlob->UnpackUint32(nSyncType) && pReceiveBlob->UnpackBlob(pSyncBlob))
@@ -231,6 +249,7 @@ namespace NumbatLogic
 #line 188 "../LangShared/Transpiled/GameStrutServer/gsServerClient.nll"
 						if (nRoomId > 0)
 						{
+#line 190 "../LangShared/Transpiled/GameStrutServer/gsServerClient.nll"
 							gsServerRoom* pRoom = GetRoomByRoomId(nRoomId);
 #line 192 "../LangShared/Transpiled/GameStrutServer/gsServerClient.nll"
 							if (pRoom == 0)
@@ -242,6 +261,7 @@ namespace NumbatLogic
 #line 195 "../LangShared/Transpiled/GameStrutServer/gsServerClient.nll"
 								return;
 							}
+#line 197 "../LangShared/Transpiled/GameStrutServer/gsServerClient.nll"
 							gsServerRoom_SyncHandler* pHandler = pRoom->__GetSyncHandler(nSyncType);
 #line 198 "../LangShared/Transpiled/GameStrutServer/gsServerClient.nll"
 							if (pHandler == 0)

@@ -54,7 +54,9 @@ namespace NumbatLogic
 #line 21 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ServerRoomHandler_Error.nll"
 	void Sync_ServerRoomHandler_Error_ServerClient::OnInitialJoin()
 	{
+#line 23 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ServerRoomHandler_Error.nll"
 		gsServerRoom* pOwnedServerRoom = new gsServerRoom(++__pServer->__nLastRoomId, "Sync_ServerRoomHandler_Error_Room", __pServer);
+#line 24 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ServerRoomHandler_Error.nll"
 		gsServerRoom* pServerRoom = pOwnedServerRoom;
 		NumbatLogic::gsServerRoom* __1621810262 = pOwnedServerRoom;
 #line 25 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ServerRoomHandler_Error.nll"
@@ -87,9 +89,11 @@ namespace NumbatLogic
 #line 51 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ServerRoomHandler_Error.nll"
 		if (nRoomTypeHash == Sync_ServerRoomHandler_Error_ClientRoom::ROOM_TYPE_HASH)
 		{
+#line 53 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ServerRoomHandler_Error.nll"
 			gsClientRoom* pRoom = new Sync_ServerRoomHandler_Error_ClientRoom(nRoomId, bPrimary, pJoinBlob, this);
 #line 54 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ServerRoomHandler_Error.nll"
 			__pDummySync = new gsSync();
+#line 55 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ServerRoomHandler_Error.nll"
 			gsBlob* pBlob = new gsBlob();
 #line 56 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ServerRoomHandler_Error.nll"
 			SyncSend(__pDummySync, "Dummy", pBlob, gsSync::Response::EXPECT_RESPONSE, pRoom);
@@ -114,7 +118,9 @@ namespace NumbatLogic
 #line 65 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ServerRoomHandler_Error.nll"
 	void Sync_ServerRoomHandler_Error::Run()
 	{
+#line 67 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ServerRoomHandler_Error.nll"
 		gsServer* pServer = new Sync_ServerRoomHandler_Error_Server("localhost", 9879, 0, "");
+#line 68 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ServerRoomHandler_Error.nll"
 		gsClient* pClient = new Sync_ServerRoomHandler_Error_Client("localhost", 9879, 0);
 #line 70 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ServerRoomHandler_Error.nll"
 		GameStrutTestUtil::Update(pServer, pClient);
