@@ -32,10 +32,8 @@ namespace NumbatLogic
 	{
 	}
 
-#line 9 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientHandler.nll"
 	gsServerClient* Sync_ClientHandler_Server::OnCreateServerClient(unsigned int nClientId, gsClientSocket* pClientSocket, gsServer* pServer)
 	{
-#line 11 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientHandler.nll"
 		return new Sync_ClientHandler_ServerClient(nClientId, pClientSocket, pServer);
 	}
 
@@ -45,25 +43,19 @@ namespace NumbatLogic
 	{
 	}
 
-#line 21 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientHandler.nll"
 	void Sync_ClientHandler_ServerClient::OnInitialJoin()
 	{
-#line 23 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientHandler.nll"
 		gsServerRoom* pOwnedServerRoom = new gsServerRoom(++__pServer->__nLastRoomId, "Sync_ClientHandler_Room", __pServer);
-#line 24 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientHandler.nll"
 		gsServerRoom* pServerRoom = pOwnedServerRoom;
 		NumbatLogic::gsServerRoom* __1621810262 = pOwnedServerRoom;
 #line 25 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientHandler.nll"
 		pOwnedServerRoom = 0;
 #line 25 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientHandler.nll"
 		__pServer->__pRoomVector->PushBack(__1621810262);
-#line 26 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientHandler.nll"
 		__pServer->__ClientJoin(this, pServerRoom);
 #line 28 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientHandler.nll"
 		gsBlob* pTestBlob = new gsBlob();
-#line 29 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientHandler.nll"
 		pTestBlob->PackUint32(42);
-#line 30 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientHandler.nll"
 		Send(0, 1986771282, pTestBlob);
 		if (pOwnedServerRoom) delete pOwnedServerRoom;
 		if (pTestBlob) delete pTestBlob;
@@ -78,14 +70,10 @@ namespace NumbatLogic
 		RegisterHandler(1986771282, OnTest);
 	}
 
-#line 43 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientHandler.nll"
 	void Sync_ClientHandler_Client::OnTest(gsClient* pClient, unsigned int nSyncId, gsBlob* pMessageBlob)
 	{
-#line 45 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientHandler.nll"
 		Sync_ClientHandler_Client* pSyncClient = (Sync_ClientHandler_Client*)(pClient);
-#line 46 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientHandler.nll"
 		Assert::Plz(pSyncClient != 0);
-#line 47 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientHandler.nll"
 		Assert::Plz(pMessageBlob->UnpackUint32(pSyncClient->m_nTestValue));
 	}
 
@@ -93,9 +81,7 @@ namespace NumbatLogic
 #line 53 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientHandler.nll"
 	void Sync_ClientHandler::Run()
 	{
-#line 55 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientHandler.nll"
 		gsServer* pServer = new Sync_ClientHandler_Server("localhost", 9877, 0, "");
-#line 56 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientHandler.nll"
 		gsClient* pClient = new Sync_ClientHandler_Client("localhost", 9877, 0);
 #line 58 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientHandler.nll"
 		Assert::Plz(pServer->__pRoomVector->GetSize() == 0);
@@ -103,17 +89,12 @@ namespace NumbatLogic
 		GameStrutTestUtil::Update(pServer, pClient);
 #line 62 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientHandler.nll"
 		Assert::Plz(pServer->__pClientVector->GetSize() == 1);
-#line 63 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientHandler.nll"
 		Assert::Plz(pServer->__pRoomVector->GetSize() == 1);
-#line 64 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientHandler.nll"
 		Assert::Plz(pClient->__eState == gsClient::State::CONNECTED);
-#line 65 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientHandler.nll"
 		Assert::Plz(pClient->__pRoomVector->GetSize() == 1);
 #line 67 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientHandler.nll"
 		Sync_ClientHandler_Client* pSyncClient = (Sync_ClientHandler_Client*)(pClient);
-#line 68 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientHandler.nll"
 		Assert::Plz(pSyncClient != 0);
-#line 69 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientHandler.nll"
 		Assert::Plz(pSyncClient->m_nTestValue == 42);
 		if (pServer) delete pServer;
 		if (pClient) delete pClient;

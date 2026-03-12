@@ -7,20 +7,20 @@ namespace NumbatLogic
 	template <class T>
 	class Vector;
 }
-#line 0 "../../../../LangShared/Transpiled/Vector/OwnedVector.nll"
+#line 0 "../../LangShared/Transpiled/Vector/OwnedVector.nll"
 namespace NumbatLogic
 {
-#line 3 "../../../../LangShared/Transpiled/Vector/OwnedVector.nll"
+#line 3 "../../LangShared/Transpiled/Vector/OwnedVector.nll"
 	template <class T>
 	class OwnedVector
 	{
-#line 5 "../../../../LangShared/Transpiled/Vector/OwnedVector.nll"
+#line 5 "../../LangShared/Transpiled/Vector/OwnedVector.nll"
 		protected: Vector<T>* m_pVector;
-#line 7 "../../../../LangShared/Transpiled/Vector/OwnedVector.nll"
+#line 7 "../../LangShared/Transpiled/Vector/OwnedVector.nll"
 		public: OwnedVector()
 		{
 			m_pVector = 0;
-#line 9 "../../../../LangShared/Transpiled/Vector/OwnedVector.nll"
+#line 9 "../../LangShared/Transpiled/Vector/OwnedVector.nll"
 			m_pVector = new Vector<T>();
 		}
 
@@ -30,7 +30,7 @@ namespace NumbatLogic
 			if (m_pVector) delete m_pVector;
 		}
 
-#line 17 "../../../../LangShared/Transpiled/Vector/OwnedVector.nll"
+#line 17 "../../LangShared/Transpiled/Vector/OwnedVector.nll"
 		public: T PushFront(T xObject)
 		{
 			m_pVector->PushFront(xObject);
@@ -61,7 +61,7 @@ namespace NumbatLogic
 					delete pTemp;
 					pTemp = 0;
 				}
-#line 44 "../../../../LangShared/Transpiled/Vector/OwnedVector.nll"
+#line 44 "../../LangShared/Transpiled/Vector/OwnedVector.nll"
 			m_pVector->Set(nIndex, pObject);
 		}
 
@@ -69,7 +69,7 @@ namespace NumbatLogic
 		{
 			while (m_pVector->GetSize() > 0)
 			{
-#line 52 "../../../../LangShared/Transpiled/Vector/OwnedVector.nll"
+#line 52 "../../LangShared/Transpiled/Vector/OwnedVector.nll"
 				T pTemp = m_pVector->PopBack();
 				if (pTemp != 0)
 					{
@@ -79,7 +79,7 @@ namespace NumbatLogic
 			}
 		}
 
-#line 58 "../../../../LangShared/Transpiled/Vector/OwnedVector.nll"
+#line 58 "../../LangShared/Transpiled/Vector/OwnedVector.nll"
 		public: void Insert(int nIndex, T pObject)
 		{
 			m_pVector->Insert(nIndex, pObject);
@@ -97,7 +97,7 @@ namespace NumbatLogic
 			{
 				delete m_pVector->Get(nIndex);
 			}
-#line 73 "../../../../LangShared/Transpiled/Vector/OwnedVector.nll"
+#line 73 "../../LangShared/Transpiled/Vector/OwnedVector.nll"
 			m_pVector->Erase(nIndex);
 		}
 

@@ -20,7 +20,6 @@ namespace NumbatLogic
 #line 3 "../LangShared/Transpiled/GameStrutTest/Test/Client_Connect.nll"
 	class Client_Connect_Server : public gsServer
 	{
-#line 5 "../LangShared/Transpiled/GameStrutTest/Test/Client_Connect.nll"
 		public: Client_Connect_Server(const char* sxAddress, unsigned short nPort, unsigned short nVersion, const char* sxDatabasePath);
 #line 9 "../LangShared/Transpiled/GameStrutTest/Test/Client_Connect.nll"
 		public: virtual gsServerClient* OnCreateServerClient(unsigned int nClientId, gsClientSocket* pClientSocket, gsServer* pServer);
@@ -28,7 +27,6 @@ namespace NumbatLogic
 #line 15 "../LangShared/Transpiled/GameStrutTest/Test/Client_Connect.nll"
 	class Client_Connect_ServerClient : public gsServerClient
 	{
-#line 17 "../LangShared/Transpiled/GameStrutTest/Test/Client_Connect.nll"
 		public: Client_Connect_ServerClient(unsigned int nClientId, gsClientSocket* pClientSocket, gsServer* pServer);
 #line 21 "../LangShared/Transpiled/GameStrutTest/Test/Client_Connect.nll"
 		public: virtual void OnInitialJoin();
@@ -36,7 +34,6 @@ namespace NumbatLogic
 #line 30 "../LangShared/Transpiled/GameStrutTest/Test/Client_Connect.nll"
 	class Client_Connect_Client : public gsClient
 	{
-#line 32 "../LangShared/Transpiled/GameStrutTest/Test/Client_Connect.nll"
 		public: Client_Connect_Client(const char* sxAddress, unsigned short nPort, unsigned short nVersion);
 #line 36 "../LangShared/Transpiled/GameStrutTest/Test/Client_Connect.nll"
 		public: virtual gsClientRoom* OnRoomJoin(unsigned int nRoomId, unsigned int nRoomTypeHash, bool bPrimary, gsBlob* pJoinBlob);
@@ -44,7 +41,6 @@ namespace NumbatLogic
 #line 43 "../LangShared/Transpiled/GameStrutTest/Test/Client_Connect.nll"
 	class Client_Connect
 	{
-#line 45 "../LangShared/Transpiled/GameStrutTest/Test/Client_Connect.nll"
 		public: static void Run();
 	};
 }

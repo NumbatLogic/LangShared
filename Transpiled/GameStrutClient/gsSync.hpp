@@ -17,7 +17,6 @@ namespace NumbatLogic
 #line 3 "../LangShared/Transpiled/GameStrutClient/gsSync.nll"
 	class gsSync
 	{
-#line 5 "../LangShared/Transpiled/GameStrutClient/gsSync.nll"
 		public: enum Response
 		{
 			NO_RESPONSE = 0,
@@ -43,7 +42,6 @@ namespace NumbatLogic
 #line 41 "../LangShared/Transpiled/GameStrutClient/gsSync.nll"
 	class gsSyncInner
 	{
-#line 43 "../LangShared/Transpiled/GameStrutClient/gsSync.nll"
 		public: gsSyncInner(gsSync* pSync, unsigned int nSyncId, const char* sxSyncType, gsClientRoom* pRoom, gsClient* pClient);
 #line 54 "../LangShared/Transpiled/GameStrutClient/gsSync.nll"
 		public: virtual ~gsSyncInner();
@@ -51,17 +49,12 @@ namespace NumbatLogic
 		public: gsSync* __pSync;
 #line 64 "../LangShared/Transpiled/GameStrutClient/gsSync.nll"
 		public: unsigned int __nSyncId;
-#line 65 "../LangShared/Transpiled/GameStrutClient/gsSync.nll"
 		public: InternalString* __sSyncType;
-#line 66 "../LangShared/Transpiled/GameStrutClient/gsSync.nll"
 		public: unsigned int __nSyncType;
 #line 68 "../LangShared/Transpiled/GameStrutClient/gsSync.nll"
 		public: bool __bComplete;
-#line 69 "../LangShared/Transpiled/GameStrutClient/gsSync.nll"
 		public: gsSync::Response __eResponse;
-#line 70 "../LangShared/Transpiled/GameStrutClient/gsSync.nll"
 		public: unsigned int __nRoomId;
-#line 71 "../LangShared/Transpiled/GameStrutClient/gsSync.nll"
 		public: unsigned char __nResult;
 	};
 }

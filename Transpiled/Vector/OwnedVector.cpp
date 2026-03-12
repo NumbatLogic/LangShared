@@ -8,9 +8,9 @@ namespace NumbatLogic
 	template <class T>
 	class Vector;
 }
-#line 0 "../../../../LangShared/Transpiled/Vector/OwnedVector.nll"
+#line 0 "../../LangShared/Transpiled/Vector/OwnedVector.nll"
 namespace NumbatLogic
 {
-#line 3 "../../../../LangShared/Transpiled/Vector/OwnedVector.nll"
+#line 3 "../../LangShared/Transpiled/Vector/OwnedVector.nll"
 }
 

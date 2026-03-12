@@ -27,7 +27,6 @@ namespace NumbatLogic
 		public: typedef void (SyncHandler)(gsClient* pClient, unsigned int nSyncId, gsBlob* pMessageBlob);
 #line 7 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
 		public: unsigned int __nHash;
-#line 8 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
 		public: SyncHandler* __pHandler;
 #line 10 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
 		public: gsClient_SyncHandler(unsigned int nHash, SyncHandler* pHandler);
@@ -35,7 +34,6 @@ namespace NumbatLogic
 #line 17 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
 	class gsClient
 	{
-#line 19 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
 		public: enum State
 		{
 			CONNECT,
@@ -77,23 +75,18 @@ namespace NumbatLogic
 		public: OwnedVector<gsClientRoom*>* __pRoomVector;
 #line 404 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
 		public: gsClientSocket* __pClientSocket;
-#line 405 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
 		public: unsigned short __nVersion;
 #line 407 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
 		public: unsigned int __nClientId;
 #line 409 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
 		public: unsigned int __nLastSyncId;
-#line 410 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
 		public: OwnedVector<gsSyncInner*>* __pSyncInnerVector;
-#line 411 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
 		public: OwnedVector<gsClient_SyncHandler*>* __pSyncHandlerVector;
 #line 414 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
 		public: State __eState;
-#line 415 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
 		public: InternalString* __sErrorMessage;
 #line 417 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
 		public: static unsigned int __ROOM_JOIN_HASH;
-#line 418 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
 		public: static unsigned int __ROOM_LEAVE_HASH;
 #line 422 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
 		public: gsClientRoom* GetRoomByRoomId(unsigned int nRoomId);

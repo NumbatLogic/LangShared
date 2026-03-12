@@ -27,7 +27,6 @@ namespace NumbatLogic
 		public: typedef void (SyncHandler)(gsServerRoom* pRoom, unsigned int nSyncId, unsigned int nSyncType, gsBlob* pInBlob, gsServerClient* pServerClient);
 #line 7 "../LangShared/Transpiled/GameStrutServer/gsServerRoom.nll"
 		public: unsigned int __nHash;
-#line 8 "../LangShared/Transpiled/GameStrutServer/gsServerRoom.nll"
 		public: SyncHandler* __pHandler;
 #line 10 "../LangShared/Transpiled/GameStrutServer/gsServerRoom.nll"
 		public: gsServerRoom_SyncHandler(unsigned int nHash, SyncHandler* pHandler);
@@ -35,7 +34,6 @@ namespace NumbatLogic
 #line 17 "../LangShared/Transpiled/GameStrutServer/gsServerRoom.nll"
 	class gsServerRoom
 	{
-#line 19 "../LangShared/Transpiled/GameStrutServer/gsServerRoom.nll"
 		public: gsServerClient* GetClientByClientId(unsigned int nClientId);
 #line 30 "../LangShared/Transpiled/GameStrutServer/gsServerRoom.nll"
 		protected: virtual gsBlob* OnClientJoin(gsServerClient* pClient);
@@ -47,15 +45,11 @@ namespace NumbatLogic
 		public: gsServerRoom_SyncHandler* __GetSyncHandler(unsigned int nSyncType);
 #line 62 "../LangShared/Transpiled/GameStrutServer/gsServerRoom.nll"
 		public: unsigned int __nRoomId;
-#line 63 "../LangShared/Transpiled/GameStrutServer/gsServerRoom.nll"
 		public: unsigned int __nRoomType;
-#line 64 "../LangShared/Transpiled/GameStrutServer/gsServerRoom.nll"
 		public: InternalString* __sRoomType;
 #line 66 "../LangShared/Transpiled/GameStrutServer/gsServerRoom.nll"
 		public: gsServer* __pServer;
-#line 67 "../LangShared/Transpiled/GameStrutServer/gsServerRoom.nll"
 		public: Vector<gsServerClient*>* __pClientVector;
-#line 68 "../LangShared/Transpiled/GameStrutServer/gsServerRoom.nll"
 		public: OwnedVector<gsServerRoom_SyncHandler*>* __pSyncHandlerVector;
 #line 70 "../LangShared/Transpiled/GameStrutServer/gsServerRoom.nll"
 		public: gsServerRoom(unsigned int nRoomId, const char* sxRoomType, gsServer* pServer);

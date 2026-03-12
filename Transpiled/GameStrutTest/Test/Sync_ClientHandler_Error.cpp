@@ -29,10 +29,8 @@ namespace NumbatLogic
 	{
 	}
 
-#line 9 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientHandler_Error.nll"
 	gsServerClient* Sync_ClientHandler_Error_Server::OnCreateServerClient(unsigned int nClientId, gsClientSocket* pClientSocket, gsServer* pServer)
 	{
-#line 11 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientHandler_Error.nll"
 		return new Sync_ClientHandler_Error_ServerClient(nClientId, pClientSocket, pServer);
 	}
 
@@ -42,14 +40,10 @@ namespace NumbatLogic
 	{
 	}
 
-#line 21 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientHandler_Error.nll"
 	void Sync_ClientHandler_Error_ServerClient::OnInitialJoin()
 	{
-#line 23 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientHandler_Error.nll"
 		gsServerRoom* pRoom = new gsServerRoom(1234, "Sync_ClientHandler_Error_Room", __pServer);
-#line 24 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientHandler_Error.nll"
 		gsBlob* pBlob = new gsBlob();
-#line 25 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientHandler_Error.nll"
 		Send(pRoom, 2223003848, pBlob);
 		if (pRoom) delete pRoom;
 		if (pBlob) delete pBlob;
@@ -59,15 +53,11 @@ namespace NumbatLogic
 #line 31 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientHandler_Error.nll"
 	void Sync_ClientHandler_Error::Run()
 	{
-#line 33 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientHandler_Error.nll"
 		gsServer* pServer = new Sync_ClientHandler_Error_Server("localhost", 9878, 0, "");
-#line 34 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientHandler_Error.nll"
 		gsClient* pClient = new gsClient("localhost", 9878, 0);
 #line 36 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientHandler_Error.nll"
 		GameStrutTestUtil::Update(pServer, pClient);
-#line 37 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientHandler_Error.nll"
 		Assert::Plz(pClient->__eState == gsClient::State::ERRORED);
-#line 38 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientHandler_Error.nll"
 		Assert::Plz(!pClient->__pClientSocket->GetConnected());
 		if (pServer) delete pServer;
 		if (pClient) delete pClient;

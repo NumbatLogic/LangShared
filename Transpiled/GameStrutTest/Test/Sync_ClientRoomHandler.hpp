@@ -21,7 +21,6 @@ namespace NumbatLogic
 #line 3 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientRoomHandler.nll"
 	class Sync_ClientRoomHandler_Server : public gsServer
 	{
-#line 5 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientRoomHandler.nll"
 		public: Sync_ClientRoomHandler_Server(const char* sxAddress, unsigned short nPort, unsigned short nVersion, const char* sxDatabasePath);
 #line 9 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientRoomHandler.nll"
 		public: virtual gsServerClient* OnCreateServerClient(unsigned int nClientId, gsClientSocket* pClientSocket, gsServer* pServer);
@@ -29,7 +28,6 @@ namespace NumbatLogic
 #line 15 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientRoomHandler.nll"
 	class Sync_ClientRoomHandler_ServerClient : public gsServerClient
 	{
-#line 17 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientRoomHandler.nll"
 		public: Sync_ClientRoomHandler_ServerClient(unsigned int nClientId, gsClientSocket* pClientSocket, gsServer* pServer);
 #line 21 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientRoomHandler.nll"
 		public: virtual void OnInitialJoin();
@@ -37,9 +35,7 @@ namespace NumbatLogic
 #line 34 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientRoomHandler.nll"
 	class Sync_ClientRoomHandler_ClientRoom : public gsClientRoom
 	{
-#line 36 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientRoomHandler.nll"
 		public: static const char* ROOM_TYPE;
-#line 37 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientRoomHandler.nll"
 		public: static const unsigned int ROOM_TYPE_HASH = 3638174234;
 #line 39 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientRoomHandler.nll"
 		public: unsigned int m_nTestValue;
@@ -51,7 +47,6 @@ namespace NumbatLogic
 #line 54 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientRoomHandler.nll"
 	class Sync_ClientRoomHandler_Client : public gsClient
 	{
-#line 56 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientRoomHandler.nll"
 		public: Sync_ClientRoomHandler_Client(const char* sxAddress, unsigned short nPort, unsigned short nVersion);
 #line 60 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientRoomHandler.nll"
 		public: virtual gsClientRoom* OnRoomJoin(unsigned int nRoomId, unsigned int nRoomTypeHash, bool bPrimary, gsBlob* pJoinBlob);
@@ -59,7 +54,6 @@ namespace NumbatLogic
 #line 68 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientRoomHandler.nll"
 	class Sync_ClientRoomHandler
 	{
-#line 70 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientRoomHandler.nll"
 		public: static void Run();
 	};
 }

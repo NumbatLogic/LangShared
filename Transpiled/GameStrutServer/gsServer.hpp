@@ -22,7 +22,6 @@ namespace NumbatLogic
 #line 3 "../LangShared/Transpiled/GameStrutServer/gsServer.nll"
 	class gsServer
 	{
-#line 5 "../LangShared/Transpiled/GameStrutServer/gsServer.nll"
 		public: gsServer(const char* sxAddress, unsigned short nPort, unsigned short nVersion, const char* sxDatabasePath);
 #line 18 "../LangShared/Transpiled/GameStrutServer/gsServer.nll"
 		public: virtual ~gsServer();
@@ -38,19 +37,14 @@ namespace NumbatLogic
 		public: virtual void Auth(gsBlob* pAuthBlob, gsClientSocket* pClientSocket);
 #line 103 "../LangShared/Transpiled/GameStrutServer/gsServer.nll"
 		public: InternalString* __sAddress;
-#line 104 "../LangShared/Transpiled/GameStrutServer/gsServer.nll"
 		public: unsigned short __nPort;
-#line 105 "../LangShared/Transpiled/GameStrutServer/gsServer.nll"
 		public: unsigned short __nVersion;
 #line 107 "../LangShared/Transpiled/GameStrutServer/gsServer.nll"
 		public: gsServerSocket* __pServerSocket;
-#line 108 "../LangShared/Transpiled/GameStrutServer/gsServer.nll"
 		public: OwnedVector<gsServerClient*>* __pClientVector;
-#line 109 "../LangShared/Transpiled/GameStrutServer/gsServer.nll"
 		public: OwnedVector<gsServerRoom*>* __pRoomVector;
 #line 111 "../LangShared/Transpiled/GameStrutServer/gsServer.nll"
 		public: unsigned int __nLastClientId;
-#line 112 "../LangShared/Transpiled/GameStrutServer/gsServer.nll"
 		public: unsigned int __nLastRoomId;
 #line 115 "../LangShared/Transpiled/GameStrutServer/gsServer.nll"
 		public: void __ClientJoin(gsServerClient* pClient, gsServerRoom* pRoom);
