@@ -38,6 +38,7 @@ namespace NumbatLogic
 #line 19 "../../../../LangShared/Transpiled/Map/OwnedStringMap.nll"
 			if (m_pMap->Contains(xKey))
 			{
+#line 21 "../../../../LangShared/Transpiled/Map/OwnedStringMap.nll"
 				TValue pOld = m_pMap->Get(xKey);
 #line 22 "../../../../LangShared/Transpiled/Map/OwnedStringMap.nll"
 				if (pOld != 0)
@@ -80,6 +81,7 @@ namespace NumbatLogic
 #line 47 "../../../../LangShared/Transpiled/Map/OwnedStringMap.nll"
 			while (m_pMap->GetSize() > 0)
 			{
+#line 49 "../../../../LangShared/Transpiled/Map/OwnedStringMap.nll"
 				const char* xKey = m_pMap->GetAnyKey();
 #line 50 "../../../../LangShared/Transpiled/Map/OwnedStringMap.nll"
 				if (xKey == 0)
@@ -101,6 +103,7 @@ namespace NumbatLogic
 			if (!m_pMap->Contains(xKey))
 #line 61 "../../../../LangShared/Transpiled/Map/OwnedStringMap.nll"
 				return 0;
+#line 63 "../../../../LangShared/Transpiled/Map/OwnedStringMap.nll"
 			TValue pTemp = m_pMap->Get(xKey);
 #line 64 "../../../../LangShared/Transpiled/Map/OwnedStringMap.nll"
 			m_pMap->Remove(xKey);

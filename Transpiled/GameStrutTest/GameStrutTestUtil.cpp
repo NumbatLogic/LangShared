@@ -24,6 +24,7 @@ namespace NumbatLogic
 #line 5 "../LangShared/Transpiled/GameStrutTest/GameStrutTestUtil.nll"
 	void GameStrutTestUtil::Update(gsServerSocket* pServerSocket, gsClientSocket* pClientSocket)
 	{
+#line 7 "../LangShared/Transpiled/GameStrutTest/GameStrutTestUtil.nll"
 		int nNotPendingCount = 0;
 #line 8 "../LangShared/Transpiled/GameStrutTest/GameStrutTestUtil.nll"
 		while (nNotPendingCount < 10)
@@ -40,13 +41,14 @@ namespace NumbatLogic
 #line 16 "../LangShared/Transpiled/GameStrutTest/GameStrutTestUtil.nll"
 				nNotPendingCount++;
 #line 17 "../LangShared/Transpiled/GameStrutTest/GameStrutTestUtil.nll"
-			Utils::Sleep(5);
+			Utils::Sleep(5 + nNotPendingCount);
 		}
 	}
 
 #line 21 "../LangShared/Transpiled/GameStrutTest/GameStrutTestUtil.nll"
 	void GameStrutTestUtil::Update(gsServer* pServer, gsClient* pClient)
 	{
+#line 23 "../LangShared/Transpiled/GameStrutTest/GameStrutTestUtil.nll"
 		int nNotPendingCount = 0;
 #line 24 "../LangShared/Transpiled/GameStrutTest/GameStrutTestUtil.nll"
 		while (nNotPendingCount < 10)
@@ -63,13 +65,14 @@ namespace NumbatLogic
 #line 32 "../LangShared/Transpiled/GameStrutTest/GameStrutTestUtil.nll"
 				nNotPendingCount++;
 #line 33 "../LangShared/Transpiled/GameStrutTest/GameStrutTestUtil.nll"
-			Utils::Sleep(5);
+			Utils::Sleep(5 + nNotPendingCount);
 		}
 	}
 
 #line 37 "../LangShared/Transpiled/GameStrutTest/GameStrutTestUtil.nll"
 	void GameStrutTestUtil::UpdateVector(gsServer* pServer, OwnedVector<gsClient*>* pClientVector)
 	{
+#line 39 "../LangShared/Transpiled/GameStrutTest/GameStrutTestUtil.nll"
 		int nNotPendingCount = 0;
 #line 40 "../LangShared/Transpiled/GameStrutTest/GameStrutTestUtil.nll"
 		while (nNotPendingCount < 10)
@@ -79,10 +82,12 @@ namespace NumbatLogic
 #line 43 "../LangShared/Transpiled/GameStrutTest/GameStrutTestUtil.nll"
 			for (int i = 0; i < pClientVector->GetSize(); i++)
 			{
+#line 45 "../LangShared/Transpiled/GameStrutTest/GameStrutTestUtil.nll"
 				gsClient* pClient = pClientVector->Get(i);
 #line 46 "../LangShared/Transpiled/GameStrutTest/GameStrutTestUtil.nll"
 				pClient->Update();
 			}
+#line 49 "../LangShared/Transpiled/GameStrutTest/GameStrutTestUtil.nll"
 			bool bPending = pServer->Pending();
 #line 50 "../LangShared/Transpiled/GameStrutTest/GameStrutTestUtil.nll"
 			if (!bPending)
@@ -90,6 +95,7 @@ namespace NumbatLogic
 #line 52 "../LangShared/Transpiled/GameStrutTest/GameStrutTestUtil.nll"
 				for (int i = 0; i < pClientVector->GetSize(); i++)
 				{
+#line 54 "../LangShared/Transpiled/GameStrutTest/GameStrutTestUtil.nll"
 					gsClient* pClient = pClientVector->Get(i);
 #line 55 "../LangShared/Transpiled/GameStrutTest/GameStrutTestUtil.nll"
 					if (pClient->GetPending())
@@ -109,7 +115,7 @@ namespace NumbatLogic
 #line 66 "../LangShared/Transpiled/GameStrutTest/GameStrutTestUtil.nll"
 				nNotPendingCount++;
 #line 67 "../LangShared/Transpiled/GameStrutTest/GameStrutTestUtil.nll"
-			Utils::Sleep(5);
+			Utils::Sleep(5 + nNotPendingCount);
 		}
 	}
 

@@ -74,10 +74,12 @@ namespace NumbatLogic
 #line 25 "../LangShared/Transpiled/GameStrutServer/gsServer.nll"
 		__pServerSocket->Update();
 		{
+#line 28 "../LangShared/Transpiled/GameStrutServer/gsServer.nll"
 			gsClientSocket* pClientSocket = __pServerSocket->Accept();
 #line 29 "../LangShared/Transpiled/GameStrutServer/gsServer.nll"
 			if (pClientSocket != 0)
 			{
+#line 31 "../LangShared/Transpiled/GameStrutServer/gsServer.nll"
 				gsServerClient* pServerClient = OnCreateServerClient(++__nLastClientId, pClientSocket, this);
 #line 32 "../LangShared/Transpiled/GameStrutServer/gsServer.nll"
 				Assert::Plz(pServerClient != 0);
@@ -92,15 +94,18 @@ namespace NumbatLogic
 #line 37 "../LangShared/Transpiled/GameStrutServer/gsServer.nll"
 		for (int i = 0; i < __pClientVector->GetSize(); i++)
 		{
+#line 39 "../LangShared/Transpiled/GameStrutServer/gsServer.nll"
 			gsServerClient* pServerClient = __pClientVector->Get(i);
 #line 41 "../LangShared/Transpiled/GameStrutServer/gsServer.nll"
 			pServerClient->__Update();
 		}
 		{
+#line 46 "../LangShared/Transpiled/GameStrutServer/gsServer.nll"
 			int i = 0;
 #line 47 "../LangShared/Transpiled/GameStrutServer/gsServer.nll"
 			while (i < __pClientVector->GetSize())
 			{
+#line 49 "../LangShared/Transpiled/GameStrutServer/gsServer.nll"
 				gsServerClient* pServerClient = __pClientVector->Get(i);
 #line 50 "../LangShared/Transpiled/GameStrutServer/gsServer.nll"
 				if (!pServerClient->__pClientSocket->GetConnected())
@@ -150,6 +155,7 @@ namespace NumbatLogic
 #line 121 "../LangShared/Transpiled/GameStrutServer/gsServer.nll"
 		while (pClient->__pRoomVector->GetSize() > 0)
 		{
+#line 123 "../LangShared/Transpiled/GameStrutServer/gsServer.nll"
 			gsServerRoom* pCurrentRoom = pClient->__pRoomVector->Get(0);
 #line 124 "../LangShared/Transpiled/GameStrutServer/gsServer.nll"
 			pCurrentRoom->__ClientLeave(pClient);
@@ -163,10 +169,13 @@ namespace NumbatLogic
 	{
 #line 132 "../LangShared/Transpiled/GameStrutServer/gsServer.nll"
 		pCreateBlob->SetOffset(0);
+#line 134 "../LangShared/Transpiled/GameStrutServer/gsServer.nll"
 		unsigned int nRoomType = ExternalString::GetChecksum(sxRoomType);
+#line 135 "../LangShared/Transpiled/GameStrutServer/gsServer.nll"
 		gsServerRoom* pOwnedRoom = OnCreateRoom(++__nLastRoomId, nRoomType, pCreateBlob);
 #line 136 "../LangShared/Transpiled/GameStrutServer/gsServer.nll"
 		Assert::Plz(pOwnedRoom != 0);
+#line 137 "../LangShared/Transpiled/GameStrutServer/gsServer.nll"
 		gsServerRoom* pRoom = pOwnedRoom;
 		NumbatLogic::gsServerRoom* __4188406598 = pOwnedRoom;
 #line 138 "../LangShared/Transpiled/GameStrutServer/gsServer.nll"

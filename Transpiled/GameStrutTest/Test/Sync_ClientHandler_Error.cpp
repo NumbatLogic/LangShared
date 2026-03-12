@@ -45,7 +45,9 @@ namespace NumbatLogic
 #line 21 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientHandler_Error.nll"
 	void Sync_ClientHandler_Error_ServerClient::OnInitialJoin()
 	{
+#line 23 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientHandler_Error.nll"
 		gsServerRoom* pRoom = new gsServerRoom(1234, "Sync_ClientHandler_Error_Room", __pServer);
+#line 24 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientHandler_Error.nll"
 		gsBlob* pBlob = new gsBlob();
 #line 25 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientHandler_Error.nll"
 		Send(pRoom, 2223003848, pBlob);
@@ -57,7 +59,9 @@ namespace NumbatLogic
 #line 31 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientHandler_Error.nll"
 	void Sync_ClientHandler_Error::Run()
 	{
+#line 33 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientHandler_Error.nll"
 		gsServer* pServer = new Sync_ClientHandler_Error_Server("localhost", 9878, 0, "");
+#line 34 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientHandler_Error.nll"
 		gsClient* pClient = new gsClient("localhost", 9878, 0);
 #line 36 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientHandler_Error.nll"
 		GameStrutTestUtil::Update(pServer, pClient);

@@ -35,11 +35,15 @@ namespace NumbatLogic
 #line 24 "../LangShared/Transpiled/Rand/Rand.nll"
 	unsigned int Rand::NextUint32()
 	{
+#line 26 "../LangShared/Transpiled/Rand/Rand.nll"
 		unsigned long long nOldState = m_nState;
 #line 27 "../LangShared/Transpiled/Rand/Rand.nll"
 		m_nState = nOldState * MULTIPLIER + m_nInc;
+#line 29 "../LangShared/Transpiled/Rand/Rand.nll"
 		unsigned int nXorShifted = (unsigned int)(((nOldState >> 18) ^ nOldState) >> 27);
+#line 30 "../LangShared/Transpiled/Rand/Rand.nll"
 		int nRot = (int)(nOldState >> 59);
+#line 31 "../LangShared/Transpiled/Rand/Rand.nll"
 		int nRotNeg = (32 - nRot) & 31;
 #line 33 "../LangShared/Transpiled/Rand/Rand.nll"
 		return (nXorShifted >> nRot) | (nXorShifted << nRotNeg);
@@ -48,6 +52,7 @@ namespace NumbatLogic
 #line 36 "../LangShared/Transpiled/Rand/Rand.nll"
 	double Rand::NextDouble()
 	{
+#line 38 "../LangShared/Transpiled/Rand/Rand.nll"
 		const double SCALE = 1.0 / 0xFFFFFFFF;
 #line 39 "../LangShared/Transpiled/Rand/Rand.nll"
 		return NextUint32() * SCALE;

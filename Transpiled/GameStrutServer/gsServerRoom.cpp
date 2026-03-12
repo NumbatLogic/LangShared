@@ -49,6 +49,7 @@ namespace NumbatLogic
 #line 21 "../LangShared/Transpiled/GameStrutServer/gsServerRoom.nll"
 		for (int i = 0; i < __pClientVector->GetSize(); i++)
 		{
+#line 23 "../LangShared/Transpiled/GameStrutServer/gsServerRoom.nll"
 			gsServerClient* pClient = __pClientVector->Get(i);
 #line 24 "../LangShared/Transpiled/GameStrutServer/gsServerRoom.nll"
 			if (pClient->__nClientId == nClientId)
@@ -92,6 +93,7 @@ namespace NumbatLogic
 #line 52 "../LangShared/Transpiled/GameStrutServer/gsServerRoom.nll"
 		for (int i = 0; i < __pSyncHandlerVector->GetSize(); i++)
 		{
+#line 54 "../LangShared/Transpiled/GameStrutServer/gsServerRoom.nll"
 			gsServerRoom_SyncHandler* pInfo = __pSyncHandlerVector->Get(i);
 #line 55 "../LangShared/Transpiled/GameStrutServer/gsServerRoom.nll"
 			if (pInfo->__nHash == nSyncType)
@@ -134,7 +136,9 @@ namespace NumbatLogic
 		__pClientVector->PushBack(pClient);
 #line 85 "../LangShared/Transpiled/GameStrutServer/gsServerRoom.nll"
 		pClient->__pRoomVector->PushBack(this);
+#line 86 "../LangShared/Transpiled/GameStrutServer/gsServerRoom.nll"
 		gsBlob* pJoinBlob = OnClientJoin(pClient);
+#line 88 "../LangShared/Transpiled/GameStrutServer/gsServerRoom.nll"
 		gsBlob* pBlob = new gsBlob();
 #line 89 "../LangShared/Transpiled/GameStrutServer/gsServerRoom.nll"
 		pBlob->PackUint32(__nRoomId);
@@ -171,6 +175,7 @@ namespace NumbatLogic
 					{
 #line 110 "../LangShared/Transpiled/GameStrutServer/gsServerRoom.nll"
 						pClient->__pRoomVector->Erase(j);
+#line 112 "../LangShared/Transpiled/GameStrutServer/gsServerRoom.nll"
 						gsBlob* pBlob = new gsBlob();
 #line 113 "../LangShared/Transpiled/GameStrutServer/gsServerRoom.nll"
 						pBlob->PackUint32(__nRoomId);
