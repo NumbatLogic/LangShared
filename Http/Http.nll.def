@@ -5,6 +5,7 @@ namespace NumbatLogic
 		public construct(string sUrl);
 		public void AddHeader(string sName, string sValue);
 		public string Execute();
+		public int GetLastStatusCode();
 	}
 	
 	class HttpPost
@@ -15,5 +16,16 @@ namespace NumbatLogic
 		public void SetUsername(string sxUsername);
 		public void SetPassword(string sxPassword);
 		public string Execute();
+		public int GetLastStatusCode();
+	}
+
+	class HttpPostMultipart
+	{
+		public construct(string sUrl);
+		public void AddHeader(string sName, string sValue);
+		public void AddField(string sName, string sValue);
+		public void AddFile(string sName, string sPath, string sContentType);
+		public string Execute();
+		public int GetLastStatusCode();
 	}
 } 
