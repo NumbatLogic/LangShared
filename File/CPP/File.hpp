@@ -11,8 +11,7 @@ namespace NumbatLogic
 	{
 		public: static InternalString* GetContents(const char* sPath);
 		public: static void PutContents(const char* sxPath, const char* sxContents);
-		public: static OwnedVector<InternalString*>* GetRecursiveFileVector(const char* sPath);
-		public: static OwnedVector<InternalString*>* GetRecursiveAllFileVector(const char* sPath);
+		public: static OwnedVector<InternalString*>* GetRecursiveFileVector(const char* sPath, OwnedVector<InternalString*>* pAllowedSuffixVector);
 
 		public: static InternalString* GetFileDirectory(const char* sxPath);
 		public: static void CreateDirectory(const char* sxPath);

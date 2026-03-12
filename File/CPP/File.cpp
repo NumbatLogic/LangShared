@@ -37,7 +37,7 @@ namespace NumbatLogic
 		delete pBlob;
 	}
 
-	OwnedVector<InternalString*>* File::GetRecursiveFileVector(const char* sPath)
+	OwnedVector<InternalString*>* File::GetRecursiveFileVector(const char* sPath, OwnedVector<InternalString*>* pAllowedSuffixVector)
 	{
 		OwnedVector<InternalString*>* sFileVector = new OwnedVector<InternalString*>();
 		Vector<InternalString*>* sDirectoryVector = new Vector<InternalString*>();
@@ -75,61 +75,30 @@ namespace NumbatLogic
 				}
 				else
 				{
-					if (sFullPath->EndsWith(".nll") || sFullPath->EndsWith(".nll.def"))
+					bool bInclude = false;
+
+					if (pAllowedSuffixVector == NULL || pAllowedSuffixVector->GetSize() == 0)
+					{
+						bInclude = true;
+					}
+					else
+					{
+						for (int j = 0; j < pAllowedSuffixVector->GetSize(); ++j)
+						{
+							InternalString* sSuffix = pAllowedSuffixVector->Get(j);
+							if (sFullPath->EndsWith(sSuffix->GetExternalString()))
+							{
+								bInclude = true;
+								break;
+							}
+						}
+					}
+
+					if (bInclude)
 					{
 						sFileVector->PushBack(sFullPath);
 						continue;
 					}
-				}
-				delete sFullPath;
-			}
-			tinydir_close(&dir);
-			delete sDirectory;
-		}
-		delete sDirectoryVector;
-		return sFileVector;
-	}
-
-	OwnedVector<InternalString*>* File::GetRecursiveAllFileVector(const char* sPath)
-	{
-		OwnedVector<InternalString*>* sFileVector = new OwnedVector<InternalString*>();
-		Vector<InternalString*>* sDirectoryVector = new Vector<InternalString*>();
-
-		sDirectoryVector->PushBack(new InternalString(sPath));
-
-		tinydir_dir dir;
-		while (sDirectoryVector->GetSize() > 0)
-		{
-			int i;
-			InternalString* sDirectory = sDirectoryVector->PopBack();
-
-			if (tinydir_open_sorted(&dir, sDirectory->GetExternalString()) == -1)
-			{
-				delete sDirectory;
-				continue;
-			}
-
-			for (i = 0; i < (int)dir.n_files; i++)
-			{
-				tinydir_file file;
-				tinydir_readfile_n(&dir, &file, i);
-
-				InternalString* sFullPath = new InternalString(sDirectory->GetExternalString());
-				sFullPath->AppendString("/");
-				sFullPath->AppendString(file.name);
-
-				if (file.is_dir)
-				{
-					if (strcmp(file.name, ".") != 0 && strcmp(file.name, "..") != 0)
-					{
-						sDirectoryVector->PushBack(sFullPath);
-						continue;
-					}
-				}
-				else
-				{
-					sFileVector->PushBack(sFullPath);
-					continue;
 				}
 				delete sFullPath;
 			}
