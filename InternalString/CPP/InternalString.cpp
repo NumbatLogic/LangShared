@@ -334,6 +334,9 @@ namespace NumbatLogic
 		Assert::Plz(nIndex >= 0);
 		Assert::Plz(nIndex < m_nCharLength);
 
+		if (IsAscii())
+			return (unsigned char)m_szBuffer[nIndex];
+
 		int i;
 		unsigned char* p = (unsigned char*)m_szBuffer;
 		for (i = 0; i < nIndex; i++)
