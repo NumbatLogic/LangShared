@@ -20,7 +20,7 @@ namespace NumbatLogic
             System.IO.File.WriteAllText(sPath, sContents);
         }
 
-        public static OwnedVector<InternalString> GetRecursiveFileVector(string sPath)
+        public static OwnedVector<InternalString> GetRecursiveFileVector(string sPath, OwnedVector<InternalString> pAllowedSuffixVector)
         {
             OwnedVector<InternalString> sFileVector = new OwnedVector<InternalString>();
             Vector<InternalString> sDirectoryVector = new Vector<InternalString>();
@@ -39,7 +39,26 @@ namespace NumbatLogic
                 for (int i = 0; i < sFiles.Length; i++)
                 {
                     string sFile = sFiles[i];
-                    if (sFile.EndsWith(".nll") || sFile.EndsWith(".nll.def"))
+
+                    bool include = false;
+                    if (pAllowedSuffixVector == null || pAllowedSuffixVector.GetSize() == 0)
+                    {
+                        include = true;
+                    }
+                    else
+                    {
+                        for (int j = 0; j < pAllowedSuffixVector.GetSize(); j++)
+                        {
+                            string suffix = pAllowedSuffixVector.Get(j).GetExternalString();
+                            if (sFile.EndsWith(suffix))
+                            {
+                                include = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (include)
                         sFileVector.PushBack(new InternalString(sFile));
                 }
             }
