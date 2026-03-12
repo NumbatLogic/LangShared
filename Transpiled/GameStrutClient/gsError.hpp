@@ -6,7 +6,6 @@ namespace NumbatLogic
 #line 3 "../LangShared/Transpiled/GameStrutClient/gsError.nll"
 	class gsError
 	{
-#line 5 "../LangShared/Transpiled/GameStrutClient/gsError.nll"
 		public: enum Error
 		{
 			BAD_HANDSHAKE,

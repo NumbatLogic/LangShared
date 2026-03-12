@@ -22,7 +22,6 @@ namespace NumbatLogic
 #line 3 "../LangShared/Transpiled/GameStrutServer/gsServerClient.nll"
 	class gsServerClient
 	{
-#line 5 "../LangShared/Transpiled/GameStrutServer/gsServerClient.nll"
 		public: void Send(gsServerRoom* pRoom, unsigned int nMessageTypeHash, gsBlob* pBlob);
 #line 23 "../LangShared/Transpiled/GameStrutServer/gsServerClient.nll"
 		public: virtual void OnInitialJoin();
@@ -32,13 +31,9 @@ namespace NumbatLogic
 		public: void SyncRespond(unsigned int nSyncId, unsigned char nResult, gsSync::Response eResponse, gsBlob* pBlob);
 #line 87 "../LangShared/Transpiled/GameStrutServer/gsServerClient.nll"
 		public: unsigned int __nClientId;
-#line 88 "../LangShared/Transpiled/GameStrutServer/gsServerClient.nll"
 		public: gsServer* __pServer;
-#line 89 "../LangShared/Transpiled/GameStrutServer/gsServerClient.nll"
 		public: gsClientSocket* __pClientSocket;
-#line 90 "../LangShared/Transpiled/GameStrutServer/gsServerClient.nll"
 		public: gsClient::State __eState;
-#line 91 "../LangShared/Transpiled/GameStrutServer/gsServerClient.nll"
 		public: Vector<gsServerRoom*>* __pRoomVector;
 #line 93 "../LangShared/Transpiled/GameStrutServer/gsServerClient.nll"
 		public: unsigned int __nLastSyncId;

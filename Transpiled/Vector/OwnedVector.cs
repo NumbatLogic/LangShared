@@ -1,10 +1,10 @@
-#line 1 "../../../../LangShared/Transpiled/Vector/OwnedVector.nll"
+#line 1 "../../LangShared/Transpiled/Vector/OwnedVector.nll"
 namespace NumbatLogic
 {
 	class OwnedVector<T> where T : class
 	{
 		protected Vector<T> m_pVector;
-#line 7 "../../../../LangShared/Transpiled/Vector/OwnedVector.nll"
+#line 7 "../../LangShared/Transpiled/Vector/OwnedVector.nll"
 		public OwnedVector()
 		{
 			m_pVector = new Vector<T>();
@@ -44,7 +44,7 @@ namespace NumbatLogic
 				{
 					pTemp = null;
 				}
-#line 44 "../../../../LangShared/Transpiled/Vector/OwnedVector.nll"
+#line 44 "../../LangShared/Transpiled/Vector/OwnedVector.nll"
 			m_pVector.Set(nIndex, pObject);
 		}
 
@@ -52,7 +52,7 @@ namespace NumbatLogic
 		{
 			while (m_pVector.GetSize() > 0)
 			{
-#line 52 "../../../../LangShared/Transpiled/Vector/OwnedVector.nll"
+#line 52 "../../LangShared/Transpiled/Vector/OwnedVector.nll"
 				T pTemp = m_pVector.PopBack();
 				if (pTemp != null)
 					{
@@ -61,7 +61,7 @@ namespace NumbatLogic
 			}
 		}
 
-#line 58 "../../../../LangShared/Transpiled/Vector/OwnedVector.nll"
+#line 58 "../../LangShared/Transpiled/Vector/OwnedVector.nll"
 		public void Insert(int nIndex, T pObject)
 		{
 			m_pVector.Insert(nIndex, pObject);
@@ -78,7 +78,7 @@ namespace NumbatLogic
 		{
 			{
 			}
-#line 73 "../../../../LangShared/Transpiled/Vector/OwnedVector.nll"
+#line 73 "../../LangShared/Transpiled/Vector/OwnedVector.nll"
 			m_pVector.Erase(nIndex);
 		}
 

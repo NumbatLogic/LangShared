@@ -11,7 +11,6 @@ namespace NumbatLogic
 #line 9 "../LangShared/Transpiled/GameStrutClient/gsError.nll"
 	const char* gsError::Stringify(Error eError)
 	{
-#line 11 "../LangShared/Transpiled/GameStrutClient/gsError.nll"
 		switch (eError)
 		{
 			case Error::BAD_HANDSHAKE:

@@ -8,9 +8,7 @@ namespace NumbatLogic
 	{
 #line 6 "../LangShared/Transpiled/Rand/Rand.nll"
 		protected: static const unsigned long long MULTIPLIER = 0x5851f42d4c957f2d;
-#line 7 "../LangShared/Transpiled/Rand/Rand.nll"
 		protected: unsigned long long m_nState;
-#line 8 "../LangShared/Transpiled/Rand/Rand.nll"
 		protected: unsigned long long m_nInc;
 #line 10 "../LangShared/Transpiled/Rand/Rand.nll"
 		public: Rand(unsigned int nSeed);

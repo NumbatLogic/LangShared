@@ -17,7 +17,6 @@ namespace NumbatLogic
 #line 3 "../LangShared/Transpiled/GameStrutTest/GameStrutTestUtil.nll"
 	class GameStrutTestUtil
 	{
-#line 5 "../LangShared/Transpiled/GameStrutTest/GameStrutTestUtil.nll"
 		public: static void Update(gsServerSocket* pServerSocket, gsClientSocket* pClientSocket);
 #line 21 "../LangShared/Transpiled/GameStrutTest/GameStrutTestUtil.nll"
 		public: static void Update(gsServer* pServer, gsClient* pClient);
