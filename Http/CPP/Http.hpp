@@ -18,10 +18,12 @@ namespace NumbatLogic
 			
 			void AddHeader(const char* sxName, const char* sxValue);
 			const char* Execute();
+			int GetLastStatusCode() const;
 
 		private:
 			std::string m_sUrl;
 			std::vector<std::pair<std::string, std::string>> m_headers;
+			long m_nLastStatusCode;
 	};
 
 	class HttpPost
@@ -36,15 +38,47 @@ namespace NumbatLogic
 			void SetPassword(const char* sxPassword);
 
 			const char* Execute();
+			int GetLastStatusCode() const;
 
 		private:
 			std::string m_sUrl;
 			std::vector<std::pair<std::string, std::string>> m_headers;
 			std::string m_sBody;
+			long m_nLastStatusCode;
 
 			InternalString* m_sUsername;
 			InternalString* m_sPassword;
 
+			InternalString* m_sTemp;
+	};
+
+	class HttpPostMultipart
+	{
+		public:
+			HttpPostMultipart(const char* sxUrl);
+			~HttpPostMultipart();
+
+			void AddHeader(const char* sxName, const char* sxValue);
+			void AddField(const char* sxName, const char* sxValue);
+			void AddFile(const char* sxName, const char* sxPath, const char* sxContentType);
+
+			const char* Execute();
+			int GetLastStatusCode() const;
+
+		private:
+			std::string m_sUrl;
+			std::vector<std::pair<std::string, std::string>> m_headers;
+			std::vector<std::pair<std::string, std::string>> m_fields;
+
+			struct FilePart
+			{
+				std::string name;
+				std::string path;
+				std::string contentType;
+			};
+			std::vector<FilePart> m_files;
+
+			long m_nLastStatusCode;
 			InternalString* m_sTemp;
 	};
 } 

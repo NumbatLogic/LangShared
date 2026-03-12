@@ -9,12 +9,14 @@ namespace NumbatLogic
     {
         private string m_sUrl;
         private Dictionary<string, string> m_headers;
+        private int m_nLastStatusCode;
         private static readonly HttpClient m_httpClient = new HttpClient();
 
         public HttpGet(string sUrl)
         {
             m_sUrl = sUrl;
             m_headers = new Dictionary<string, string>();
+            m_nLastStatusCode = 0;
         }
 
         public void AddHeader(string sName, string sValue)
@@ -40,6 +42,7 @@ namespace NumbatLogic
 
                 // Make the request synchronously
                 var response = m_httpClient.SendAsync(request).GetAwaiter().GetResult();
+                m_nLastStatusCode = (int)response.StatusCode;
                 
                 if (response.IsSuccessStatusCode)
                 {
@@ -47,12 +50,19 @@ namespace NumbatLogic
                     return content;
                 }
                 
-                return null;
+                // Return body even on non-2xx to aid debugging
+                return response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
             }
             catch
             {
+                m_nLastStatusCode = 0;
                 return null;
             }
+        }
+
+        public int GetLastStatusCode()
+        {
+            return m_nLastStatusCode;
         }
     }
 } 
