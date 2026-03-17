@@ -150,10 +150,10 @@ namespace NumbatLogic
 		}
 
 		public void PackBool(bool val) { PackUint8(val ? (byte)1 : (byte)0); }
-		public void PackInt8(sbyte val) { Pack(System.BitConverter.GetBytes(val), 1); }
+		public void PackInt8(sbyte val) { Pack(System.BitConverter.GetBytes((short)val), 1); }
 		public void PackInt16(short val) { Pack(System.BitConverter.GetBytes(val), 2); }
 		public void PackInt32(int val) { Pack(System.BitConverter.GetBytes(val), 4); }
-		public void PackUint8(byte val) { Pack(System.BitConverter.GetBytes(val), 1); }
+		public void PackUint8(byte val) { Pack(System.BitConverter.GetBytes((ushort)val), 1); }
 		public void PackUint16(ushort val) { Pack(System.BitConverter.GetBytes(val), 2); }
 		public void PackUint32(uint val) { Pack(System.BitConverter.GetBytes(val), 4); }
 		public void PackFloat(float val) { Pack(System.BitConverter.GetBytes(val), 4); }
