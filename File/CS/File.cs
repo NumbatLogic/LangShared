@@ -75,5 +75,18 @@ namespace NumbatLogic
         {
             System.IO.Directory.CreateDirectory(sPath);
         }
+
+        public static InternalString GetFullPath(string sPath)
+        {
+            try
+            {
+                return new InternalString(System.IO.Path.GetFullPath(sPath));
+            }
+            catch
+            {
+            }
+
+            return new InternalString(sPath);
+        }
     }
 }

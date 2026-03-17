@@ -8,5 +8,7 @@ namespace NumbatLogic
 
 		public static InternalString** GetFileDirectory(string sPath);
 		public static void CreateDirectory(string sPath);
+
+		public static InternalString** GetFullPath(string sPath);
 	}
 }

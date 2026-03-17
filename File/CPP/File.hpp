@@ -15,5 +15,7 @@ namespace NumbatLogic
 
 		public: static InternalString* GetFileDirectory(const char* sxPath);
 		public: static void CreateDirectory(const char* sxPath);
+
+		public: static InternalString* GetFullPath(const char* sxPath);
 	};
 }
