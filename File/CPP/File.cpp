@@ -8,6 +8,9 @@
 
 #include <stdio.h>
 #include <cstring>
+#include <limits.h>
+#include <stdlib.h>
+#include <libgen.h>
 
 namespace NumbatLogic
 {
@@ -137,4 +140,21 @@ namespace NumbatLogic
 			mkdir(sxPath, 0700);
 		}
 	#endif
+
+	InternalString* File::GetFullPath(const char* sxPath)
+	{
+		#ifndef _WIN32
+			char* sxResolved = realpath(sxPath, NULL);
+			if (!sxResolved)
+			{
+				return new InternalString(sxPath);
+			}
+
+			InternalString* sOut = new InternalString(sxResolved);
+			free(sxResolved);
+			return sOut;
+		#else
+			return new InternalString(sxPath);
+		#endif
+	}
 }
