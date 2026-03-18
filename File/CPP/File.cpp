@@ -42,6 +42,13 @@ namespace NumbatLogic
 
 	OwnedVector<InternalString*>* File::GetRecursiveFileVector(const char* sPath, OwnedVector<InternalString*>* pAllowedSuffixVector)
 	{
+		tinydir_dir initialDir;
+		if (tinydir_open_sorted(&initialDir, sPath) == -1)
+		{
+			return NULL;
+		}
+		tinydir_close(&initialDir);
+
 		OwnedVector<InternalString*>* sFileVector = new OwnedVector<InternalString*>();
 		Vector<InternalString*>* sDirectoryVector = new Vector<InternalString*>();
 
