@@ -22,6 +22,9 @@ namespace NumbatLogic
 
         public static OwnedVector<InternalString> GetRecursiveFileVector(string sPath, OwnedVector<InternalString> pAllowedSuffixVector)
         {
+            if (!System.IO.Directory.Exists(sPath))
+                return null;
+
             OwnedVector<InternalString> sFileVector = new OwnedVector<InternalString>();
             Vector<InternalString> sDirectoryVector = new Vector<InternalString>();
 
@@ -31,11 +34,24 @@ namespace NumbatLogic
             {
                 string sDirectory = sDirectoryVector.PopBack().GetExternalString();
 
-                string[] sDirectories = System.IO.Directory.GetDirectories(sDirectory);
+                if (!System.IO.Directory.Exists(sDirectory))
+                    continue;
+
+                string[] sDirectories;
+                string[] sFiles;
+                try
+                {
+                    sDirectories = System.IO.Directory.GetDirectories(sDirectory);
+                    sFiles = System.IO.Directory.GetFiles(sDirectory);
+                }
+                catch
+                {
+                    continue;
+                }
+
                 for (int i = 0; i < sDirectories.Length; i++)
                     sDirectoryVector.PushBack(new InternalString(sDirectories[i]));
 
-                string[] sFiles = System.IO.Directory.GetFiles(sDirectory);
                 for (int i = 0; i < sFiles.Length; i++)
                 {
                     string sFile = sFiles[i];
