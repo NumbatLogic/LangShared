@@ -1,7 +1,7 @@
 #include "gsSync.hpp"
-#include "../../Assert/CPP/Assert.hpp"
-#include "../../InternalString/CPP/InternalString.hpp"
-#include "../../ExternalString/CPP/ExternalString.hpp"
+#include "../../Source/Assert/CPP/Assert.hpp"
+#include "../../Source/InternalString/CPP/InternalString.hpp"
+#include "../../Source/ExternalString/CPP/ExternalString.hpp"
 #include "gsClientRoom.hpp"
 
 namespace NumbatLogic
@@ -13,17 +13,17 @@ namespace NumbatLogic
 	class ExternalString;
 	class gsClientRoom;
 }
-#line 0 "../LangShared/Transpiled/GameStrutClient/gsSync.nll"
+#line 0 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsSync.nll"
 namespace NumbatLogic
 {
-#line 3 "../LangShared/Transpiled/GameStrutClient/gsSync.nll"
-#line 13 "../LangShared/Transpiled/GameStrutClient/gsSync.nll"
+#line 3 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsSync.nll"
+#line 13 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsSync.nll"
 	gsSync::gsSync()
 	{
 		__pSyncInner = 0;
 	}
 
-#line 17 "../LangShared/Transpiled/GameStrutClient/gsSync.nll"
+#line 17 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsSync.nll"
 	gsSync::~gsSync()
 	{
 		if (__pSyncInner != 0)
@@ -45,8 +45,8 @@ namespace NumbatLogic
 	{
 	}
 
-#line 41 "../LangShared/Transpiled/GameStrutClient/gsSync.nll"
-#line 43 "../LangShared/Transpiled/GameStrutClient/gsSync.nll"
+#line 41 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsSync.nll"
+#line 43 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsSync.nll"
 	gsSyncInner::gsSyncInner(gsSync* pSync, unsigned int nSyncId, const char* sxSyncType, gsClientRoom* pRoom, gsClient* pClient)
 	{
 		__pSync = 0;
@@ -57,7 +57,7 @@ namespace NumbatLogic
 		__eResponse = gsSync::Response::NO_RESPONSE;
 		__nRoomId = 0;
 		__nResult = 0;
-#line 45 "../LangShared/Transpiled/GameStrutClient/gsSync.nll"
+#line 45 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsSync.nll"
 		__pSync = pSync;
 		__nSyncId = nSyncId;
 		__sSyncType = new InternalString(sxSyncType);

@@ -1,4 +1,4 @@
-#line 1 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientHandler.nll"
+#line 1 "/home/cliffya/git/LangShared/Source/GameStrutTest/Test/Sync_ClientHandler.nll"
 namespace NumbatLogic
 {
 	class Sync_ClientHandler_Server : gsServer
@@ -24,12 +24,12 @@ namespace NumbatLogic
 			gsServerRoom pOwnedServerRoom = new gsServerRoom(++__pServer.__nLastRoomId, "Sync_ClientHandler_Room", __pServer);
 			gsServerRoom pServerRoom = pOwnedServerRoom;
 			NumbatLogic.gsServerRoom __1621810262 = pOwnedServerRoom;
-#line 25 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientHandler.nll"
+#line 25 "/home/cliffya/git/LangShared/Source/GameStrutTest/Test/Sync_ClientHandler.nll"
 			pOwnedServerRoom = null;
-#line 25 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientHandler.nll"
+#line 25 "/home/cliffya/git/LangShared/Source/GameStrutTest/Test/Sync_ClientHandler.nll"
 			__pServer.__pRoomVector.PushBack(__1621810262);
 			__pServer.__ClientJoin(this, pServerRoom);
-#line 28 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientHandler.nll"
+#line 28 "/home/cliffya/git/LangShared/Source/GameStrutTest/Test/Sync_ClientHandler.nll"
 			gsBlob pTestBlob = new gsBlob();
 			pTestBlob.PackUint32(42);
 			Send(null, 1986771282, pTestBlob);
@@ -39,7 +39,7 @@ namespace NumbatLogic
 	class Sync_ClientHandler_Client : gsClient
 	{
 		public uint m_nTestValue;
-#line 38 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientHandler.nll"
+#line 38 "/home/cliffya/git/LangShared/Source/GameStrutTest/Test/Sync_ClientHandler.nll"
 		public Sync_ClientHandler_Client(string sxAddress, ushort nPort, ushort nVersion) : base(sxAddress, nPort, nVersion)
 		{
 			RegisterHandler(1986771282, OnTest);
@@ -59,16 +59,16 @@ namespace NumbatLogic
 		{
 			gsServer pServer = new Sync_ClientHandler_Server("localhost", 9877, 0, "");
 			gsClient pClient = new Sync_ClientHandler_Client("localhost", 9877, 0);
-#line 58 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientHandler.nll"
+#line 58 "/home/cliffya/git/LangShared/Source/GameStrutTest/Test/Sync_ClientHandler.nll"
 			Assert.Plz(pServer.__pRoomVector.GetSize() == 0);
-#line 60 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientHandler.nll"
+#line 60 "/home/cliffya/git/LangShared/Source/GameStrutTest/Test/Sync_ClientHandler.nll"
 			GameStrutTestUtil.Update(pServer, pClient);
-#line 62 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientHandler.nll"
+#line 62 "/home/cliffya/git/LangShared/Source/GameStrutTest/Test/Sync_ClientHandler.nll"
 			Assert.Plz(pServer.__pClientVector.GetSize() == 1);
 			Assert.Plz(pServer.__pRoomVector.GetSize() == 1);
 			Assert.Plz(pClient.__eState == gsClient.State.CONNECTED);
 			Assert.Plz(pClient.__pRoomVector.GetSize() == 1);
-#line 67 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientHandler.nll"
+#line 67 "/home/cliffya/git/LangShared/Source/GameStrutTest/Test/Sync_ClientHandler.nll"
 			Sync_ClientHandler_Client pSyncClient = (Sync_ClientHandler_Client)(pClient);
 			Assert.Plz(pSyncClient != null);
 			Assert.Plz(pSyncClient.m_nTestValue == 42);

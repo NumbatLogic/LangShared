@@ -4,16 +4,16 @@ namespace NumbatLogic
 {
 	class Rand;
 }
-#line 0 "../LangShared/Transpiled/Rand/Rand.nll"
+#line 0 "/home/cliffya/git/LangShared/Source/Rand/Rand.nll"
 namespace NumbatLogic
 {
-#line 3 "../LangShared/Transpiled/Rand/Rand.nll"
-#line 10 "../LangShared/Transpiled/Rand/Rand.nll"
+#line 3 "/home/cliffya/git/LangShared/Source/Rand/Rand.nll"
+#line 10 "/home/cliffya/git/LangShared/Source/Rand/Rand.nll"
 	Rand::Rand(unsigned int nSeed)
 	{
 		m_nState = 0;
 		m_nInc = 0;
-#line 12 "../LangShared/Transpiled/Rand/Rand.nll"
+#line 12 "/home/cliffya/git/LangShared/Source/Rand/Rand.nll"
 		Seed(nSeed);
 	}
 
@@ -30,11 +30,11 @@ namespace NumbatLogic
 	{
 		unsigned long long nOldState = m_nState;
 		m_nState = nOldState * MULTIPLIER + m_nInc;
-#line 29 "../LangShared/Transpiled/Rand/Rand.nll"
+#line 29 "/home/cliffya/git/LangShared/Source/Rand/Rand.nll"
 		unsigned int nXorShifted = (unsigned int)(((nOldState >> 18) ^ nOldState) >> 27);
 		int nRot = (int)(nOldState >> 59);
 		int nRotNeg = (32 - nRot) & 31;
-#line 33 "../LangShared/Transpiled/Rand/Rand.nll"
+#line 33 "/home/cliffya/git/LangShared/Source/Rand/Rand.nll"
 		return (nXorShifted >> nRot) | (nXorShifted << nRotNeg);
 	}
 

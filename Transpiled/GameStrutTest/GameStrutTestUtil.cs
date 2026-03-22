@@ -1,4 +1,4 @@
-#line 1 "../LangShared/Transpiled/GameStrutTest/GameStrutTestUtil.nll"
+#line 1 "/home/cliffya/git/LangShared/Source/GameStrutTest/GameStrutTestUtil.nll"
 namespace NumbatLogic
 {
 	class GameStrutTestUtil
@@ -10,7 +10,7 @@ namespace NumbatLogic
 			{
 				pServerSocket.Update();
 				pClientSocket.Update();
-#line 13 "../LangShared/Transpiled/GameStrutTest/GameStrutTestUtil.nll"
+#line 13 "/home/cliffya/git/LangShared/Source/GameStrutTest/GameStrutTestUtil.nll"
 				if (pServerSocket.Pending() || pClientSocket.Pending())
 					nNotPendingCount = 0;
 				else
@@ -26,7 +26,7 @@ namespace NumbatLogic
 			{
 				pServer.Update();
 				pClient.Update();
-#line 29 "../LangShared/Transpiled/GameStrutTest/GameStrutTestUtil.nll"
+#line 29 "/home/cliffya/git/LangShared/Source/GameStrutTest/GameStrutTestUtil.nll"
 				if (pServer.Pending() || pClient.GetPending())
 					nNotPendingCount = 0;
 				else
@@ -46,7 +46,7 @@ namespace NumbatLogic
 					gsClient pClient = pClientVector.Get(i);
 					pClient.Update();
 				}
-#line 49 "../LangShared/Transpiled/GameStrutTest/GameStrutTestUtil.nll"
+#line 49 "/home/cliffya/git/LangShared/Source/GameStrutTest/GameStrutTestUtil.nll"
 				bool bPending = pServer.Pending();
 				if (!bPending)
 				{
@@ -60,7 +60,7 @@ namespace NumbatLogic
 						}
 					}
 				}
-#line 63 "../LangShared/Transpiled/GameStrutTest/GameStrutTestUtil.nll"
+#line 63 "/home/cliffya/git/LangShared/Source/GameStrutTest/GameStrutTestUtil.nll"
 				if (bPending)
 					nNotPendingCount = 0;
 				else

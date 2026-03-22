@@ -1,4 +1,4 @@
-#line 1 "../LangShared/Transpiled/GameStrutClient/gsError.nll"
+#line 1 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsError.nll"
 namespace NumbatLogic
 {
 	class gsError
@@ -8,19 +8,19 @@ namespace NumbatLogic
 			BAD_HANDSHAKE,
 		}
 
-#line 9 "../LangShared/Transpiled/GameStrutClient/gsError.nll"
+#line 9 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsError.nll"
 		public static string Stringify(Error eError)
 		{
 			switch (eError)
 			{
 				case Error.BAD_HANDSHAKE:
 				{
-#line 13 "../LangShared/Transpiled/GameStrutClient/gsError.nll"
+#line 13 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsError.nll"
 					return "Bad handshake";
 				}
 
 			}
-#line 16 "../LangShared/Transpiled/GameStrutClient/gsError.nll"
+#line 16 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsError.nll"
 			return "Unknown error?";
 		}
 

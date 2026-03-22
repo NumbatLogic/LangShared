@@ -6,10 +6,10 @@ namespace NumbatLogic
 {
 	class gsServer;
 }
-#line 0 "../LangShared/Transpiled/GameStrutTest/TestServer.nll"
+#line 0 "/home/cliffya/git/LangShared/Source/GameStrutTest/TestServer.nll"
 namespace NumbatLogic
 {
-#line 3 "../LangShared/Transpiled/GameStrutTest/TestServer.nll"
+#line 3 "/home/cliffya/git/LangShared/Source/GameStrutTest/TestServer.nll"
 	class TestServer : public gsServer
 	{
 		public: TestServer(const char* sxAddress, unsigned short nPort, unsigned short nVersion, const char* sxDatabasePath);

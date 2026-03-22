@@ -1,4 +1,4 @@
-#line 1 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ServerRoomHandler_Error.nll"
+#line 1 "/home/cliffya/git/LangShared/Source/GameStrutTest/Test/Sync_ServerRoomHandler_Error.nll"
 namespace NumbatLogic
 {
 	class Sync_ServerRoomHandler_Error_Server : gsServer
@@ -24,9 +24,9 @@ namespace NumbatLogic
 			gsServerRoom pOwnedServerRoom = new gsServerRoom(++__pServer.__nLastRoomId, "Sync_ServerRoomHandler_Error_Room", __pServer);
 			gsServerRoom pServerRoom = pOwnedServerRoom;
 			NumbatLogic.gsServerRoom __1621810262 = pOwnedServerRoom;
-#line 25 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ServerRoomHandler_Error.nll"
+#line 25 "/home/cliffya/git/LangShared/Source/GameStrutTest/Test/Sync_ServerRoomHandler_Error.nll"
 			pOwnedServerRoom = null;
-#line 25 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ServerRoomHandler_Error.nll"
+#line 25 "/home/cliffya/git/LangShared/Source/GameStrutTest/Test/Sync_ServerRoomHandler_Error.nll"
 			__pServer.__pRoomVector.PushBack(__1621810262);
 			__pServer.__ClientJoin(this, pServerRoom);
 		}
@@ -36,7 +36,7 @@ namespace NumbatLogic
 	{
 		public static string ROOM_TYPE = "Sync_ServerRoomHandler_Error_Room";
 		public const uint ROOM_TYPE_HASH = 3685084777;
-#line 35 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ServerRoomHandler_Error.nll"
+#line 35 "/home/cliffya/git/LangShared/Source/GameStrutTest/Test/Sync_ServerRoomHandler_Error.nll"
 		public Sync_ServerRoomHandler_Error_ClientRoom(uint nRoomId, bool bPrimary, gsBlob pJoinBlob, gsClient pClient) : base(nRoomId, ROOM_TYPE, ROOM_TYPE_HASH, bPrimary, pClient)
 		{
 		}
@@ -45,12 +45,12 @@ namespace NumbatLogic
 	class Sync_ServerRoomHandler_Error_Client : gsClient
 	{
 		public gsSync __pDummySync;
-#line 44 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ServerRoomHandler_Error.nll"
+#line 44 "/home/cliffya/git/LangShared/Source/GameStrutTest/Test/Sync_ServerRoomHandler_Error.nll"
 		public Sync_ServerRoomHandler_Error_Client(string sxAddress, ushort nPort, ushort nVersion) : base(sxAddress, nPort, nVersion)
 		{
 		}
 
-#line 49 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ServerRoomHandler_Error.nll"
+#line 49 "/home/cliffya/git/LangShared/Source/GameStrutTest/Test/Sync_ServerRoomHandler_Error.nll"
 		public override gsClientRoom OnRoomJoin(uint nRoomId, uint nRoomTypeHash, bool bPrimary, gsBlob pJoinBlob)
 		{
 			if (nRoomTypeHash == Sync_ServerRoomHandler_Error_ClientRoom.ROOM_TYPE_HASH)
@@ -60,30 +60,30 @@ namespace NumbatLogic
 				gsBlob pBlob = new gsBlob();
 				SyncSend(__pDummySync, "Dummy", pBlob, gsSync.Response.EXPECT_RESPONSE, pRoom);
 				NumbatLogic.gsClientRoom __2731727373 = pRoom;
-#line 57 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ServerRoomHandler_Error.nll"
+#line 57 "/home/cliffya/git/LangShared/Source/GameStrutTest/Test/Sync_ServerRoomHandler_Error.nll"
 				pRoom = null;
-#line 57 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ServerRoomHandler_Error.nll"
+#line 57 "/home/cliffya/git/LangShared/Source/GameStrutTest/Test/Sync_ServerRoomHandler_Error.nll"
 				return __2731727373;
 			}
 			return base.OnRoomJoin(nRoomId, nRoomTypeHash, bPrimary, pJoinBlob);
 		}
 
-#line 40 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ServerRoomHandler_Error.nll"
+#line 40 "/home/cliffya/git/LangShared/Source/GameStrutTest/Test/Sync_ServerRoomHandler_Error.nll"
 		~Sync_ServerRoomHandler_Error_Client()
 		{
 		}
 
 	}
-#line 63 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ServerRoomHandler_Error.nll"
+#line 63 "/home/cliffya/git/LangShared/Source/GameStrutTest/Test/Sync_ServerRoomHandler_Error.nll"
 	class Sync_ServerRoomHandler_Error
 	{
 		public static void Run()
 		{
 			gsServer pServer = new Sync_ServerRoomHandler_Error_Server("localhost", 9879, 0, "");
 			gsClient pClient = new Sync_ServerRoomHandler_Error_Client("localhost", 9879, 0);
-#line 70 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ServerRoomHandler_Error.nll"
+#line 70 "/home/cliffya/git/LangShared/Source/GameStrutTest/Test/Sync_ServerRoomHandler_Error.nll"
 			GameStrutTestUtil.Update(pServer, pClient);
-#line 72 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ServerRoomHandler_Error.nll"
+#line 72 "/home/cliffya/git/LangShared/Source/GameStrutTest/Test/Sync_ServerRoomHandler_Error.nll"
 			Assert.Plz(!pClient.__pClientSocket.GetConnected());
 			Assert.Plz(pServer.__pClientVector.GetSize() == 0);
 			if (pServer != null) pServer.Dispose();

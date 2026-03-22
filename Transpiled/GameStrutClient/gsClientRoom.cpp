@@ -1,9 +1,9 @@
 #include "gsClientRoom.hpp"
-#include "../../InternalString/CPP/InternalString.hpp"
-#include "../../ExternalString/CPP/ExternalString.hpp"
-#include "../../Assert/CPP/Assert.hpp"
+#include "../../Source/InternalString/CPP/InternalString.hpp"
+#include "../../Source/ExternalString/CPP/ExternalString.hpp"
+#include "../../Source/Assert/CPP/Assert.hpp"
 #include "../Vector/OwnedVector.hpp"
-#include "../../Console/CPP/Console.hpp"
+#include "../../Source/Console/CPP/Console.hpp"
 #include "gsClient.hpp"
 
 namespace NumbatLogic
@@ -18,22 +18,22 @@ namespace NumbatLogic
 	class Console;
 	class gsClient;
 }
-#line 0 "../LangShared/Transpiled/GameStrutClient/gsClientRoom.nll"
+#line 0 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClientRoom.nll"
 namespace NumbatLogic
 {
-#line 3 "../LangShared/Transpiled/GameStrutClient/gsClientRoom.nll"
-#line 10 "../LangShared/Transpiled/GameStrutClient/gsClientRoom.nll"
+#line 3 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClientRoom.nll"
+#line 10 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClientRoom.nll"
 	gsClientRoom_SyncHandler::gsClientRoom_SyncHandler(unsigned int nHash, SyncHandler* pHandler)
 	{
 		__nHash = 0;
 		__pHandler = 0;
-#line 12 "../LangShared/Transpiled/GameStrutClient/gsClientRoom.nll"
+#line 12 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClientRoom.nll"
 		__nHash = nHash;
 		__pHandler = pHandler;
 	}
 
-#line 17 "../LangShared/Transpiled/GameStrutClient/gsClientRoom.nll"
-#line 19 "../LangShared/Transpiled/GameStrutClient/gsClientRoom.nll"
+#line 17 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClientRoom.nll"
+#line 19 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClientRoom.nll"
 	gsClientRoom::gsClientRoom(unsigned int nRoomId, const char* sxRoomType, unsigned int nRoomTypeHash, bool bPrimary, gsClient* pClient)
 	{
 		__nRoomId = 0;
@@ -42,7 +42,7 @@ namespace NumbatLogic
 		__bPrimary = false;
 		__pClient = 0;
 		__pSyncHandlerVector = 0;
-#line 21 "../LangShared/Transpiled/GameStrutClient/gsClientRoom.nll"
+#line 21 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClientRoom.nll"
 		__nRoomId = nRoomId;
 		if (sxRoomType == 0)
 		{
@@ -81,7 +81,7 @@ namespace NumbatLogic
 		return 0;
 	}
 
-#line 17 "../LangShared/Transpiled/GameStrutClient/gsClientRoom.nll"
+#line 17 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClientRoom.nll"
 	gsClientRoom::~gsClientRoom()
 	{
 		if (__sRoomType) delete __sRoomType;

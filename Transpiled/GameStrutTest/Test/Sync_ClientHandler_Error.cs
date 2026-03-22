@@ -1,4 +1,4 @@
-#line 1 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientHandler_Error.nll"
+#line 1 "/home/cliffya/git/LangShared/Source/GameStrutTest/Test/Sync_ClientHandler_Error.nll"
 namespace NumbatLogic
 {
 	class Sync_ClientHandler_Error_Server : gsServer
@@ -33,7 +33,7 @@ namespace NumbatLogic
 		{
 			gsServer pServer = new Sync_ClientHandler_Error_Server("localhost", 9878, 0, "");
 			gsClient pClient = new gsClient("localhost", 9878, 0);
-#line 36 "../LangShared/Transpiled/GameStrutTest/Test/Sync_ClientHandler_Error.nll"
+#line 36 "/home/cliffya/git/LangShared/Source/GameStrutTest/Test/Sync_ClientHandler_Error.nll"
 			GameStrutTestUtil.Update(pServer, pClient);
 			Assert.Plz(pClient.__eState == gsClient.State.ERRORED);
 			Assert.Plz(!pClient.__pClientSocket.GetConnected());

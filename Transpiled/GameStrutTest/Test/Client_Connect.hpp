@@ -14,31 +14,31 @@ namespace NumbatLogic
 	class gsClientRoom;
 	class gsBlob;
 }
-#line 0 "../LangShared/Transpiled/GameStrutTest/Test/Client_Connect.nll"
+#line 0 "/home/cliffya/git/LangShared/Source/GameStrutTest/Test/Client_Connect.nll"
 namespace NumbatLogic
 {
-#line 3 "../LangShared/Transpiled/GameStrutTest/Test/Client_Connect.nll"
+#line 3 "/home/cliffya/git/LangShared/Source/GameStrutTest/Test/Client_Connect.nll"
 	class Client_Connect_Server : public gsServer
 	{
 		public: Client_Connect_Server(const char* sxAddress, unsigned short nPort, unsigned short nVersion, const char* sxDatabasePath);
-#line 9 "../LangShared/Transpiled/GameStrutTest/Test/Client_Connect.nll"
+#line 9 "/home/cliffya/git/LangShared/Source/GameStrutTest/Test/Client_Connect.nll"
 		public: virtual gsServerClient* OnCreateServerClient(unsigned int nClientId, gsClientSocket* pClientSocket, gsServer* pServer);
 	};
-#line 15 "../LangShared/Transpiled/GameStrutTest/Test/Client_Connect.nll"
+#line 15 "/home/cliffya/git/LangShared/Source/GameStrutTest/Test/Client_Connect.nll"
 	class Client_Connect_ServerClient : public gsServerClient
 	{
 		public: Client_Connect_ServerClient(unsigned int nClientId, gsClientSocket* pClientSocket, gsServer* pServer);
-#line 21 "../LangShared/Transpiled/GameStrutTest/Test/Client_Connect.nll"
+#line 21 "/home/cliffya/git/LangShared/Source/GameStrutTest/Test/Client_Connect.nll"
 		public: virtual void OnInitialJoin();
 	};
-#line 30 "../LangShared/Transpiled/GameStrutTest/Test/Client_Connect.nll"
+#line 30 "/home/cliffya/git/LangShared/Source/GameStrutTest/Test/Client_Connect.nll"
 	class Client_Connect_Client : public gsClient
 	{
 		public: Client_Connect_Client(const char* sxAddress, unsigned short nPort, unsigned short nVersion);
-#line 36 "../LangShared/Transpiled/GameStrutTest/Test/Client_Connect.nll"
+#line 36 "/home/cliffya/git/LangShared/Source/GameStrutTest/Test/Client_Connect.nll"
 		public: virtual gsClientRoom* OnRoomJoin(unsigned int nRoomId, unsigned int nRoomTypeHash, bool bPrimary, gsBlob* pJoinBlob);
 	};
-#line 43 "../LangShared/Transpiled/GameStrutTest/Test/Client_Connect.nll"
+#line 43 "/home/cliffya/git/LangShared/Source/GameStrutTest/Test/Client_Connect.nll"
 	class Client_Connect
 	{
 		public: static void Run();

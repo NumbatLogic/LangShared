@@ -1,12 +1,12 @@
 #include "gsClient.hpp"
 #include "gsClientRoom.hpp"
 #include "../Vector/OwnedVector.hpp"
-#include "../../GameStrutClient/CPP/gsClientSocket.hpp"
+#include "../../Source/GameStrutClient/CPP/gsClientSocket.hpp"
 #include "gsSync.hpp"
-#include "../../InternalString/CPP/InternalString.hpp"
-#include "../../Blob/CPP/Blob.hpp"
-#include "../../Assert/CPP/Assert.hpp"
-#include "../../Console/CPP/Console.hpp"
+#include "../../Source/InternalString/CPP/InternalString.hpp"
+#include "../../Source/Blob/CPP/Blob.hpp"
+#include "../../Source/Assert/CPP/Assert.hpp"
+#include "../../Source/Console/CPP/Console.hpp"
 
 namespace NumbatLogic
 {
@@ -24,22 +24,22 @@ namespace NumbatLogic
 	class gsSync;
 	class gsClientRoom_SyncHandler;
 }
-#line 0 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
+#line 0 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClient.nll"
 namespace NumbatLogic
 {
-#line 3 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
-#line 10 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
+#line 3 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClient.nll"
+#line 10 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClient.nll"
 	gsClient_SyncHandler::gsClient_SyncHandler(unsigned int nHash, SyncHandler* pHandler)
 	{
 		__nHash = 0;
 		__pHandler = 0;
-#line 12 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
+#line 12 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClient.nll"
 		__nHash = nHash;
 		__pHandler = pHandler;
 	}
 
-#line 17 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
-#line 27 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
+#line 17 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClient.nll"
+#line 27 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClient.nll"
 	gsClient::gsClient(const char* sxAddress, unsigned short nPort, unsigned short nVersion)
 	{
 		__pRoomVector = 0;
@@ -51,16 +51,16 @@ namespace NumbatLogic
 		__pSyncHandlerVector = 0;
 		__eState = State::CONNECT;
 		__sErrorMessage = 0;
-#line 29 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
+#line 29 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClient.nll"
 		__pRoomVector = new OwnedVector<gsClientRoom*>();
-#line 31 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
+#line 31 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClient.nll"
 		__pClientSocket = new gsClientSocket();
 		__pClientSocket->Connect(sxAddress, nPort);
 		__nVersion = nVersion;
 		__eState = State::CONNECT;
 		__pSyncInnerVector = new OwnedVector<gsSyncInner*>();
 		__pSyncHandlerVector = new OwnedVector<gsClient_SyncHandler*>();
-#line 38 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
+#line 38 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClient.nll"
 		RegisterHandler(__ROOM_JOIN_HASH, __OnRoomJoin);
 		RegisterHandler(__ROOM_LEAVE_HASH, __OnRoomLeave);
 	}
@@ -75,11 +75,11 @@ namespace NumbatLogic
 		if (__sErrorMessage) delete __sErrorMessage;
 	}
 
-#line 47 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
+#line 47 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClient.nll"
 	void gsClient::Update()
 	{
 		__pClientSocket->Update();
-#line 51 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
+#line 51 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClient.nll"
 		switch (__eState)
 		{
 			case State::CONNECT:
@@ -87,42 +87,42 @@ namespace NumbatLogic
 				if (!__pClientSocket->Pending())
 				{
 					__eState = State::HANDSHAKE;
-#line 59 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
+#line 59 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClient.nll"
 					gsBlob* pSendBlob = new gsBlob();
 					pSendBlob->PackUint16(MAGIC_WORD);
 					pSendBlob->PackUint16(__nVersion);
-#line 63 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
+#line 63 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClient.nll"
 					pSendBlob->PackUint8(0);
-#line 65 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
+#line 65 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClient.nll"
 					InternalString* sName = new InternalString("cliffya");
 					pSendBlob->PackInternalString(sName);
-#line 68 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
+#line 68 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClient.nll"
 					InternalString* sPassword = new InternalString("password");
 					pSendBlob->PackInternalString(sPassword);
-#line 71 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
+#line 71 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClient.nll"
 					__pClientSocket->Send(pSendBlob);
 					if (pSendBlob) delete pSendBlob;
 					if (sName) delete sName;
 					if (sPassword) delete sPassword;
 				}
-#line 73 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
+#line 73 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClient.nll"
 				break;
 			}
 
 			case State::HANDSHAKE:
 			{
-#line 77 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
+#line 77 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClient.nll"
 				gsBlob* pReceiveBlob = __pClientSocket->Receive();
 				if (pReceiveBlob != 0)
 				{
-#line 81 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
+#line 81 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClient.nll"
 					const int INITIAL_SIZE = 2 + 2 + 1 + 4;
 					if (pReceiveBlob->GetSize() == INITIAL_SIZE)
 					{
 						unsigned short nMagic = 0;
 						unsigned short nVersion = 0;
 						bool bSuccess = false;
-#line 88 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
+#line 88 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClient.nll"
 						if (pReceiveBlob->UnpackUint16(nMagic) && pReceiveBlob->UnpackUint16(nVersion) && pReceiveBlob->UnpackBool(bSuccess))
 						{
 							if (nMagic == gsClient::MAGIC_WORD && bSuccess)
@@ -131,61 +131,61 @@ namespace NumbatLogic
 									Assert::Plz(false);
 								__eState = State::CONNECTED;
 								if (pReceiveBlob) delete pReceiveBlob;
-#line 95 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
+#line 95 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClient.nll"
 								break;
 							}
 						}
 					}
-#line 101 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
+#line 101 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClient.nll"
 					Console::Log("bad handshake?");
 					Assert::Plz(false);
 				}
 				if (pReceiveBlob) delete pReceiveBlob;
-#line 104 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
+#line 104 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClient.nll"
 				break;
 			}
 
 			case State::CONNECTED:
 			{
-#line 108 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
+#line 108 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClient.nll"
 				gsBlob* pReceiveBlob = __pClientSocket->Receive();
 				if (pReceiveBlob != 0)
 				{
 					bool bSyncResponse = false;
 					unsigned int nSyncId = 0;
-#line 114 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
+#line 114 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClient.nll"
 					if (!pReceiveBlob->UnpackBool(bSyncResponse) || !pReceiveBlob->UnpackUint32(nSyncId))
 					{
 						Console::Log("bad blob?");
 						Assert::Plz(false);
 					}
-#line 120 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
+#line 120 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClient.nll"
 					if (bSyncResponse)
 					{
 						gsSyncInner* pSyncInner = GetSyncInnerBySyncId(nSyncId);
 						Assert::Plz(pSyncInner != 0);
-#line 125 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
+#line 125 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClient.nll"
 						unsigned char nResult = 0;
 						if (!pReceiveBlob->UnpackUint8(nResult))
 							Assert::Plz(false);
-#line 129 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
+#line 129 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClient.nll"
 						unsigned char nResponseRaw = 0;
 						if (!pReceiveBlob->UnpackUint8(nResponseRaw))
 							Assert::Plz(false);
 						gsSync::Response eResponse = (gsSync::Response)(nResponseRaw);
-#line 134 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
+#line 134 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClient.nll"
 						if (nResult == gsSync::RESULT_SUCCESS && eResponse != pSyncInner->__eResponse)
 						{
 							ErrorDisconnect("Response expectation mismatch");
 							if (pReceiveBlob) delete pReceiveBlob;
-#line 137 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
+#line 137 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClient.nll"
 							return;
 						}
-#line 140 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
+#line 140 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClient.nll"
 						bool bHasBlob = false;
 						if (!pReceiveBlob->UnpackBool(bHasBlob))
 							Assert::Plz(false);
-#line 144 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
+#line 144 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClient.nll"
 						gsBlob* pSyncBlob = 0;
 						if (bHasBlob)
 						{
@@ -193,10 +193,10 @@ namespace NumbatLogic
 							if (!pReceiveBlob->UnpackBlob(pSyncBlob))
 								Assert::Plz(false);
 						}
-#line 152 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
+#line 152 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClient.nll"
 						if (eResponse != gsSync::Response::EXPECT_ROOM_CHANGE)
 							pSyncInner->__bComplete = true;
-#line 155 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
+#line 155 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClient.nll"
 						pSyncInner->__nResult = nResult;
 						if (nResult == gsSync::RESULT_SUCCESS && pSyncInner->__pSync != 0)
 							pSyncInner->__pSync->OnComplete(nResult, pSyncBlob);
@@ -204,17 +204,17 @@ namespace NumbatLogic
 					}
 					else
 					{
-#line 161 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
+#line 161 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClient.nll"
 						unsigned int nRoomId = 0;
 						unsigned int nMessageType = 0;
-#line 164 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
+#line 164 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClient.nll"
 						if (!pReceiveBlob->UnpackUint32(nRoomId) || !pReceiveBlob->UnpackUint32(nMessageType))
 							Assert::Plz(false);
-#line 167 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
+#line 167 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClient.nll"
 						gsBlob* pMessageBlob = new gsBlob();
 						if (!pReceiveBlob->UnpackBlob(pMessageBlob))
 							Assert::Plz(false);
-#line 171 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
+#line 171 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClient.nll"
 						if (nRoomId == 0)
 						{
 							gsClient_SyncHandler* pHandler = __GetSyncHandler(nMessageType);
@@ -223,7 +223,7 @@ namespace NumbatLogic
 								ErrorDisconnect("No handler registered for sync message");
 								if (pMessageBlob) delete pMessageBlob;
 								if (pReceiveBlob) delete pReceiveBlob;
-#line 177 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
+#line 177 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClient.nll"
 								return;
 							}
 							pHandler->__pHandler(this, nSyncId, pMessageBlob);
@@ -236,7 +236,7 @@ namespace NumbatLogic
 								ErrorDisconnect("Bad room id");
 								if (pMessageBlob) delete pMessageBlob;
 								if (pReceiveBlob) delete pReceiveBlob;
-#line 187 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
+#line 187 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClient.nll"
 								return;
 							}
 							gsClientRoom_SyncHandler* pHandler = pRoom->__GetSyncHandler(nMessageType);
@@ -245,7 +245,7 @@ namespace NumbatLogic
 								ErrorDisconnect("No handler registered for room sync message");
 								if (pMessageBlob) delete pMessageBlob;
 								if (pReceiveBlob) delete pReceiveBlob;
-#line 193 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
+#line 193 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClient.nll"
 								return;
 							}
 							pHandler->__pHandler(this, pRoom, nSyncId, pMessageBlob);
@@ -266,14 +266,14 @@ namespace NumbatLogic
 							if (pRoom->__nRoomId == pSyncInner->__nRoomId)
 								break;
 						}
-#line 214 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
+#line 214 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClient.nll"
 						if (j == __pRoomVector->GetSize())
 						{
 							pSyncInner->__eResponse = gsSync::Response::NO_RESPONSE;
 							pSyncInner->__bComplete = true;
 						}
 					}
-#line 221 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
+#line 221 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClient.nll"
 					if (pSyncInner->__bComplete && pSyncInner->__pSync == 0)
 					{
 						__pSyncInnerVector->Erase(i);
@@ -282,25 +282,25 @@ namespace NumbatLogic
 					i++;
 				}
 				if (pReceiveBlob) delete pReceiveBlob;
-#line 230 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
+#line 230 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClient.nll"
 				break;
 			}
 
 			case State::DISCONNECTED:
 			{
-#line 234 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
+#line 234 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClient.nll"
 				break;
 			}
 
 			case State::ERRORED:
 			{
-#line 238 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
+#line 238 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClient.nll"
 				break;
 			}
 
 			default:
 			{
-#line 242 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
+#line 242 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClient.nll"
 				Assert::Plz(false);
 				break;
 			}
@@ -308,7 +308,7 @@ namespace NumbatLogic
 		}
 	}
 
-#line 248 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
+#line 248 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClient.nll"
 	void gsClient::__OnRoomJoin(gsClient* pClient, unsigned int nSyncId, gsBlob* pMessageBlob)
 	{
 		unsigned int nRoomId = 0;
@@ -323,20 +323,20 @@ namespace NumbatLogic
 				if (pRoom != 0)
 				{
 					NumbatLogic::gsClientRoom* __3933567650 = pRoom;
-#line 261 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
+#line 261 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClient.nll"
 					pRoom = 0;
-#line 261 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
+#line 261 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClient.nll"
 					pClient->__pRoomVector->PushBack(__3933567650);
 					if (pRoom) delete pRoom;
 					if (pJoinBlob) delete pJoinBlob;
-#line 262 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
+#line 262 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClient.nll"
 					return;
 				}
 				if (pRoom) delete pRoom;
 			}
 			if (pJoinBlob) delete pJoinBlob;
 		}
-#line 266 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
+#line 266 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClient.nll"
 		pClient->ErrorDisconnect("Room join failed");
 	}
 
@@ -383,10 +383,10 @@ namespace NumbatLogic
 	{
 		if (eResponse == gsSync::Response::EXPECT_ROOM_CHANGE)
 			Assert::Plz(!HasRoomChangeSyncInFlight(pRoom));
-#line 313 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
+#line 313 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClient.nll"
 		gsSyncInner* pSyncInner = new gsSyncInner(pSync, ++__nLastSyncId, sxSyncType, pRoom, this);
 		pSyncInner->__eResponse = eResponse;
-#line 316 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
+#line 316 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClient.nll"
 		gsBlob* pSendBlob = new gsBlob();
 		pSendBlob->PackUint32(pSyncInner->__nSyncId);
 		pSendBlob->PackUint32(0);
@@ -396,40 +396,40 @@ namespace NumbatLogic
 			pSendBlob->PackUint32(0);
 		pSendBlob->PackUint32(pSyncInner->__nSyncType);
 		pSendBlob->PackBlob(pBlob);
-#line 326 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
+#line 326 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClient.nll"
 		__pClientSocket->Send(pSendBlob);
-#line 328 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
+#line 328 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClient.nll"
 		pSyncInner->__pSync->__pSyncInner = pSyncInner;
-#line 330 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
+#line 330 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClient.nll"
 		if (pSyncInner->__eResponse == gsSync::Response::NO_RESPONSE)
 			pSyncInner->__bComplete = true;
 		NumbatLogic::gsSyncInner* __3139231656 = pSyncInner;
 		pSyncInner = 0;
-#line 333 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
+#line 333 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClient.nll"
 		__pSyncInnerVector->PushBack(__3139231656);
 		if (pSyncInner) delete pSyncInner;
 		if (pSendBlob) delete pSendBlob;
 	}
 
-#line 336 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
+#line 336 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClient.nll"
 	bool gsClient::GetPending()
 	{
 		if (__eState == State::ERRORED)
 			return false;
-#line 341 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
+#line 341 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClient.nll"
 		if (__pClientSocket->Pending())
 			return true;
-#line 344 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
+#line 344 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClient.nll"
 		if (!__pClientSocket->GetConnected())
 			return false;
-#line 347 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
+#line 347 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClient.nll"
 		for (int i = 0; i < __pSyncInnerVector->GetSize(); i++)
 		{
 			gsSyncInner* pSyncInner = __pSyncInnerVector->Get(i);
 			if (!pSyncInner->__bComplete)
 				return true;
 		}
-#line 354 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
+#line 354 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClient.nll"
 		return false;
 	}
 
@@ -472,10 +472,10 @@ namespace NumbatLogic
 		return new gsClientRoom(nRoomId, 0, nRoomTypeHash, bPrimary, this);
 	}
 
-#line 417 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
+#line 417 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClient.nll"
 	unsigned int gsClient::__ROOM_JOIN_HASH = 1895086341;
 	unsigned int gsClient::__ROOM_LEAVE_HASH = 938124572;
-#line 422 "../LangShared/Transpiled/GameStrutClient/gsClient.nll"
+#line 422 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClient.nll"
 	gsClientRoom* gsClient::GetRoomByRoomId(unsigned int nRoomId)
 	{
 		for (int i = 0; i < __pRoomVector->GetSize(); i++)
