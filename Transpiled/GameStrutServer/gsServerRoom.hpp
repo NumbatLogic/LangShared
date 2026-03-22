@@ -1,7 +1,7 @@
 #pragma once
 
 #include "gsServerRoom.hpp"
-#include "../../Vector/CPP/Vector.hpp"
+#include "../../Source/Vector/CPP/Vector.hpp"
 #include "gsServerClient.hpp"
 #include "../Vector/OwnedVector.hpp"
 
@@ -18,46 +18,46 @@ namespace NumbatLogic
 	template <class T>
 	class OwnedVector;
 }
-#line 0 "../LangShared/Transpiled/GameStrutServer/gsServerRoom.nll"
+#line 0 "/home/cliffya/git/LangShared/Source/GameStrutServer/gsServerRoom.nll"
 namespace NumbatLogic
 {
-#line 3 "../LangShared/Transpiled/GameStrutServer/gsServerRoom.nll"
+#line 3 "/home/cliffya/git/LangShared/Source/GameStrutServer/gsServerRoom.nll"
 	class gsServerRoom_SyncHandler
 	{
 		public: typedef void (SyncHandler)(gsServerRoom* pRoom, unsigned int nSyncId, unsigned int nSyncType, gsBlob* pInBlob, gsServerClient* pServerClient);
-#line 7 "../LangShared/Transpiled/GameStrutServer/gsServerRoom.nll"
+#line 7 "/home/cliffya/git/LangShared/Source/GameStrutServer/gsServerRoom.nll"
 		public: unsigned int __nHash;
 		public: SyncHandler* __pHandler;
-#line 10 "../LangShared/Transpiled/GameStrutServer/gsServerRoom.nll"
+#line 10 "/home/cliffya/git/LangShared/Source/GameStrutServer/gsServerRoom.nll"
 		public: gsServerRoom_SyncHandler(unsigned int nHash, SyncHandler* pHandler);
 	};
-#line 17 "../LangShared/Transpiled/GameStrutServer/gsServerRoom.nll"
+#line 17 "/home/cliffya/git/LangShared/Source/GameStrutServer/gsServerRoom.nll"
 	class gsServerRoom
 	{
 		public: gsServerClient* GetClientByClientId(unsigned int nClientId);
-#line 30 "../LangShared/Transpiled/GameStrutServer/gsServerRoom.nll"
+#line 30 "/home/cliffya/git/LangShared/Source/GameStrutServer/gsServerRoom.nll"
 		protected: virtual gsBlob* OnClientJoin(gsServerClient* pClient);
-#line 35 "../LangShared/Transpiled/GameStrutServer/gsServerRoom.nll"
+#line 35 "/home/cliffya/git/LangShared/Source/GameStrutServer/gsServerRoom.nll"
 		protected: virtual void OnClientLeave(gsServerClient* pClient);
-#line 40 "../LangShared/Transpiled/GameStrutServer/gsServerRoom.nll"
+#line 40 "/home/cliffya/git/LangShared/Source/GameStrutServer/gsServerRoom.nll"
 		public: void RegisterHandler(unsigned int nSyncType, gsServerRoom_SyncHandler::SyncHandler* pHandler);
-#line 50 "../LangShared/Transpiled/GameStrutServer/gsServerRoom.nll"
+#line 50 "/home/cliffya/git/LangShared/Source/GameStrutServer/gsServerRoom.nll"
 		public: gsServerRoom_SyncHandler* __GetSyncHandler(unsigned int nSyncType);
-#line 62 "../LangShared/Transpiled/GameStrutServer/gsServerRoom.nll"
+#line 62 "/home/cliffya/git/LangShared/Source/GameStrutServer/gsServerRoom.nll"
 		public: unsigned int __nRoomId;
 		public: unsigned int __nRoomType;
 		public: InternalString* __sRoomType;
-#line 66 "../LangShared/Transpiled/GameStrutServer/gsServerRoom.nll"
+#line 66 "/home/cliffya/git/LangShared/Source/GameStrutServer/gsServerRoom.nll"
 		public: gsServer* __pServer;
 		public: Vector<gsServerClient*>* __pClientVector;
 		public: OwnedVector<gsServerRoom_SyncHandler*>* __pSyncHandlerVector;
-#line 70 "../LangShared/Transpiled/GameStrutServer/gsServerRoom.nll"
+#line 70 "/home/cliffya/git/LangShared/Source/GameStrutServer/gsServerRoom.nll"
 		public: gsServerRoom(unsigned int nRoomId, const char* sxRoomType, gsServer* pServer);
-#line 80 "../LangShared/Transpiled/GameStrutServer/gsServerRoom.nll"
+#line 80 "/home/cliffya/git/LangShared/Source/GameStrutServer/gsServerRoom.nll"
 		public: void __ClientJoin(gsServerClient* pClient);
-#line 97 "../LangShared/Transpiled/GameStrutServer/gsServerRoom.nll"
+#line 97 "/home/cliffya/git/LangShared/Source/GameStrutServer/gsServerRoom.nll"
 		public: void __ClientLeave(gsServerClient* pClient);
-#line 17 "../LangShared/Transpiled/GameStrutServer/gsServerRoom.nll"
+#line 17 "/home/cliffya/git/LangShared/Source/GameStrutServer/gsServerRoom.nll"
 		public: virtual ~gsServerRoom();
 	};
 }

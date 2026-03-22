@@ -1,13 +1,13 @@
-#line 1 "../LangShared/Transpiled/GameStrutServer/gsServerRoom.nll"
+#line 1 "/home/cliffya/git/LangShared/Source/GameStrutServer/gsServerRoom.nll"
 namespace NumbatLogic
 {
 	class gsServerRoom_SyncHandler
 	{
 		public delegate void SyncHandler(gsServerRoom pRoom, uint nSyncId, uint nSyncType, gsBlob pInBlob, gsServerClient pServerClient);
-#line 7 "../LangShared/Transpiled/GameStrutServer/gsServerRoom.nll"
+#line 7 "/home/cliffya/git/LangShared/Source/GameStrutServer/gsServerRoom.nll"
 		public uint __nHash;
 		public SyncHandler __pHandler;
-#line 10 "../LangShared/Transpiled/GameStrutServer/gsServerRoom.nll"
+#line 10 "/home/cliffya/git/LangShared/Source/GameStrutServer/gsServerRoom.nll"
 		public gsServerRoom_SyncHandler(uint nHash, SyncHandler pHandler)
 		{
 			__nHash = nHash;
@@ -37,7 +37,7 @@ namespace NumbatLogic
 		{
 		}
 
-#line 40 "../LangShared/Transpiled/GameStrutServer/gsServerRoom.nll"
+#line 40 "/home/cliffya/git/LangShared/Source/GameStrutServer/gsServerRoom.nll"
 		public void RegisterHandler(uint nSyncType, gsServerRoom_SyncHandler.SyncHandler pHandler)
 		{
 			if (__GetSyncHandler(nSyncType) != null)
@@ -59,15 +59,15 @@ namespace NumbatLogic
 			return null;
 		}
 
-#line 62 "../LangShared/Transpiled/GameStrutServer/gsServerRoom.nll"
+#line 62 "/home/cliffya/git/LangShared/Source/GameStrutServer/gsServerRoom.nll"
 		public uint __nRoomId;
 		public uint __nRoomType;
 		public InternalString __sRoomType;
-#line 66 "../LangShared/Transpiled/GameStrutServer/gsServerRoom.nll"
+#line 66 "/home/cliffya/git/LangShared/Source/GameStrutServer/gsServerRoom.nll"
 		public gsServer __pServer;
 		public Vector<gsServerClient> __pClientVector;
 		public OwnedVector<gsServerRoom_SyncHandler> __pSyncHandlerVector;
-#line 70 "../LangShared/Transpiled/GameStrutServer/gsServerRoom.nll"
+#line 70 "/home/cliffya/git/LangShared/Source/GameStrutServer/gsServerRoom.nll"
 		public gsServerRoom(uint nRoomId, string sxRoomType, gsServer pServer)
 		{
 			__nRoomId = nRoomId;
@@ -81,17 +81,17 @@ namespace NumbatLogic
 		public void __ClientJoin(gsServerClient pClient)
 		{
 			Assert.Plz(GetClientByClientId(pClient.__nClientId) == null);
-#line 84 "../LangShared/Transpiled/GameStrutServer/gsServerRoom.nll"
+#line 84 "/home/cliffya/git/LangShared/Source/GameStrutServer/gsServerRoom.nll"
 			__pClientVector.PushBack(pClient);
 			pClient.__pRoomVector.PushBack(this);
 			gsBlob pJoinBlob = OnClientJoin(pClient);
-#line 88 "../LangShared/Transpiled/GameStrutServer/gsServerRoom.nll"
+#line 88 "/home/cliffya/git/LangShared/Source/GameStrutServer/gsServerRoom.nll"
 			gsBlob pBlob = new gsBlob();
 			pBlob.PackUint32(__nRoomId);
 			pBlob.PackUint32(__nRoomType);
 			pBlob.PackBool(false);
 			pBlob.PackBlob(pJoinBlob);
-#line 94 "../LangShared/Transpiled/GameStrutServer/gsServerRoom.nll"
+#line 94 "/home/cliffya/git/LangShared/Source/GameStrutServer/gsServerRoom.nll"
 			pClient.Send(null, gsClient.__ROOM_JOIN_HASH, pBlob);
 		}
 
@@ -103,13 +103,13 @@ namespace NumbatLogic
 				{
 					OnClientLeave(pClient);
 					__pClientVector.Erase(i);
-#line 106 "../LangShared/Transpiled/GameStrutServer/gsServerRoom.nll"
+#line 106 "/home/cliffya/git/LangShared/Source/GameStrutServer/gsServerRoom.nll"
 					for (int j = 0; j < pClient.__pRoomVector.GetSize(); j++)
 					{
 						if (pClient.__pRoomVector.Get(j) == this)
 						{
 							pClient.__pRoomVector.Erase(j);
-#line 112 "../LangShared/Transpiled/GameStrutServer/gsServerRoom.nll"
+#line 112 "/home/cliffya/git/LangShared/Source/GameStrutServer/gsServerRoom.nll"
 							gsBlob pBlob = new gsBlob();
 							pBlob.PackUint32(__nRoomId);
 							pBlob.PackUint32(__nRoomType);
@@ -117,15 +117,15 @@ namespace NumbatLogic
 							return;
 						}
 					}
-#line 121 "../LangShared/Transpiled/GameStrutServer/gsServerRoom.nll"
+#line 121 "/home/cliffya/git/LangShared/Source/GameStrutServer/gsServerRoom.nll"
 					Assert.Plz(false);
 				}
 			}
-#line 126 "../LangShared/Transpiled/GameStrutServer/gsServerRoom.nll"
+#line 126 "/home/cliffya/git/LangShared/Source/GameStrutServer/gsServerRoom.nll"
 			Assert.Plz(false);
 		}
 
-#line 17 "../LangShared/Transpiled/GameStrutServer/gsServerRoom.nll"
+#line 17 "/home/cliffya/git/LangShared/Source/GameStrutServer/gsServerRoom.nll"
 		~gsServerRoom()
 		{
 		}

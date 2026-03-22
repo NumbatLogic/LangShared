@@ -1,4 +1,4 @@
-#line 1 "../LangShared/Transpiled/GameStrutClient/gsSync.nll"
+#line 1 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsSync.nll"
 namespace NumbatLogic
 {
 	class gsSync
@@ -10,9 +10,9 @@ namespace NumbatLogic
 			EXPECT_ROOM_CHANGE,
 		}
 
-#line 11 "../LangShared/Transpiled/GameStrutClient/gsSync.nll"
+#line 11 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsSync.nll"
 		public const byte RESULT_SUCCESS = 0;
-#line 13 "../LangShared/Transpiled/GameStrutClient/gsSync.nll"
+#line 13 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsSync.nll"
 		public gsSync()
 		{
 		}
@@ -38,10 +38,10 @@ namespace NumbatLogic
 		{
 		}
 
-#line 37 "../LangShared/Transpiled/GameStrutClient/gsSync.nll"
+#line 37 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsSync.nll"
 		public gsSyncInner __pSyncInner;
 	}
-#line 41 "../LangShared/Transpiled/GameStrutClient/gsSync.nll"
+#line 41 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsSync.nll"
 	class gsSyncInner
 	{
 		public gsSyncInner(gsSync pSync, uint nSyncId, string sxSyncType, gsClientRoom pRoom, gsClient pClient)
@@ -61,13 +61,13 @@ namespace NumbatLogic
 				__pSync.__pSyncInner = null;
 		}
 
-#line 62 "../LangShared/Transpiled/GameStrutClient/gsSync.nll"
+#line 62 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsSync.nll"
 		public gsSync __pSync;
-#line 64 "../LangShared/Transpiled/GameStrutClient/gsSync.nll"
+#line 64 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsSync.nll"
 		public uint __nSyncId;
 		public InternalString __sSyncType;
 		public uint __nSyncType;
-#line 68 "../LangShared/Transpiled/GameStrutClient/gsSync.nll"
+#line 68 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsSync.nll"
 		public bool __bComplete;
 		public gsSync.Response __eResponse;
 		public uint __nRoomId;

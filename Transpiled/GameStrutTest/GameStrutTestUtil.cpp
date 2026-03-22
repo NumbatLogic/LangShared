@@ -1,7 +1,7 @@
 #include "GameStrutTestUtil.hpp"
-#include "../../GameStrutClient/CPP/gsServerSocket.hpp"
-#include "../../GameStrutClient/CPP/gsClientSocket.hpp"
-#include "../../Utils/CPP/Utils.hpp"
+#include "../../Source/GameStrutClient/CPP/gsServerSocket.hpp"
+#include "../../Source/GameStrutClient/CPP/gsClientSocket.hpp"
+#include "../../Source/Utils/CPP/Utils.hpp"
 #include "../GameStrutServer/gsServer.hpp"
 #include "../GameStrutClient/gsClient.hpp"
 #include "../Vector/OwnedVector.hpp"
@@ -17,11 +17,11 @@ namespace NumbatLogic
 	template <class T>
 	class OwnedVector;
 }
-#line 0 "../LangShared/Transpiled/GameStrutTest/GameStrutTestUtil.nll"
+#line 0 "/home/cliffya/git/LangShared/Source/GameStrutTest/GameStrutTestUtil.nll"
 namespace NumbatLogic
 {
-#line 3 "../LangShared/Transpiled/GameStrutTest/GameStrutTestUtil.nll"
-#line 5 "../LangShared/Transpiled/GameStrutTest/GameStrutTestUtil.nll"
+#line 3 "/home/cliffya/git/LangShared/Source/GameStrutTest/GameStrutTestUtil.nll"
+#line 5 "/home/cliffya/git/LangShared/Source/GameStrutTest/GameStrutTestUtil.nll"
 	void GameStrutTestUtil::Update(gsServerSocket* pServerSocket, gsClientSocket* pClientSocket)
 	{
 		int nNotPendingCount = 0;
@@ -29,7 +29,7 @@ namespace NumbatLogic
 		{
 			pServerSocket->Update();
 			pClientSocket->Update();
-#line 13 "../LangShared/Transpiled/GameStrutTest/GameStrutTestUtil.nll"
+#line 13 "/home/cliffya/git/LangShared/Source/GameStrutTest/GameStrutTestUtil.nll"
 			if (pServerSocket->Pending() || pClientSocket->Pending())
 				nNotPendingCount = 0;
 			else
@@ -45,7 +45,7 @@ namespace NumbatLogic
 		{
 			pServer->Update();
 			pClient->Update();
-#line 29 "../LangShared/Transpiled/GameStrutTest/GameStrutTestUtil.nll"
+#line 29 "/home/cliffya/git/LangShared/Source/GameStrutTest/GameStrutTestUtil.nll"
 			if (pServer->Pending() || pClient->GetPending())
 				nNotPendingCount = 0;
 			else
@@ -65,7 +65,7 @@ namespace NumbatLogic
 				gsClient* pClient = pClientVector->Get(i);
 				pClient->Update();
 			}
-#line 49 "../LangShared/Transpiled/GameStrutTest/GameStrutTestUtil.nll"
+#line 49 "/home/cliffya/git/LangShared/Source/GameStrutTest/GameStrutTestUtil.nll"
 			bool bPending = pServer->Pending();
 			if (!bPending)
 			{
@@ -79,7 +79,7 @@ namespace NumbatLogic
 					}
 				}
 			}
-#line 63 "../LangShared/Transpiled/GameStrutTest/GameStrutTestUtil.nll"
+#line 63 "/home/cliffya/git/LangShared/Source/GameStrutTest/GameStrutTestUtil.nll"
 			if (bPending)
 				nNotPendingCount = 0;
 			else

@@ -11,16 +11,16 @@ namespace NumbatLogic
 	template <class T>
 	class OwnedVector;
 }
-#line 0 "../LangShared/Transpiled/GameStrutTest/GameStrutTestUtil.nll"
+#line 0 "/home/cliffya/git/LangShared/Source/GameStrutTest/GameStrutTestUtil.nll"
 namespace NumbatLogic
 {
-#line 3 "../LangShared/Transpiled/GameStrutTest/GameStrutTestUtil.nll"
+#line 3 "/home/cliffya/git/LangShared/Source/GameStrutTest/GameStrutTestUtil.nll"
 	class GameStrutTestUtil
 	{
 		public: static void Update(gsServerSocket* pServerSocket, gsClientSocket* pClientSocket);
-#line 21 "../LangShared/Transpiled/GameStrutTest/GameStrutTestUtil.nll"
+#line 21 "/home/cliffya/git/LangShared/Source/GameStrutTest/GameStrutTestUtil.nll"
 		public: static void Update(gsServer* pServer, gsClient* pClient);
-#line 37 "../LangShared/Transpiled/GameStrutTest/GameStrutTestUtil.nll"
+#line 37 "/home/cliffya/git/LangShared/Source/GameStrutTest/GameStrutTestUtil.nll"
 		public: static void UpdateVector(gsServer* pServer, OwnedVector<gsClient*>* pClientVector);
 	};
 }

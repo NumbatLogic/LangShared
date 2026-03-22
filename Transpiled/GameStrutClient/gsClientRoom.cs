@@ -1,13 +1,13 @@
-#line 1 "../LangShared/Transpiled/GameStrutClient/gsClientRoom.nll"
+#line 1 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClientRoom.nll"
 namespace NumbatLogic
 {
 	class gsClientRoom_SyncHandler
 	{
 		public delegate void SyncHandler(gsClient pClient, gsClientRoom pRoom, uint nSyncId, gsBlob pMessageBlob);
-#line 7 "../LangShared/Transpiled/GameStrutClient/gsClientRoom.nll"
+#line 7 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClientRoom.nll"
 		public uint __nHash;
 		public SyncHandler __pHandler;
-#line 10 "../LangShared/Transpiled/GameStrutClient/gsClientRoom.nll"
+#line 10 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClientRoom.nll"
 		public gsClientRoom_SyncHandler(uint nHash, SyncHandler pHandler)
 		{
 			__nHash = nHash;
@@ -57,14 +57,14 @@ namespace NumbatLogic
 			return null;
 		}
 
-#line 61 "../LangShared/Transpiled/GameStrutClient/gsClientRoom.nll"
+#line 61 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClientRoom.nll"
 		public uint __nRoomId;
 		public InternalString __sRoomType;
 		public uint __nRoomTypeHash;
 		public bool __bPrimary;
 		public gsClient __pClient;
 		public OwnedVector<gsClientRoom_SyncHandler> __pSyncHandlerVector;
-#line 17 "../LangShared/Transpiled/GameStrutClient/gsClientRoom.nll"
+#line 17 "/home/cliffya/git/LangShared/Source/GameStrutClient/gsClientRoom.nll"
 		~gsClientRoom()
 		{
 		}

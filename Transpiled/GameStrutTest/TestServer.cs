@@ -1,4 +1,4 @@
-#line 1 "../LangShared/Transpiled/GameStrutTest/TestServer.nll"
+#line 1 "/home/cliffya/git/LangShared/Source/GameStrutTest/TestServer.nll"
 namespace NumbatLogic
 {
 	class TestServer : gsServer

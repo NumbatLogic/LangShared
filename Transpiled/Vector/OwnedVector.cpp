@@ -1,5 +1,5 @@
 #include "OwnedVector.hpp"
-#include "../../Vector/CPP/Vector.hpp"
+#include "../../Source/Vector/CPP/Vector.hpp"
 
 namespace NumbatLogic
 {
@@ -8,9 +8,9 @@ namespace NumbatLogic
 	template <class T>
 	class Vector;
 }
-#line 0 "../../LangShared/Transpiled/Vector/OwnedVector.nll"
+#line 0 "/home/cliffya/git/LangShared/Source/Vector/OwnedVector.nll"
 namespace NumbatLogic
 {
-#line 3 "../../LangShared/Transpiled/Vector/OwnedVector.nll"
+#line 3 "/home/cliffya/git/LangShared/Source/Vector/OwnedVector.nll"
 }
 

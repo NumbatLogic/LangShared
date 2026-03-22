@@ -1,9 +1,9 @@
 #include "ServerSocket_AcceptSendRecieve.hpp"
-#include "../../../GameStrutClient/CPP/gsServerSocket.hpp"
-#include "../../../GameStrutClient/CPP/gsClientSocket.hpp"
+#include "../../../Source/GameStrutClient/CPP/gsServerSocket.hpp"
+#include "../../../Source/GameStrutClient/CPP/gsClientSocket.hpp"
 #include "../GameStrutTestUtil.hpp"
-#include "../../../Assert/CPP/Assert.hpp"
-#include "../../../Blob/CPP/Blob.hpp"
+#include "../../../Source/Assert/CPP/Assert.hpp"
+#include "../../../Source/Blob/CPP/Blob.hpp"
 
 namespace NumbatLogic
 {
@@ -14,28 +14,28 @@ namespace NumbatLogic
 	class Assert;
 	class gsBlob;
 }
-#line 0 "../LangShared/Transpiled/GameStrutTest/Test/ServerSocket_AcceptSendRecieve.nll"
+#line 0 "/home/cliffya/git/LangShared/Source/GameStrutTest/Test/ServerSocket_AcceptSendRecieve.nll"
 namespace NumbatLogic
 {
-#line 3 "../LangShared/Transpiled/GameStrutTest/Test/ServerSocket_AcceptSendRecieve.nll"
-#line 5 "../LangShared/Transpiled/GameStrutTest/Test/ServerSocket_AcceptSendRecieve.nll"
+#line 3 "/home/cliffya/git/LangShared/Source/GameStrutTest/Test/ServerSocket_AcceptSendRecieve.nll"
+#line 5 "/home/cliffya/git/LangShared/Source/GameStrutTest/Test/ServerSocket_AcceptSendRecieve.nll"
 	void ServerSocket_AcceptSendRecieve::Run()
 	{
 		gsServerSocket* pServerSocket = new gsServerSocket();
 		pServerSocket->Start(9876);
-#line 10 "../LangShared/Transpiled/GameStrutTest/Test/ServerSocket_AcceptSendRecieve.nll"
+#line 10 "/home/cliffya/git/LangShared/Source/GameStrutTest/Test/ServerSocket_AcceptSendRecieve.nll"
 		gsClientSocket* pClientSocket = new gsClientSocket();
 		pClientSocket->Connect("localhost", 9876);
-#line 13 "../LangShared/Transpiled/GameStrutTest/Test/ServerSocket_AcceptSendRecieve.nll"
+#line 13 "/home/cliffya/git/LangShared/Source/GameStrutTest/Test/ServerSocket_AcceptSendRecieve.nll"
 		GameStrutTestUtil::Update(pServerSocket, pClientSocket);
-#line 15 "../LangShared/Transpiled/GameStrutTest/Test/ServerSocket_AcceptSendRecieve.nll"
+#line 15 "/home/cliffya/git/LangShared/Source/GameStrutTest/Test/ServerSocket_AcceptSendRecieve.nll"
 		gsClientSocket* pServerClientSocket = pServerSocket->Accept();
 		Assert::Plz(pServerClientSocket != 0);
-#line 18 "../LangShared/Transpiled/GameStrutTest/Test/ServerSocket_AcceptSendRecieve.nll"
+#line 18 "/home/cliffya/git/LangShared/Source/GameStrutTest/Test/ServerSocket_AcceptSendRecieve.nll"
 		Assert::Plz(pServerClientSocket->GetConnected());
 		Assert::Plz(pClientSocket->GetConnected());
 		{
-#line 22 "../LangShared/Transpiled/GameStrutTest/Test/ServerSocket_AcceptSendRecieve.nll"
+#line 22 "/home/cliffya/git/LangShared/Source/GameStrutTest/Test/ServerSocket_AcceptSendRecieve.nll"
 			gsBlob* pSendBlob = new gsBlob();
 			pSendBlob->PackInt32(619);
 			Assert::Plz(pServerSocket->Broadcast(pSendBlob));
@@ -43,7 +43,7 @@ namespace NumbatLogic
 		}
 		GameStrutTestUtil::Update(pServerSocket, pClientSocket);
 		{
-#line 30 "../LangShared/Transpiled/GameStrutTest/Test/ServerSocket_AcceptSendRecieve.nll"
+#line 30 "/home/cliffya/git/LangShared/Source/GameStrutTest/Test/ServerSocket_AcceptSendRecieve.nll"
 			gsBlob* pReceiveBlob = pClientSocket->Receive();
 			Assert::Plz(pReceiveBlob != 0);
 			int nRecievedInt = 0;
@@ -59,7 +59,7 @@ namespace NumbatLogic
 		}
 		GameStrutTestUtil::Update(pServerSocket, pClientSocket);
 		{
-#line 46 "../LangShared/Transpiled/GameStrutTest/Test/ServerSocket_AcceptSendRecieve.nll"
+#line 46 "/home/cliffya/git/LangShared/Source/GameStrutTest/Test/ServerSocket_AcceptSendRecieve.nll"
 			gsBlob* pServerReceiveBlob = pServerClientSocket->Receive();
 			Assert::Plz(pServerReceiveBlob != 0);
 			int nServerReceivedInt = 0;
