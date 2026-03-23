@@ -65,15 +65,13 @@ generate_csproj() {
 			done
 		fi
 
-		### HAXXXX
-		if [ "${output_type}" = "Exe" ]; then
-			echo "    <Compile Include=\"../../../../Transpiled/NetObject/**/*.cs\" />"
-		fi
 		echo "  </ItemGroup>"
 		echo "</Project>"
 	} > "$csproj_path"
 }
 
+LIBRARY_FOLDERS=()
+EXE_FOLDERS=()
 for source_dir in Source/*; do
 	if [ ! -d "$source_dir" ]; then
 		continue
@@ -85,17 +83,27 @@ for source_dir in Source/*; do
 		continue
 	fi
 
-	output_type="Library"
 	if grep -q "KIND_CONSOLE_APP" "$project_php"; then
-		output_type="Exe"
+		EXE_FOLDERS+=("$folder_name")
+	else
+		LIBRARY_FOLDERS+=("$folder_name")
 	fi
+done
+
+for folder_name in "${EXE_FOLDERS[@]}"; do
+	include_patterns=("../../../../Transpiled/${folder_name}/**/*.cs")
+	
+	# HAXXXX without real dependancy stuff, just throw every library in
+	for lib_folder in "${LIBRARY_FOLDERS[@]}"; do
+		include_patterns+=("../../../../Transpiled/${lib_folder}/**/*.cs")
+	done
 
 	generate_csproj \
 		"Source/ProjectGen/dotnet/${folder_name}" \
 		"Source/ProjectGen/dotnet/${folder_name}/${folder_name}.csproj" \
 		"${folder_name}" \
-		"${output_type}" \
-		"../../../../Transpiled/${folder_name}/**/*.cs"
+		"Exe" \
+		"${include_patterns[@]}"
 done
 
 
