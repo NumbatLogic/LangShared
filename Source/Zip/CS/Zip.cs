@@ -1,6 +1,6 @@
 namespace NumbatLogic
 {
-    class Zip
+    public class Zip
     {
         System.IO.Compression.ZipArchive m_pZipArchive = null;
         System.IO.MemoryStream m_pStream = null;

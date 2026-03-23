@@ -1,6 +1,6 @@
 namespace NumbatLogic
 {
-    class Utils
+    public class Utils
     {
         public static double Pow(double fBase, double fExponent)
         {

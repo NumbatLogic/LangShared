@@ -1,6 +1,6 @@
 namespace NumbatLogic
 {
-	class StringMap<TValue>
+	public class StringMap<TValue>
 	{
 		private System.Collections.Generic.Dictionary<string, TValue> m_pDict;
 

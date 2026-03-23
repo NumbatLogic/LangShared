@@ -1,6 +1,6 @@
 namespace NumbatLogic
 {
-	class Assert
+	public class Assert
 	{
 		public static void Plz(bool result, string test, string file, int line)
 		{

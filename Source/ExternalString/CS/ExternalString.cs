@@ -1,6 +1,6 @@
 namespace NumbatLogic
 {
-	class ExternalString
+	public class ExternalString
 	{
 		public static bool Equal(string szA, string szB)
 		{

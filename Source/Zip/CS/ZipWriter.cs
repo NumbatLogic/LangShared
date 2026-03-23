@@ -1,10 +1,10 @@
 namespace NumbatLogic
 {
-	class ZipWriter
+	public class ZipWriter
 	{
 		private System.Collections.Generic.List<ZipEntry> m_lstEntries = new System.Collections.Generic.List<ZipEntry>();
 
-		private class ZipEntry
+		public class ZipEntry
 		{
 			public string FileName;
 			public gsBlob Blob;

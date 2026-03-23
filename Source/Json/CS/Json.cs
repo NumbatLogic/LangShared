@@ -5,7 +5,7 @@ using System.Text.Json.Nodes;
 
 namespace NumbatLogic
 {
-	class Json
+	public class Json
 	{
 		private JsonNode m_pOwnedNode;
 		private JsonNode m_pNode;

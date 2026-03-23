@@ -2,7 +2,7 @@ using System;
 
 namespace NumbatLogic
 {
-    class Date
+    public class Date
     {
         public static uint GetUnixDate()
         {

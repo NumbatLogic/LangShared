@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace NumbatLogic
 {
-    class HttpPost
+    public class HttpPost
     {
         private string m_sUrl;
         private Dictionary<string, string> m_headers;
@@ -88,7 +88,7 @@ namespace NumbatLogic
     }
 
     // Minimal Multipart helper (CS backend). Included for completeness.
-    class HttpPostMultipart
+    public class HttpPostMultipart
     {
         private string m_sUrl;
         private Dictionary<string, string> m_headers;

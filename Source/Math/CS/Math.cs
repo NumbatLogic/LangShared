@@ -2,7 +2,7 @@ using System;
 
 namespace NumbatLogic
 {
-	class Math
+	public class Math
 	{
 		public const double PI = 3.14159265358979323846;
 		public const double DEG_TO_RAD = 0.01745329251994329577;

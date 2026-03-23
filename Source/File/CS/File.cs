@@ -1,6 +1,6 @@
 namespace NumbatLogic
 {
-    class File
+    public class File
     {
         public static InternalString GetContents(string sxPath)
         {

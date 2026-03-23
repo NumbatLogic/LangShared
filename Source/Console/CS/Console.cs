@@ -1,6 +1,6 @@
 namespace NumbatLogic
 {
-	class Console
+	public class Console
 	{
 		public static void Log(string sxLog)
 		{

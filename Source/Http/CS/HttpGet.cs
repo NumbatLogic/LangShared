@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace NumbatLogic
 {
-    class HttpGet
+    public class HttpGet
     {
         private string m_sUrl;
         private Dictionary<string, string> m_headers;

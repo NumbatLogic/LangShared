@@ -1,6 +1,6 @@
 namespace NumbatLogic
 {
-	class XmlFile : XmlNode
+	public class XmlFile : XmlNode
 	{
 
 		public XmlFile() : base(new System.Xml.XmlDocument())

@@ -4,7 +4,7 @@ using System;
 
 namespace NumbatLogic
 {
-	class gsClientSocket
+	public class gsClientSocket
 	{
 		public Socket __pSocket;
 		
