@@ -116,7 +116,7 @@ namespace NumbatLogic
                 using (System.IO.Stream stream = entry.Open())
                 {
                     byte[] buffer = new byte[entry.Length];
-                    stream.Read(buffer, 0, (int)entry.Length);
+                    stream.ReadExactly(buffer, 0, (int)entry.Length);
                     pOutBlob.Reset();
                     pOutBlob.Pack(buffer, buffer.Length);
                     pOutBlob.SetOffset(0);
