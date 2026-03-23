@@ -1,6 +1,6 @@
 namespace NumbatLogic
 {
-	class Vector<T>
+	public class Vector<T>
 	{
 		private System.Collections.Generic.List<T> m_pList;
 

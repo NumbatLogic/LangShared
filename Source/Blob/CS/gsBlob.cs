@@ -1,6 +1,6 @@
 namespace NumbatLogic
 {
-	class gsBlob
+	public class gsBlob
 	{
 		private const int DEFAULT_SIZE = 64;
 

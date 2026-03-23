@@ -1,6 +1,6 @@
 namespace NumbatLogic
 {
-	class InternalString
+	public class InternalString
 	{
 		private System.Text.StringBuilder m_pStringBuilder;
 
