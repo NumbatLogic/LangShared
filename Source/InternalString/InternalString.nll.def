@@ -29,6 +29,7 @@ namespace NumbatLogic
 		public double ParseDouble();
 		public Uint32 ParseHex();
 		public int FindChar(UniChar nChar);
+		public int IndexOf(string sxFind);
 		public int LastIndexOf(string sxFind);
 		public void Replace(string sxFind, string sxReplace);
 	}

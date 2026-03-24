@@ -51,6 +51,7 @@ namespace NumbatLogic
 			unsigned int ParseHex();
 
 			int FindChar(unsigned short nChar);
+			int IndexOf(const char* sxFind);
 			int LastIndexOf(const char* sxFind);
 
 			void Replace(const char* sxFind, const char* sxReplace);

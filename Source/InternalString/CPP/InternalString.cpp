@@ -407,6 +407,32 @@ namespace NumbatLogic
 		return -1;
 	}
 
+	int InternalString::IndexOf(const char* sxFind)
+	{
+		InternalString* sFind = new InternalString(sxFind);
+		int nCurrentCharIndex = 0;
+		int nOffset = 0;
+
+		while (nOffset + sFind->m_nByteLength <= m_nByteLength)
+		{
+			if (memcmp(m_szBuffer + nOffset, sFind->m_szBuffer, sFind->m_nByteLength) == 0)
+			{
+				delete sFind;
+				return nCurrentCharIndex;
+			}
+
+			unsigned char c = m_szBuffer[nOffset];
+			if (c == 0)
+				break;
+
+			nOffset += GetUtf8CharSize(c);
+			nCurrentCharIndex++;
+		}
+
+		delete sFind;
+		return -1;
+	}
+
 	int InternalString::LastIndexOf(const char* sxFind)
 	{
 		InternalString* sFind = new InternalString(sxFind);

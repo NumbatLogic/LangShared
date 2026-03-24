@@ -143,6 +143,11 @@ namespace NumbatLogic
 			return m_pStringBuilder.ToString().IndexOf((char)nChar);
 		}
 
+		public int IndexOf(string sxFind)
+		{
+			return m_pStringBuilder.ToString().IndexOf(sxFind);
+		}
+
 		public int LastIndexOf(string sxFind)
 		{
 			return m_pStringBuilder.ToString().LastIndexOf(sxFind);
