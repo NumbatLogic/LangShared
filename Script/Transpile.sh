@@ -14,11 +14,28 @@ sArgs=("-f" "Source")
 
 sPackageList="Source/LangShared.package-list"
 if [ -f "$sPackageList" ]; then
-	mapfile -t sPackages < "$sPackageList"
-	for sPackage in "${sPackages[@]}"; do
+	mapfile -t sPackageArray < "$sPackageList"
+	for sPackage in "${sPackageArray[@]}"; do
+		if [ -z "$sPackage" ] || [[ "$sPackage" == \#* ]]; then
+			continue
+		fi
 		sArgs+=("-f")
 		sArgs+=("$LANG_SHARED_SOURCE/$sPackage")
 	done
 fi
+
+sPackageList="Source/External.package-list"
+if [ -f "$sPackageList" ]; then
+	mapfile -t sPackageArray < "$sPackageList"
+	for sPackage in "${sPackageArray[@]}"; do
+		if [ -z "$sPackage" ] || [[ "$sPackage" == \#* ]]; then
+			continue
+		fi
+		sArgs+=("-f")
+		sArgs+=("../${sPackage}/Source")
+	done
+fi
+
+sArgs+=("$@")
 
 gdb -ex "set confirm off" -ex run -ex backtrace -ex quit --args "$LANG_CLI" "${sArgs[@]}"

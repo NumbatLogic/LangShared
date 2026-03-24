@@ -29,81 +29,101 @@ cd ..
 
 # CS
 generate_csproj() {
-	local project_dir="$1"
-	local csproj_path="$2"
-	local assembly_name="$3"
-	local output_type="$4"
+	local sProjectDir="$1"
+	local sCsprojPath="$2"
+	local sAssemblyName="$3"
+	local sOutputType="$4"
 	shift 4
-	local include_patterns=("$@")
+	local sIncludePatternArray=("$@")
 
-	mkdir -p "$project_dir"
+	mkdir -p "$sProjectDir"
 	{
 		echo "<Project Sdk=\"Microsoft.NET.Sdk\">"
 		echo "  <PropertyGroup>"
-		echo "    <AssemblyName>${assembly_name}</AssemblyName>"
+		echo "    <AssemblyName>${sAssemblyName}</AssemblyName>"
 		echo "    <TargetFramework>net10.0</TargetFramework>"
 		echo "    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>"
 		echo "    <Nullable>disable</Nullable>"
 		echo "    <ImplicitUsings>disable</ImplicitUsings>"
-		echo "    <OutputType>${output_type}</OutputType>"
+		echo "    <OutputType>${sOutputType}</OutputType>"
 		echo "  </PropertyGroup>"
 		echo
 		echo "  <ItemGroup>"
 
-		for pattern in "${include_patterns[@]}"; do
-			echo "    <Compile Include=\"${pattern}\" />"
+		for sIncludePattern in "${sIncludePatternArray[@]}"; do
+			echo "    <Compile Include=\"${sIncludePattern}\" />"
 		done
 
 		if [ -f "Source/LangShared.package-list" ]; then
-			mapfile -t ls_packages < Source/LangShared.package-list
-			for pkg in "${ls_packages[@]}"; do
-				if [ -z "$pkg" ] || [[ "$pkg" == \#* ]]; then
+			mapfile -t sPackageArray < Source/LangShared.package-list
+			for sPackage in "${sPackageArray[@]}"; do
+				if [ -z "$sPackage" ] || [[ "$sPackage" == \#* ]]; then
 					continue
 				fi
-				echo "    <Compile Include=\"${SCRIPT_DIR}/../Source/${pkg}/**/*.cs\" />"
-				echo "    <Compile Include=\"${SCRIPT_DIR}/../Transpiled/${pkg}/**/*.cs\" />"
+				echo "    <Compile Include=\"${SCRIPT_DIR}/../Source/${sPackage}/**/*.cs\" />"
+				echo "    <Compile Include=\"${SCRIPT_DIR}/../Transpiled/${sPackage}/**/*.cs\" />"
+			done
+		fi
+
+		if [ -f "Source/External.package-list" ]; then
+			mapfile -t sPackageArray < Source/External.package-list
+			for sPackage in "${sPackageArray[@]}"; do
+				if [ -z "$sPackage" ] || [[ "$sPackage" == \#* ]]; then
+					continue
+				fi
+				echo "    <Compile Include=\"../../../../../${sPackage}/Transpiled/**/*.cs\" />"
+				echo "    <Compile Include=\"../../../../../${sPackage}/Source/CS/*.cs\" />"
 			done
 		fi
 
 		echo "  </ItemGroup>"
+
+		# HAXXXXXXX
+		if [ -f "Source/External.package-list" ] && grep -q "^nll-PgSql$" "Source/External.package-list"; then
+			echo
+			echo "  <ItemGroup>"
+			echo "    <PackageReference Include=\"Npgsql\" Version=\"10.0.2\" />"
+			echo "  </ItemGroup>"
+		fi
+
 		echo "</Project>"
-	} > "$csproj_path"
+	} > "$sCsprojPath"
 }
 
-LIBRARY_FOLDERS=()
-EXE_FOLDERS=()
-for source_dir in Source/*; do
-	if [ ! -d "$source_dir" ]; then
+sLibraryFolderArray=()
+sExeFolderArray=()
+for sSourceDir in Source/*; do
+	if [ ! -d "$sSourceDir" ]; then
 		continue
 	fi
 
-	folder_name="$(basename "$source_dir")"
-	project_php="${source_dir}/${folder_name}.php"
-	if [ ! -f "$project_php" ]; then
+	sFolderName="$(basename "$sSourceDir")"
+	sProjectPhp="${sSourceDir}/${sFolderName}.php"
+	if [ ! -f "$sProjectPhp" ]; then
 		continue
 	fi
 
-	if grep -q "KIND_CONSOLE_APP" "$project_php"; then
-		EXE_FOLDERS+=("$folder_name")
+	if grep -q "KIND_CONSOLE_APP" "$sProjectPhp"; then
+		sExeFolderArray+=("$sFolderName")
 	else
-		LIBRARY_FOLDERS+=("$folder_name")
+		sLibraryFolderArray+=("$sFolderName")
 	fi
 done
 
-for folder_name in "${EXE_FOLDERS[@]}"; do
-	include_patterns=("../../../../Transpiled/${folder_name}/**/*.cs")
+for sFolderName in "${sExeFolderArray[@]}"; do
+	sIncludePatternArray=("../../../../Transpiled/${sFolderName}/**/*.cs")
 	
 	# HAXXXX without real dependancy stuff, just throw every library in
-	for lib_folder in "${LIBRARY_FOLDERS[@]}"; do
-		include_patterns+=("../../../../Transpiled/${lib_folder}/**/*.cs")
+	for sLibraryFolder in "${sLibraryFolderArray[@]}"; do
+		sIncludePatternArray+=("../../../../Transpiled/${sLibraryFolder}/**/*.cs")
 	done
 
 	generate_csproj \
-		"Source/ProjectGen/dotnet/${folder_name}" \
-		"Source/ProjectGen/dotnet/${folder_name}/${folder_name}.csproj" \
-		"${folder_name}" \
+		"Source/ProjectGen/dotnet/${sFolderName}" \
+		"Source/ProjectGen/dotnet/${sFolderName}/${sFolderName}.csproj" \
+		"${sFolderName}" \
 		"Exe" \
-		"${include_patterns[@]}"
+		"${sIncludePatternArray[@]}"
 done
 
 
