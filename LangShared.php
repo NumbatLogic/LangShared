@@ -6,18 +6,15 @@
 			parent::__construct($sAction);
 
 			$sAllowedDirectoryArray = file($sPackageList, FILE_IGNORE_NEW_LINES);
-			//$this->m_xFileArray = ProjectGen_ParseDirectory(dirname(__FILE__), "/\.hpp|\.cpp/",  $sAllowedDirectoryArray);
-
-			if ($sAction == ACTION_ESP_IDF)
-			{
-				$sAllowedDirectoryArray = array_diff($sAllowedDirectoryArray, ["Http"]);
-			}
 			
+			if ($sAction == ACTION_ESP_IDF)
+				$sAllowedDirectoryArray = array_diff($sAllowedDirectoryArray, ["Http"]);
 
+			$sFileRegex = ProjectGen_GetSourceRegex($sAction);
 			$this->m_xFileArray = array_merge(
-				ProjectGen_ParseDirectory(dirname(__FILE__) . "/Source", "/\.hpp$|\.cpp$|\.h$|\.c$/",  $sAllowedDirectoryArray),
-				ProjectGen_ParseDirectory(dirname(__FILE__) . "/Transpiled", "/\.hpp|\.cpp/",  $sAllowedDirectoryArray),
-            );
+				ProjectGen_ParseDirectory(dirname(__FILE__) . "/Source", $sFileRegex,  $sAllowedDirectoryArray),
+				ProjectGen_ParseDirectory(dirname(__FILE__) . "/Transpiled", $sFileRegex,  $sAllowedDirectoryArray),
+			);
 		}
 
 		public function GetName() { return "LangShared"; }

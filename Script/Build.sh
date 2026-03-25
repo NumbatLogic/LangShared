@@ -23,9 +23,9 @@ fi
 
 if [ "$LANGUAGE" = "CS" ]; then
 	shopt -s nullglob
-	csproj_files=(Source/ProjectGen/dotnet/*/*.csproj)
+	csproj_files=(Source/ProjectGen/dotnet10/*/*.csproj)
 	if [ ${#csproj_files[@]} -eq 0 ]; then
-		echo "No C# projects found in Source/ProjectGen/dotnet"
+		echo "No C# projects found in Source/ProjectGen/dotnet10"
 		exit 1
 	fi
 	for csproj in "${csproj_files[@]}"; do

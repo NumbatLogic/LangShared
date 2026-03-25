@@ -24,9 +24,9 @@ source "$SCRIPT_DIR/_runner.sh"
 
 if [ "$LANGUAGE" = "CS" ]; then
 	shopt -s nullglob
-	dll_files=(Source/ProjectGen/dotnet/*/bin/Debug/net*/*Test*.dll)
+	dll_files=(Source/ProjectGen/dotnet10/*/bin/Debug/net*/*Test*.dll)
 	if [ ${#dll_files[@]} -eq 0 ]; then
-		echo "No C# test binaries found in Source/ProjectGen/dotnet/*/bin/Debug/net*"
+		echo "No C# test binaries found in Source/ProjectGen/dotnet10/*/bin/Debug/net*"
 		exit 1
 	fi
 	for dll in "${dll_files[@]}"; do
