@@ -19,12 +19,12 @@ if [ -f "Source/LangShared.package-list" ]; then
 	rm -rf "$SCRIPT_DIR/../Transpiled"
 fi
 
-"$SCRIPT_DIR/CodeCrab.sh"
-"$SCRIPT_DIR/Transpile.sh"
+./CodeCrab.sh
+./Transpile.sh
 
 cd Source
 	php "${PROJECT_NAME}.php" "linux_gmake"
 	php "${PROJECT_NAME}.php" "dotnet10"
 cd ..
 
-"$SCRIPT_DIR/Build.sh" "$@"
+./Build.sh "$@"

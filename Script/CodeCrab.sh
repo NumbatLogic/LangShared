@@ -10,4 +10,8 @@ if [ ! -f "$CODECRAB_PATH" ]; then
 fi
 
 cd Source
-"$SCRIPT_DIR/_php.sh" "$CODECRAB_PATH" "."
+if [ "$#" -gt 0 ]; then
+	"$SCRIPT_DIR/_php.sh" "$CODECRAB_PATH" "$@"
+else
+	"$SCRIPT_DIR/_php.sh" "$CODECRAB_PATH" "."
+fi
