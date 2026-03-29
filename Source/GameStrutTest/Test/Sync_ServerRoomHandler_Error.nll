@@ -1,6 +1,6 @@
 namespace NumbatLogic
 {
-	class Sync_ServerRoomHandler_Error_Server : gsServer
+	class disposable Sync_ServerRoomHandler_Error_Server : gsServer
 	{
 		public construct(string sxAddress, Uint16 nPort, Uint16 nVersion, string sxDatabasePath) : base (sxAddress, nPort, nVersion, sxDatabasePath)
 		{
