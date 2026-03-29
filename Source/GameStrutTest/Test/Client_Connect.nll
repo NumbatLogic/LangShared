@@ -1,6 +1,6 @@
 namespace NumbatLogic
 {
-	class Client_Connect_Server : gsServer
+	class disposable Client_Connect_Server : gsServer
 	{
 		public construct(string sxAddress, Uint16 nPort, Uint16 nVersion, string sxDatabasePath) : base (sxAddress, nPort, nVersion, sxDatabasePath)
 		{
@@ -49,7 +49,7 @@ namespace NumbatLogic
 
 			Assert::Plz(pServer.__pRoomVector.GetSize() == 0);
 
-			GameStrutTestUtil::Update(pServer, pClient);
+			GameStrutTestUtil::UpdateUntilConnected(pServer, pClient);
 
 			// on server, client connected and is in room
 			Assert::Plz(pServer.__pClientVector.GetSize() == 1);

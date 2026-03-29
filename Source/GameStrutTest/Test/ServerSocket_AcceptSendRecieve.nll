@@ -10,7 +10,7 @@ namespace NumbatLogic
 			gsClientSocket* pClientSocket = own new gsClientSocket();
 			pClientSocket.Connect("localhost", 9876);
 
-			GameStrutTestUtil::Update(pServerSocket, pClientSocket);
+			GameStrutTestUtil::UpdateUntilConnected(pServerSocket, pClientSocket);
 
 			gsClientSocket pServerClientSocket = pServerSocket.Accept();
 			Assert::Plz(pServerClientSocket != null);
