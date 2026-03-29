@@ -14,6 +14,7 @@
 	#include <netdb.h>
 	#include <netinet/in.h>
 	#include <sys/ioctl.h>
+	#include <sys/select.h>
 	#include <sys/socket.h>
 	#include <sys/time.h>
 	#include <unistd.h>
@@ -31,6 +32,7 @@ namespace NumbatLogic
 		m_nPort = -1;
 		m_nNextClientId = 1;  // Start client IDs at 1 (0 is reserved for broadcast)
 		m_pClientSocketVector = new Vector<gsClientSocket*>();
+		m_pAcceptReturnQueue = new Vector<gsClientSocket*>();
 	}
 
 	gsServerSocket::~gsServerSocket()
@@ -50,6 +52,8 @@ namespace NumbatLogic
 		m_pClientSocketVector->Clear();
 		Assert::Plz(m_pClientSocketVector->GetSize() == 0);
 		delete m_pClientSocketVector;
+		m_pAcceptReturnQueue->Clear();
+		delete m_pAcceptReturnQueue;
 	}
 
 	void gsServerSocket::Start(int port)
@@ -57,6 +61,7 @@ namespace NumbatLogic
 		Assert::Plz(m_nSocket == -1);
 		Assert::Plz(m_nPort == -1);
 		Assert::Plz(m_pClientSocketVector->GetSize() == 0);
+		Assert::Plz(m_pAcceptReturnQueue->GetSize() == 0);
 
 		m_nPort = port;
 		
@@ -131,8 +136,15 @@ namespace NumbatLogic
 
 	void gsServerSocket::Stop()
 	{
+		if (m_nSocket == -1)
+		{
+			Assert::Plz(m_nPort == -1);
+			return;
+		}
+
 		Assert::Plz(m_nPort != -1);
-		Assert::Plz(m_nSocket != -1);
+
+		m_pAcceptReturnQueue->Clear();
 
 		close(m_nSocket);
 		m_nSocket = -1;  // Reset to initial state
@@ -151,20 +163,76 @@ namespace NumbatLogic
 		m_pClientSocketVector->Clear();
 	}
 
+	bool gsServerSocket::ReadyToAcceptListen()
+	{
+		if (m_nSocket == -1)
+			return false;
+
+		#ifdef NB_WINDOWS
+			fd_set readfds;
+			FD_ZERO(&readfds);
+			FD_SET((SOCKET)m_nSocket, &readfds);
+			struct timeval tv;
+			tv.tv_sec = 0;
+			tv.tv_usec = 0;
+			int n = select(0, &readfds, NULL, NULL, &tv);
+			return n > 0 && FD_ISSET((SOCKET)m_nSocket, &readfds);
+		#else
+			fd_set readfds;
+			FD_ZERO(&readfds);
+			FD_SET(m_nSocket, &readfds);
+			struct timeval tv;
+			tv.tv_sec = 0;
+			tv.tv_usec = 0;
+			int n = select(m_nSocket + 1, &readfds, NULL, NULL, &tv);
+			return n > 0 && FD_ISSET(m_nSocket, &readfds);
+		#endif
+	}
+
+	void gsServerSocket::DrainIncomingConnections()
+	{
+		if (m_nSocket == -1)
+			return;
+
+		while (ReadyToAcceptListen())
+		{
+			struct sockaddr_in clientAddr;
+			socklen_t clientLen = sizeof(clientAddr);
+
+			int nClientSocket = accept(m_nSocket, (struct sockaddr*)&clientAddr, &clientLen);
+			if (nClientSocket < 0)
+				break;
+
+			gsClientSocket* pNewClient = new gsClientSocket();
+			pNewClient->SetServerClientSocket(nClientSocket, m_nNextClientId++);
+
+			#ifdef NB_WINDOWS
+				u_long mode = 1;
+				ioctlsocket(nClientSocket, FIONBIO, &mode);
+			#else
+				int flags = fcntl(nClientSocket, F_GETFL, 0);
+				if (flags != -1)
+				{
+					fcntl(nClientSocket, F_SETFL, flags | O_NONBLOCK);
+				}
+			#endif
+
+			m_pClientSocketVector->PushBack(pNewClient);
+			m_pAcceptReturnQueue->PushBack(pNewClient);
+		}
+	}
+
 	void gsServerSocket::Update()
 	{
 		if (m_nSocket == -1)
 			return;
 
-		// Process all client connections
+		DrainIncomingConnections();
+
 		for (unsigned int i = 0; i < m_pClientSocketVector->GetSize(); ++i)
 		{
 			gsClientSocket* pClientSocket = m_pClientSocketVector->Get(i);
-			if (pClientSocket)
-			{
-				// Update client socket to process any pending data
-				pClientSocket->Update();
-			}
+			pClientSocket->Update();
 		}
 	}
 
@@ -172,6 +240,12 @@ namespace NumbatLogic
 	{
 		if (m_nSocket == -1)
 			return false;
+
+		if (ReadyToAcceptListen())
+			return true;
+
+		if (m_pAcceptReturnQueue->GetSize() > 0)
+			return true;
 
 		// Check all clients for pending data
 		for (unsigned int i = 0; i < m_pClientSocketVector->GetSize(); i++)
@@ -189,39 +263,16 @@ namespace NumbatLogic
 		return false;
 	}
 
+	int gsServerSocket::GetNumClient()
+	{
+		return m_pClientSocketVector->GetSize();
+	}
+
 	gsClientSocket* gsServerSocket::Accept()
 	{
-		Assert::Plz(m_nSocket != -1);
-
-		struct sockaddr_in clientAddr;
-		socklen_t clientLen = sizeof(clientAddr);
-		
-		int nClientSocket = accept(m_nSocket, (struct sockaddr*)&clientAddr, &clientLen);
-		if (nClientSocket < 0)
-		{
-			// No pending connection or error
+		if (m_pAcceptReturnQueue->GetSize() == 0)
 			return NULL;
-		}
-
-		// Create new client socket
-		gsClientSocket* pNewClient = new gsClientSocket();
-		pNewClient->SetServerClientSocket(nClientSocket, m_nNextClientId++);
-		
-		// Set non-blocking mode
-		#ifdef NB_WINDOWS
-			u_long mode = 1;
-			ioctlsocket(nClientSocket, FIONBIO, &mode);
-		#else
-			int flags = fcntl(nClientSocket, F_GETFL, 0);
-			if (flags != -1)
-			{
-				fcntl(nClientSocket, F_SETFL, flags | O_NONBLOCK);
-			}
-		#endif
-		// Add to client vector
-		m_pClientSocketVector->PushBack(pNewClient);
-
-		return pNewClient;
+		return m_pAcceptReturnQueue->PopFront();
 	}
 
 	bool gsServerSocket::Broadcast(gsBlob* pBlob)

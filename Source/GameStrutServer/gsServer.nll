@@ -24,14 +24,14 @@ namespace NumbatLogic
 		{
 			__pServerSocket.Update();
 
+			while (true)
 			{
 				gsClientSocket pClientSocket = __pServerSocket.Accept();
-				if (pClientSocket != null)
-				{
-					gsServerClient* pServerClient = own OnCreateServerClient(++__nLastClientId, pClientSocket, this);
-					Assert::Plz(pServerClient != null);
-					__pClientVector.PushBack(disown pServerClient);
-				}
+				if (pClientSocket == null)
+					break;
+				gsServerClient* pServerClient = own OnCreateServerClient(++__nLastClientId, pClientSocket, this);
+				Assert::Plz(pServerClient != null);
+				__pClientVector.PushBack(disown pServerClient);
 			}
 
 			for (int i = 0; i < __pClientVector.GetSize(); i++)
@@ -79,6 +79,11 @@ namespace NumbatLogic
 		public bool Pending()
 		{
 			return __pServerSocket.Pending();
+		}
+
+		public int GetNumClient()
+		{
+			return __pClientVector.GetSize();
 		}
 
 		public virtual gsServerClient** OnCreateServerClient(Uint32 nClientId, gsClientSocket pClientSocket, gsServer pServer)

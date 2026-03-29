@@ -12,6 +12,7 @@ namespace NumbatLogic
 		public int __nRecieveOffset = 0;
 
 		public bool __bRecentSend = false;
+		public bool __bConnecting = false;
 		public bool __bConnected = false;
 
 
@@ -22,14 +23,28 @@ namespace NumbatLogic
 			IPEndPoint pIPEndPoint = new IPEndPoint(pIPAddress, nPort);
 
 			__pSocket = new Socket(pIPEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-			__pSocket.Connect(pIPEndPoint);
 			__pSocket.Blocking = false;
-			__bConnected = true;
+			__bConnecting = false;
+			__bConnected = false;
+
+			try
+			{
+				__pSocket.Connect(pIPEndPoint);
+				__bConnected = true;
+			}
+			catch (SocketException ex)
+			{
+				// Non-blocking connect in progress; completion is handled in Update().
+				if (ex.SocketErrorCode == SocketError.WouldBlock || ex.SocketErrorCode == SocketError.InProgress || ex.SocketErrorCode == SocketError.AlreadyInProgress)
+					__bConnecting = true;
+				else
+					throw;
+			}
 		}
 
 		public void Disconnect()
 		{
-			if (!__bConnected)
+			if (!__bConnected && !__bConnecting)
 				return;
 			if (__pSocket != null)
 			{
@@ -37,6 +52,7 @@ namespace NumbatLogic
 				try { __pSocket.Close(); } catch { }
 				__pSocket = null;
 			}
+			__bConnecting = false;
 			__bConnected = false;
 		}
 
@@ -44,7 +60,29 @@ namespace NumbatLogic
 		{
 			__bRecentSend = false;
 
-			if (!__bConnected || __pSocket == null)
+			if (__pSocket == null)
+				return;
+			
+			if (__bConnecting)
+			{
+				bool bReady = __pSocket.Poll(0, SelectMode.SelectWrite) || __pSocket.Poll(0, SelectMode.SelectError);
+				if (!bReady)
+					return;
+
+				int nConnectError = (int)__pSocket.GetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Error);
+				if (nConnectError == 0)
+				{
+					__bConnecting = false;
+					__bConnected = true;
+				}
+				else
+				{
+					Disconnect();
+					return;
+				}
+			}
+
+			if (!__bConnected)
 				return;
 
 			if (__pSocket.Poll(0, SelectMode.SelectRead))
@@ -73,6 +111,8 @@ namespace NumbatLogic
 
 		public bool Pending()
 		{
+			if (__bConnecting)
+				return true;
 			if (!GetConnected())
 				return false;
 			return __bRecentSend;
@@ -80,13 +120,14 @@ namespace NumbatLogic
 
 		public bool GetConnected()
 		{
-			return __bConnected && __pSocket != null;
+			return __bConnected && !__bConnecting && __pSocket != null;
 		}
 
 		public bool Send(gsBlob pBlob)
 		{
 			Assert.Plz(pBlob != null);
 			Assert.Plz(pBlob.GetSize() > 0);
+			Assert.Plz(GetConnected());
 
 			ushort nBlobSize = (ushort)pBlob.__nSize;
 

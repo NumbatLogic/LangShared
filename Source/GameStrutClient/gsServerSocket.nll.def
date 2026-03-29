@@ -6,6 +6,7 @@ namespace NumbatLogic
 		public void Stop();
 		public void Update();
 		public bool Pending();
+		public int GetNumClient();
 		public gsClientSocket Accept();
 
 		public bool Broadcast(gsBlob pBlob);
