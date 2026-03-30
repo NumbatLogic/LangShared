@@ -32,7 +32,7 @@ if [ -f "$sPackageList" ]; then
 			continue
 		fi
 		sArgs+=("-f")
-		sArgs+=("../${sPackage}/Source")
+		sArgs+=("../${sPackage}")
 	done
 fi
 
