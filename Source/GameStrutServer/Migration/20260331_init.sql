@@ -1,0 +1,4 @@
+CREATE TABLE IF NOT EXISTS "GS_tblRoom" (
+	"id" SERIAL PRIMARY KEY,
+	"name" TEXT
+);

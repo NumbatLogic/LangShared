@@ -1,0 +1,42 @@
+namespace NumbatLogic
+{
+	namespace Orm
+	{
+		class RoomSchema
+		{
+			private static OrmObjectInfo* s_pInfo;
+			public static OrmObjectInfo GetInfo()
+			{
+				if (s_pInfo == null)
+				{
+					s_pInfo = own new OrmObjectInfo("GS_tblRoom", 0, 0, 1, 0, 0, 0, 0, 1);
+					s_pInfo.AddField(OrmFieldInfo::Type::INT32, "id", 0, true);
+					s_pInfo.AddField(OrmFieldInfo::Type::STRING, "name", 0, false);
+				}
+				return s_pInfo;
+			}
+		}
+
+		class Room : OrmObject
+		{
+			public construct() : base(RoomSchema::GetInfo())
+			{
+			}
+
+			public Int32 GetId(bool bInitial = false) { return __GetInt32(0, bInitial); }
+			public void SetId(Int32 v) { __SetInt32(0, v); }
+
+			public string GetName(bool bInitial = false) { return __GetString(0, bInitial); }
+			public void SetName(string v) { __SetString(0, v); }
+		}
+
+		class RoomContainer : OrmContainer
+		{
+			public override OrmObject** CreateRow()
+			{
+				Room* pRow = own new Room();
+				return disown pRow;
+			}
+		}
+	}
+}
