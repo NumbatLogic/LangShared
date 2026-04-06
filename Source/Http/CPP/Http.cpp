@@ -9,6 +9,22 @@
 
 namespace NumbatLogic
 {
+	HttpClient::HttpClient()
+	{
+		m_pHandle = curl_easy_init();
+	}
+
+	HttpClient::~HttpClient()
+	{
+		if (m_pHandle)
+			curl_easy_cleanup(static_cast<CURL*>(m_pHandle));
+	}
+
+	void* HttpClient::GetHandle() const
+	{
+		return m_pHandle;
+	}
+
 	// Static callback function for libcurl
 	static size_t WriteCallback(void* contents, size_t size, size_t nmemb, std::string* userp)
 	{
@@ -37,12 +53,19 @@ namespace NumbatLogic
 
 	const char* HttpGet::Execute()
 	{
-		CURL* curl = curl_easy_init();
+		return Execute(0);
+	}
+
+	const char* HttpGet::Execute(HttpClient* pClient)
+	{
+		CURL* curl = pClient ? static_cast<CURL*>(pClient->GetHandle()) : curl_easy_init();
 		if (!curl)
 		{
 			m_nLastStatusCode = 0;
 			return nullptr;
 		}
+
+		curl_easy_reset(curl);
 
 		std::string response;
 		struct curl_slist* headers = nullptr;
@@ -68,7 +91,8 @@ namespace NumbatLogic
 		m_nLastStatusCode = http_code;
 
 		curl_slist_free_all(headers);
-		curl_easy_cleanup(curl);
+		if (!pClient)
+			curl_easy_cleanup(curl);
 
 		// Always return the response body (if any). Caller can inspect status code.
 
@@ -154,12 +178,19 @@ namespace NumbatLogic
 
 	const char* HttpPost::Execute()
 	{
-		CURL* curl = curl_easy_init();
+		return Execute(0);
+	}
+
+	const char* HttpPost::Execute(HttpClient* pClient)
+	{
+		CURL* curl = pClient ? static_cast<CURL*>(pClient->GetHandle()) : curl_easy_init();
 		if (!curl)
 		{
 			m_nLastStatusCode = 0;
 			return nullptr;
 		}
+
+		curl_easy_reset(curl);
 
 		std::string response;
 		struct curl_slist* headers = nullptr;
@@ -192,7 +223,8 @@ namespace NumbatLogic
 		m_nLastStatusCode = http_code;
 
 		curl_slist_free_all(headers);
-		curl_easy_cleanup(curl);
+		if (!pClient)
+			curl_easy_cleanup(curl);
 
 		// Always keep response (even on non-2xx) so caller can debug.
 		// Return nullptr only when curl itself fails hard and we have no body.
@@ -248,12 +280,19 @@ namespace NumbatLogic
 
 	const char* HttpPostMultipart::Execute()
 	{
-		CURL* curl = curl_easy_init();
+		return Execute(0);
+	}
+
+	const char* HttpPostMultipart::Execute(HttpClient* pClient)
+	{
+		CURL* curl = pClient ? static_cast<CURL*>(pClient->GetHandle()) : curl_easy_init();
 		if (!curl)
 		{
 			m_nLastStatusCode = 0;
 			return nullptr;
 		}
+
+		curl_easy_reset(curl);
 
 		std::string response;
 		struct curl_slist* headers = nullptr;
@@ -298,7 +337,8 @@ namespace NumbatLogic
 
 		curl_slist_free_all(headers);
 		curl_mime_free(mime);
-		curl_easy_cleanup(curl);
+		if (!pClient)
+			curl_easy_cleanup(curl);
 
 		if (res != CURLE_OK && response.length() == 0)
 			return nullptr;

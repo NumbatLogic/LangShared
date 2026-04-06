@@ -13,7 +13,6 @@ namespace NumbatLogic
 		private string m_sUsername;
 		private string m_sPassword;
 		private int m_nLastStatusCode;
-		private static readonly HttpClient m_httpClient = new HttpClient();
 
 		public HttpPost(string sUrl)
 		{
@@ -50,6 +49,13 @@ namespace NumbatLogic
 
 		public string Execute()
 		{
+			return Execute(null);
+		}
+
+		public string Execute(HttpClient pClient)
+		{
+			var pLocalClient = pClient ?? new HttpClient();
+			var client = pLocalClient.m_httpClient;
 			try
 			{
 				// Create content from body
@@ -85,7 +91,7 @@ namespace NumbatLogic
 				}
 
 				// Make the request synchronously
-				var response = m_httpClient.SendAsync(request).GetAwaiter().GetResult();
+				var response = client.SendAsync(request).GetAwaiter().GetResult();
 				m_nLastStatusCode = (int)response.StatusCode;
 				
 				if (response.IsSuccessStatusCode)
@@ -101,6 +107,11 @@ namespace NumbatLogic
 			{
 				m_nLastStatusCode = 0;
 				return null;
+			}
+			finally
+			{
+				if (pClient == null)
+					client.Dispose();
 			}
 		}
 
@@ -118,7 +129,6 @@ namespace NumbatLogic
 		private Dictionary<string, string> m_fields;
 		private List<(string Name, string Path, string ContentType)> m_files;
 		private int m_nLastStatusCode;
-		private static readonly HttpClient m_httpClient = new HttpClient();
 
 		public HttpPostMultipart(string sUrl)
 		{
@@ -149,6 +159,13 @@ namespace NumbatLogic
 
 		public string Execute()
 		{
+			return Execute(null);
+		}
+
+		public string Execute(HttpClient pClient)
+		{
+			var pLocalClient = pClient ?? new HttpClient();
+			var client = pLocalClient.m_httpClient;
 			try
 			{
 				var content = new MultipartFormDataContent();
@@ -168,7 +185,7 @@ namespace NumbatLogic
 				foreach (var header in m_headers)
 					request.Headers.Add(header.Key, header.Value);
 
-				var response = m_httpClient.SendAsync(request).GetAwaiter().GetResult();
+				var response = client.SendAsync(request).GetAwaiter().GetResult();
 				m_nLastStatusCode = (int)response.StatusCode;
 				return response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
 			}
@@ -176,6 +193,11 @@ namespace NumbatLogic
 			{
 				m_nLastStatusCode = 0;
 				return null;
+			}
+			finally
+			{
+				if (pClient == null)
+					client.Dispose();
 			}
 		}
 

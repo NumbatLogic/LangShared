@@ -5,12 +5,21 @@ using System.Threading.Tasks;
 
 namespace NumbatLogic
 {
+    public class HttpClient
+    {
+        internal System.Net.Http.HttpClient m_httpClient;
+
+        public HttpClient()
+        {
+            m_httpClient = new System.Net.Http.HttpClient();
+        }
+    }
+
     public class HttpGet
     {
         private string m_sUrl;
         private Dictionary<string, string> m_headers;
         private int m_nLastStatusCode;
-        private static readonly HttpClient m_httpClient = new HttpClient();
 
         public HttpGet(string sUrl)
         {
@@ -29,6 +38,13 @@ namespace NumbatLogic
 
         public string Execute()
         {
+            return Execute(null);
+        }
+
+        public string Execute(HttpClient pClient)
+        {
+            var pLocalClient = pClient ?? new HttpClient();
+            var client = pLocalClient.m_httpClient;
             try
             {
                 // Create a new request message
@@ -41,7 +57,7 @@ namespace NumbatLogic
                 }
 
                 // Make the request synchronously
-                var response = m_httpClient.SendAsync(request).GetAwaiter().GetResult();
+                var response = client.SendAsync(request).GetAwaiter().GetResult();
                 m_nLastStatusCode = (int)response.StatusCode;
                 
                 if (response.IsSuccessStatusCode)
@@ -57,6 +73,11 @@ namespace NumbatLogic
             {
                 m_nLastStatusCode = 0;
                 return null;
+            }
+            finally
+            {
+                if (pClient == null)
+                    client.Dispose();
             }
         }
 

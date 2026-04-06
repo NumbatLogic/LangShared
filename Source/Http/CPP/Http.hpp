@@ -9,6 +9,17 @@
 namespace NumbatLogic
 {
 	class InternalString;
+	class HttpClient
+	{
+		public:
+			HttpClient();
+			~HttpClient();
+
+			void* GetHandle() const;
+
+		private:
+			void* m_pHandle;
+	};
 
 	class HttpGet
 	{
@@ -18,6 +29,7 @@ namespace NumbatLogic
 			
 			void AddHeader(const char* sxName, const char* sxValue);
 			const char* Execute();
+			const char* Execute(HttpClient* pClient);
 			int GetLastStatusCode() const;
 
 		private:
@@ -38,6 +50,7 @@ namespace NumbatLogic
 			void SetPassword(const char* sxPassword);
 
 			const char* Execute();
+			const char* Execute(HttpClient* pClient);
 			int GetLastStatusCode() const;
 
 		private:
@@ -63,6 +76,7 @@ namespace NumbatLogic
 			void AddFile(const char* sxName, const char* sxPath, const char* sxContentType);
 
 			const char* Execute();
+			const char* Execute(HttpClient* pClient);
 			int GetLastStatusCode() const;
 
 		private:
