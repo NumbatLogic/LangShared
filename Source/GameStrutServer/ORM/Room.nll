@@ -1,27 +1,24 @@
-namespace NumbatLogic
+namespace NumberDuck
 {
-	namespace Orm
+	namespace ORM
 	{
-		class RoomSchema
+		class RoomSchema : OrmObjectInfo
 		{
-			private static OrmObjectInfo* s_pInfo;
-			public static OrmObjectInfo GetInfo()
+			private static RoomSchema* s_pStatic;
+			public construct() : base("GS_tblRoom", 0, 0, 1, 0, 0, 0, 0, 1)
 			{
-				if (s_pInfo == null)
-				{
-					s_pInfo = own new OrmObjectInfo("GS_tblRoom", 0, 0, 1, 0, 0, 0, 0, 1);
-					s_pInfo.AddField(OrmFieldInfo::Type::INT32, "id", 0, true);
-					s_pInfo.AddField(OrmFieldInfo::Type::STRING, "name", 0, false);
-				}
-				return s_pInfo;
+				s_pStatic = this;
+				AddField(OrmFieldInfo::Type::INT32, "id", 0, true);
+				AddField(OrmFieldInfo::Type::STRING, "name", 0, false);
 			}
+			public destruct() { s_pStatic = null; }
+			public static RoomSchema GetStatic() { return s_pStatic; }
+
 		}
 
 		class Room : OrmObject
 		{
-			public construct() : base(RoomSchema::GetInfo())
-			{
-			}
+			public construct() : base(RoomSchema::GetInfo()) { }
 
 			public Int32 GetId(bool bInitial = false) { return __GetInt32(0, bInitial); }
 			public void SetId(Int32 v) { __SetInt32(0, v); }
@@ -32,11 +29,15 @@ namespace NumbatLogic
 
 		class RoomContainer : OrmContainer
 		{
+			public construct() : base(RoomSchema::GetInfo()) { }
 			public override OrmObject** CreateRow()
 			{
 				Room* pRow = own new Room();
 				return disown pRow;
 			}
+
+			public Room GetRowById(Int32 v) { return cast Room(__GetRowByInt32(0, v)); }
+			public Room GetRowByName(string v) { return cast Room(__GetRowByString(0, v)); }
 		}
 	}
 }

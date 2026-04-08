@@ -1,0 +1,15 @@
+namespace NumberDuck
+{
+	namespace ORM
+	{
+		class disposable SchemaStatic
+		{
+			public RoomSchema* __pRoomSchema;
+
+			public construct()
+			{
+				__pRoomSchema = own new RoomSchema();
+			}
+		}
+	}
+}
