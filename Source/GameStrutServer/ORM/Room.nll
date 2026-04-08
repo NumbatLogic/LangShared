@@ -1,10 +1,10 @@
-namespace NumberDuck
+namespace NumbatLogic
 {
 	namespace ORM
 	{
 		class RoomSchema : OrmObjectInfo
 		{
-			private static RoomSchema* s_pStatic;
+			private static RoomSchema s_pStatic;
 			public construct() : base("GS_tblRoom", 0, 0, 1, 0, 0, 0, 0, 1)
 			{
 				s_pStatic = this;
@@ -18,7 +18,7 @@ namespace NumberDuck
 
 		class Room : OrmObject
 		{
-			public construct() : base(RoomSchema::GetInfo()) { }
+			public construct() : base(RoomSchema::GetStatic()) { }
 
 			public Int32 GetId(bool bInitial = false) { return __GetInt32(0, bInitial); }
 			public void SetId(Int32 v) { __SetInt32(0, v); }
@@ -29,7 +29,7 @@ namespace NumberDuck
 
 		class RoomContainer : OrmContainer
 		{
-			public construct() : base(RoomSchema::GetInfo()) { }
+			public construct() : base(RoomSchema::GetStatic()) { }
 			public override OrmObject** CreateRow()
 			{
 				Room* pRow = own new Room();
