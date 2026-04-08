@@ -1,43 +1,46 @@
 namespace NumbatLogic
 {
-	namespace ORM
+	namespace GameStrut
 	{
-		class RoomSchema : OrmObjectInfo
+		namespace ORM
 		{
-			private static RoomSchema s_pStatic;
-			public construct() : base("GS_tblRoom", 0, 0, 1, 0, 0, 0, 0, 1)
+			class RoomSchema : NumbatLogic::ORM::RowInfo
 			{
-				s_pStatic = this;
-				AddField(OrmFieldInfo::Type::INT32, "id", 0, true);
-				AddField(OrmFieldInfo::Type::STRING, "name", 0, false);
-			}
-			public destruct() { s_pStatic = null; }
-			public static RoomSchema GetStatic() { return s_pStatic; }
+				private static RoomSchema s_pStatic;
+				public construct() : base("GS_tblRoom", 0, 0, 1, 0, 0, 0, 0, 1)
+				{
+					s_pStatic = this;
+					AddField(NumbatLogic::ORM::FieldInfo::Type::INT32, "id", 0, true);
+					AddField(NumbatLogic::ORM::FieldInfo::Type::STRING, "name", 0, false);
+				}
+				public destruct() { s_pStatic = null; }
+				public static RoomSchema GetStatic() { return s_pStatic; }
 
-		}
-
-		class Room : OrmObject
-		{
-			public construct() : base(RoomSchema::GetStatic()) { }
-
-			public Int32 GetId(bool bInitial = false) { return __GetInt32(0, bInitial); }
-			public void SetId(Int32 v) { __SetInt32(0, v); }
-
-			public string GetName(bool bInitial = false) { return __GetString(0, bInitial); }
-			public void SetName(string v) { __SetString(0, v); }
-		}
-
-		class RoomContainer : OrmContainer
-		{
-			public construct() : base(RoomSchema::GetStatic()) { }
-			public override OrmObject** CreateRow()
-			{
-				Room* pRow = own new Room();
-				return disown pRow;
 			}
 
-			public Room GetRowById(Int32 v) { return cast Room(__GetRowByInt32(0, v)); }
-			public Room GetRowByName(string v) { return cast Room(__GetRowByString(0, v)); }
+			class Room : NumbatLogic::ORM::Row
+			{
+				public construct() : base(RoomSchema::GetStatic()) { }
+
+				public Int32 GetId(bool bInitial = false) { return __GetInt32(0, bInitial); }
+				public void SetId(Int32 v) { __SetInt32(0, v); }
+
+				public string GetName(bool bInitial = false) { return __GetString(0, bInitial); }
+				public void SetName(string v) { __SetString(0, v); }
+			}
+
+			class RoomContainer : NumbatLogic::ORM::Container
+			{
+				public construct() : base(RoomSchema::GetStatic()) { }
+				public override NumbatLogic::ORM::Row** CreateRow()
+				{
+					Room* pRow = own new Room();
+					return disown pRow;
+				}
+
+				public Room GetRowById(Int32 v) { return cast Room(__GetRowByInt32(0, v)); }
+				public Room GetRowByName(string v) { return cast Room(__GetRowByString(0, v)); }
+			}
 		}
 	}
 }

@@ -1,14 +1,17 @@
 namespace NumbatLogic
 {
-	namespace ORM
+	namespace GameStrut
 	{
-		class disposable SchemaStatic
+		namespace ORM
 		{
-			public RoomSchema* __pRoomSchema;
-
-			public construct()
+			class disposable SchemaStatic
 			{
-				__pRoomSchema = own new RoomSchema();
+				public RoomSchema* __pRoomSchema;
+
+				public construct()
+				{
+					__pRoomSchema = own new RoomSchema();
+				}
 			}
 		}
 	}
