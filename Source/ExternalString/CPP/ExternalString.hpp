@@ -14,7 +14,7 @@ namespace NumbatLogic
         		int c = 0;
 
 				const char* p = szString;
-				while (c = *p++)
+				while ((c = *p++))
 					hash = c + (hash << 6) + (hash << 16) - hash;
 
 				return (unsigned int)hash;

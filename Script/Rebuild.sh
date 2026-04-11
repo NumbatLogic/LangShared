@@ -39,6 +39,7 @@ fi
 
 cd Source
 	php "${PROJECT_NAME}.php" "linux_gmake"
+	php "${PROJECT_NAME}.php" "esp_idf"
 	php "${PROJECT_NAME}.php" "dotnet10"
 cd ..
 

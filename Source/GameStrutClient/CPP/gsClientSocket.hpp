@@ -27,6 +27,7 @@ namespace NumbatLogic
 			InternalString* m_pHost;
 			int m_nPort;
 			bool m_bConnected;
+			bool m_bConnectPending;  // Non-blocking connect(): wait for TCP handshake before recv()
 			unsigned int m_nClientSocketId;  // Unique identifier for this client socket
 
 			// Buffer management

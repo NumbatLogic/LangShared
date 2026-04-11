@@ -15,7 +15,6 @@
 	#include <netinet/in.h>
 	#include <sys/ioctl.h>
 	#include <sys/socket.h>
-	#include <sys/time.h>
 	#include <unistd.h>
 	#include <fcntl.h>
 #endif
@@ -31,6 +30,7 @@ namespace NumbatLogic
 		m_nSocket = -1;
 		m_nPort = -1;
 		m_bConnected = false;
+		m_bConnectPending = false;
 		m_pHost = NULL;
 		m_nClientSocketId = 0;  // Initialize client socket ID to 0
 
@@ -117,18 +117,23 @@ namespace NumbatLogic
 
 		status = connect(m_nSocket, result->ai_addr, (int)result->ai_addrlen);
 		m_bConnected = true;
-		
+		m_bConnectPending = false;
+
 		#ifdef NB_WINDOWS
 			if (status == SOCKET_ERROR) {
 				int error = WSAGetLastError();
-				if (error != WSAEWOULDBLOCK) {
+				if (error == WSAEWOULDBLOCK)
+					m_bConnectPending = true;
+				else {
 					printf("Connect failed with error: %d\n", error);
 					Disconnect();
 				}
 			}
 		#else
 			if (status < 0) {
-				if (errno != EINPROGRESS) {
+				if (errno == EINPROGRESS)
+					m_bConnectPending = true;
+				else {
 					printf("Connect failed with error: %s\n", strerror(errno));
 					Disconnect();
 				}
@@ -155,6 +160,7 @@ namespace NumbatLogic
 		}
 
 		m_bConnected = false;
+		m_bConnectPending = false;
 		m_nPort = -1;
 		delete m_pHost;
 		m_pHost = NULL;
@@ -171,6 +177,71 @@ namespace NumbatLogic
 	{
 		if (!m_bConnected || m_nSocket < 0)
 			return;
+
+		// Non-blocking connect: do not recv until the handshake finishes.
+		// Use getpeername + SO_ERROR instead of select()/poll(): ESP-IDF lwIP/VFS has had
+		// select+FD_SET issues that can corrupt lwIP memp (crash in tcpip thread).
+		if (m_bConnectPending)
+		{
+			struct sockaddr_storage peer;
+			#ifdef NB_WINDOWS
+				int peerlen = (int)sizeof(peer);
+				int okPeer = getpeername(m_nSocket, (struct sockaddr*)&peer, &peerlen);
+			#else
+				socklen_t peerlen = sizeof(peer);
+				int okPeer = getpeername(m_nSocket, (struct sockaddr*)&peer, &peerlen);
+			#endif
+
+			int soerr = 0;
+			#ifdef NB_WINDOWS
+				int solen = sizeof(soerr);
+				if (getsockopt(m_nSocket, SOL_SOCKET, SO_ERROR, (char*)&soerr, &solen) == SOCKET_ERROR)
+				{
+					Disconnect();
+					return;
+				}
+			#else
+				socklen_t solen = sizeof(soerr);
+				if (getsockopt(m_nSocket, SOL_SOCKET, SO_ERROR, &soerr, &solen) < 0)
+				{
+					Disconnect();
+					return;
+				}
+			#endif
+
+			if (okPeer == 0)
+			{
+				if (soerr != 0)
+				{
+					Disconnect();
+					return;
+				}
+				m_bConnectPending = false;
+			}
+			else
+			{
+				#ifdef NB_WINDOWS
+					int werr = WSAGetLastError();
+					if (werr != WSAENOTCONN && werr != WSAEWOULDBLOCK)
+					{
+						Disconnect();
+						return;
+					}
+				#else
+					if (errno != ENOTCONN && errno != EAGAIN && errno != EWOULDBLOCK)
+					{
+						Disconnect();
+						return;
+					}
+				#endif
+				if (soerr != 0)
+				{
+					Disconnect();
+					return;
+				}
+				return;
+			}
+		}
 
 		// Process write buffer
 		if (m_nWriteDataSize > 0)
@@ -189,12 +260,13 @@ namespace NumbatLogic
 			{
 				#ifdef NB_WINDOWS
 					int error = WSAGetLastError();
-					if (error != WSAEWOULDBLOCK) {
+					if (error != WSAEWOULDBLOCK && error != WSAEINPROGRESS && error != WSAEALREADY) {
 						printf("Send error: %d\n", error);
 						// Handle send error appropriately
 					}
 				#else
-					if (errno != EAGAIN && errno != EWOULDBLOCK) {
+					// lwIP may still report handshake state after getpeername() succeeds.
+					if (errno != EAGAIN && errno != EWOULDBLOCK && errno != EINPROGRESS && errno != EALREADY) {
 						printf("Send error: %s\n", strerror(errno));
 						// Handle send error appropriately
 					}
@@ -210,9 +282,11 @@ namespace NumbatLogic
 			int x = ioctl(m_nSocket, FIONREAD, &bytesAvailable);
 			if (x < 0)
 			{
-				if (errno != EAGAIN && errno != EWOULDBLOCK) {
+				// lwIP (ESP-IDF and others) often omits FIONREAD; newlib uses ENOSYS (88) here.
+				if (errno == ENOSYS || errno == EOPNOTSUPP || errno == ENOTTY)
+					bytesAvailable = 1024; // hax a size, pick a decent size otherwise it will nibble slowly!
+				else if (errno != EAGAIN && errno != EWOULDBLOCK)
 					printf("ioctl error %d - %d - %s\n", m_nSocket, errno, strerror(errno));
-				}
 			}
 		#endif
 
@@ -248,12 +322,29 @@ namespace NumbatLogic
 			{
 				#ifdef NB_WINDOWS
 					int error = WSAGetLastError();
-					if (error != WSAEWOULDBLOCK) {
+					if (error == WSAEWOULDBLOCK || error == WSAEINTR || error == WSAEINPROGRESS || error == WSAEALREADY)
+					{
+							
+					}
+					else if (error == WSAECONNRESET || error == WSAECONNABORTED)
+					{
+						Disconnect();
+					}
+					else
+					{
 						printf("Recv error: %d\n", error);
 						Disconnect();
 					}
 				#else
-					if (errno != EAGAIN && errno != EWOULDBLOCK) {
+					if (errno == EAGAIN || errno == EWOULDBLOCK || errno == EINTR || errno == EINPROGRESS || errno == EALREADY)
+					{
+					}
+					else if (errno == ECONNRESET || errno == ECONNABORTED)
+					{
+						Disconnect();
+					}
+					else
+					{
 						printf("Recv error: %s\n", strerror(errno));
 						Disconnect();
 					}
@@ -318,7 +409,8 @@ namespace NumbatLogic
 
 		unsigned short nSize = *((unsigned short*)m_pReadBuffer);
 
-		if (nSize > m_nReadDataSize + sizeof(unsigned short))
+		// Need 2-byte length + payload in buffer (not m_nReadDataSize + 2 — that allowed underflow below).
+		if (m_nReadDataSize < sizeof(unsigned short) + nSize)
 			return NULL;
 
 		// Create new blob with available data
@@ -337,6 +429,7 @@ namespace NumbatLogic
 	{
 		m_nSocket = nSocket;
 		m_bConnected = true;
+		m_bConnectPending = false;
 		m_nClientSocketId = nClientSocketId;
 	}
 }
