@@ -7,11 +7,12 @@ namespace NumbatLogic
 			class RoomSchema : NumbatLogic::ORM::RowInfo
 			{
 				private static RoomSchema s_pStatic;
-				public construct() : base("GS_tblRoom", 0, 0, 1, 0, 0, 0, 0, 1)
+				public construct() : base("GS_tblRoom", 0, 0, 2, 0, 0, 0, 0, 0, 1)
 				{
 					s_pStatic = this;
-					AddField(NumbatLogic::ORM::FieldInfo::Type::INT32, "id", 0, true);
-					AddField(NumbatLogic::ORM::FieldInfo::Type::STRING, "name", 0, false);
+					AddField(NumbatLogic::ORM::FieldInfo::Type::INT32, "nRoomId", 0, true);
+					AddField(NumbatLogic::ORM::FieldInfo::Type::INT32, "nServerId", 1, false);
+					AddField(NumbatLogic::ORM::FieldInfo::Type::STRING, "sName", 0, false);
 				}
 				public destruct() { s_pStatic = null; }
 				public static RoomSchema GetStatic() { return s_pStatic; }
@@ -22,8 +23,11 @@ namespace NumbatLogic
 			{
 				public construct() : base(RoomSchema::GetStatic()) { }
 
-				public Int32 GetId(bool bInitial = false) { return __GetInt32(0, bInitial); }
-				public void SetId(Int32 v) { __SetInt32(0, v); }
+				public Int32 GetRoomId(bool bInitial = false) { return __GetInt32(0, bInitial); }
+				public void SetRoomId(Int32 v) { __SetInt32(0, v); }
+
+				public Int32 GetServerId(bool bInitial = false) { return __GetInt32(1, bInitial); }
+				public void SetServerId(Int32 v) { __SetInt32(1, v); }
 
 				public string GetName(bool bInitial = false) { return __GetString(0, bInitial); }
 				public void SetName(string v) { __SetString(0, v); }
@@ -38,7 +42,8 @@ namespace NumbatLogic
 					return disown pRow;
 				}
 
-				public Room GetRowById(Int32 v) { return cast Room(__GetRowByInt32(0, v)); }
+				public Room GetRowByRoomId(Int32 v) { return cast Room(__GetRowByInt32(0, v)); }
+				public Room GetRowByServerId(Int32 v) { return cast Room(__GetRowByInt32(1, v)); }
 				public Room GetRowByName(string v) { return cast Room(__GetRowByString(0, v)); }
 			}
 		}

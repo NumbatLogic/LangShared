@@ -1,0 +1,41 @@
+namespace NumbatLogic
+{
+	namespace GameStrut
+	{
+		namespace ORM
+		{
+			class UserSchema : NumbatLogic::ORM::RowInfo
+			{
+				private static UserSchema s_pStatic;
+				public construct() : base("GS_tblUser", 0, 0, 1, 0, 0, 0, 0, 0, 0)
+				{
+					s_pStatic = this;
+					AddField(NumbatLogic::ORM::FieldInfo::Type::INT32, "nUserId", 0, true);
+				}
+				public destruct() { s_pStatic = null; }
+				public static UserSchema GetStatic() { return s_pStatic; }
+
+			}
+
+			class User : NumbatLogic::ORM::Row
+			{
+				public construct() : base(UserSchema::GetStatic()) { }
+
+				public Int32 GetUserId(bool bInitial = false) { return __GetInt32(0, bInitial); }
+				public void SetUserId(Int32 v) { __SetInt32(0, v); }
+			}
+
+			class UserContainer : NumbatLogic::ORM::Container
+			{
+				public construct() : base(UserSchema::GetStatic()) { }
+				public override NumbatLogic::ORM::Row** CreateRow()
+				{
+					User* pRow = own new User();
+					return disown pRow;
+				}
+
+				public User GetRowByUserId(Int32 v) { return cast User(__GetRowByInt32(0, v)); }
+			}
+		}
+	}
+}

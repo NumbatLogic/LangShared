@@ -1,0 +1,51 @@
+namespace NumbatLogic
+{
+	namespace GameStrut
+	{
+		namespace ORM
+		{
+			class ServerSchema : NumbatLogic::ORM::RowInfo
+			{
+				private static ServerSchema s_pStatic;
+				public construct() : base("GS_tblServer", 0, 0, 1, 0, 0, 0, 0, 0, 2)
+				{
+					s_pStatic = this;
+					AddField(NumbatLogic::ORM::FieldInfo::Type::INT32, "nServerId", 0, true);
+					AddField(NumbatLogic::ORM::FieldInfo::Type::STRING, "sHostName", 0, false);
+					AddField(NumbatLogic::ORM::FieldInfo::Type::STRING, "tsLastSeen", 1, false);
+				}
+				public destruct() { s_pStatic = null; }
+				public static ServerSchema GetStatic() { return s_pStatic; }
+
+			}
+
+			class Server : NumbatLogic::ORM::Row
+			{
+				public construct() : base(ServerSchema::GetStatic()) { }
+
+				public Int32 GetServerId(bool bInitial = false) { return __GetInt32(0, bInitial); }
+				public void SetServerId(Int32 v) { __SetInt32(0, v); }
+
+				public string GetHostName(bool bInitial = false) { return __GetString(0, bInitial); }
+				public void SetHostName(string v) { __SetString(0, v); }
+
+				public string GetLastSeen(bool bInitial = false) { return __GetString(1, bInitial); }
+				public void SetLastSeen(string v) { __SetString(1, v); }
+			}
+
+			class ServerContainer : NumbatLogic::ORM::Container
+			{
+				public construct() : base(ServerSchema::GetStatic()) { }
+				public override NumbatLogic::ORM::Row** CreateRow()
+				{
+					Server* pRow = own new Server();
+					return disown pRow;
+				}
+
+				public Server GetRowByServerId(Int32 v) { return cast Server(__GetRowByInt32(0, v)); }
+				public Server GetRowByHostName(string v) { return cast Server(__GetRowByString(0, v)); }
+				public Server GetRowByLastSeen(string v) { return cast Server(__GetRowByString(1, v)); }
+			}
+		}
+	}
+}

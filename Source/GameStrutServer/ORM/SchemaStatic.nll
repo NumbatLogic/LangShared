@@ -7,10 +7,14 @@ namespace NumbatLogic
 			class disposable SchemaStatic
 			{
 				public RoomSchema* __pRoomSchema;
+				public ServerSchema* __pServerSchema;
+				public UserSchema* __pUserSchema;
 
 				public construct()
 				{
 					__pRoomSchema = own new RoomSchema();
+					__pServerSchema = own new ServerSchema();
+					__pUserSchema = own new UserSchema();
 				}
 			}
 		}
