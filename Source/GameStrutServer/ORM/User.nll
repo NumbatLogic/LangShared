@@ -7,7 +7,7 @@ namespace NumbatLogic
 			class UserSchema : NumbatLogic::ORM::RowInfo
 			{
 				private static UserSchema s_pStatic;
-				public construct() : base("GS_tblUser", 0, 0, 1, 0, 0, 0, 0, 0, 0)
+				public construct() : base("GS_tblUser", 0, 1, 0, 0, 0, 0, 0)
 				{
 					s_pStatic = this;
 					AddField(NumbatLogic::ORM::FieldInfo::Type::INT32, "nUserId", 0, true);

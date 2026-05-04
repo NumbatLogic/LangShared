@@ -7,7 +7,7 @@ namespace NumbatLogic
 			class ServerSchema : NumbatLogic::ORM::RowInfo
 			{
 				private static ServerSchema s_pStatic;
-				public construct() : base("GS_tblServer", 0, 0, 1, 0, 0, 0, 0, 0, 2)
+				public construct() : base("GS_tblServer", 0, 1, 0, 0, 0, 2, 0)
 				{
 					s_pStatic = this;
 					AddField(NumbatLogic::ORM::FieldInfo::Type::INT32, "nServerId", 0, true);
