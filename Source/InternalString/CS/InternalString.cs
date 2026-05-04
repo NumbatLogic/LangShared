@@ -99,6 +99,11 @@ namespace NumbatLogic
 			return m_pStringBuilder.Length;
 		}
 
+		public int GetByteLength()
+		{
+			return System.Text.Encoding.UTF8.GetByteCount(m_pStringBuilder.ToString());
+		}
+
 		public char GetChar(int nIndex)
 		{
 			return m_pStringBuilder[nIndex];

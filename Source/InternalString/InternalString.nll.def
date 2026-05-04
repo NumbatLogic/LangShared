@@ -21,6 +21,7 @@ namespace NumbatLogic
 		public void Crop(int nStart, int nLength);
 		public void CropFront(int nLength);
 		public int GetLength();
+		public int GetByteLength();
 		public UniChar GetChar(int nIndex);
 		public bool IsAscii();
 		public bool IsEqual(string sString);
