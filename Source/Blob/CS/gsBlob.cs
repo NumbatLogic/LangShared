@@ -73,6 +73,31 @@ namespace NumbatLogic
 			return (remainder);
 		}
 
+		public gsBlob Clone()
+		{
+			gsBlob pOut = new gsBlob();
+			if (__nSize > 0)
+			{
+				pOut.Resize(__nSize);
+				System.Buffer.BlockCopy(__pBuffer, 0, pOut.__pBuffer, 0, __nSize);
+			}
+			pOut.__nSize = __nSize;
+			pOut.__nOffset = __nOffset;
+			return pOut;
+		}
+
+		public bool IsEqual(gsBlob pOther)
+		{
+			if (pOther == null)
+				return false;
+			if (__nSize != pOther.__nSize)
+				return false;
+			return System.MemoryExtensions.SequenceEqual(
+				System.MemoryExtensions.AsSpan(__pBuffer, 0, __nSize),
+				System.MemoryExtensions.AsSpan(pOther.__pBuffer, 0, pOther.__nSize)
+			);
+		}
+
 		public void Resize(int nSize)
 		{
 			byte[] pOldBuffer = __pBuffer;
