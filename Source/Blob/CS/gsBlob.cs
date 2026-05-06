@@ -178,6 +178,7 @@ namespace NumbatLogic
 		public void PackInt8(sbyte val) { Pack(System.BitConverter.GetBytes((short)val), 1); }
 		public void PackInt16(short val) { Pack(System.BitConverter.GetBytes(val), 2); }
 		public void PackInt32(int val) { Pack(System.BitConverter.GetBytes(val), 4); }
+		public void PackInt64(long val) { Pack(System.BitConverter.GetBytes(val), 8); }
 		public void PackUint8(byte val) { Pack(System.BitConverter.GetBytes((ushort)val), 1); }
 		public void PackUint16(ushort val) { Pack(System.BitConverter.GetBytes(val), 2); }
 		public void PackUint32(uint val) { Pack(System.BitConverter.GetBytes(val), 4); }
@@ -220,6 +221,7 @@ namespace NumbatLogic
 		public bool UnpackInt8(ref sbyte val) { const int SIZE = 1; if (__nOffset + SIZE > __nSize) return false; val = unchecked((sbyte)__pBuffer[__nOffset]); __nOffset += SIZE; return true; }
 		public bool UnpackInt16(ref short val) { const int SIZE = 2; if (__nOffset + SIZE > __nSize) return false; val = System.BitConverter.ToInt16(__pBuffer, __nOffset); __nOffset += SIZE; return true; }
 		public bool UnpackInt32(ref int val) {  const int SIZE = 4; if (__nOffset + SIZE > __nSize) return false; val = System.BitConverter.ToInt32(__pBuffer, __nOffset); __nOffset += SIZE; return true; }
+		public bool UnpackInt64(ref long val) { const int SIZE = 8; if (__nOffset + SIZE > __nSize) return false; val = System.BitConverter.ToInt64(__pBuffer, __nOffset); __nOffset += SIZE; return true; }
 		public bool UnpackUint8(ref byte val) { const int SIZE = 1; if (__nOffset + SIZE > __nSize) return false; val = __pBuffer[__nOffset]; __nOffset += SIZE; return true; }
 		public bool UnpackUint16(ref ushort val) { const int SIZE = 2; if (__nOffset + SIZE > __nSize) return false; val = System.BitConverter.ToUInt16(__pBuffer, __nOffset); __nOffset += SIZE; return true; }
 		public bool UnpackUint32(ref uint val) { const int SIZE = 4; if (__nOffset + SIZE > __nSize) return false; val = System.BitConverter.ToUInt32(__pBuffer, __nOffset); __nOffset += SIZE; return true; }

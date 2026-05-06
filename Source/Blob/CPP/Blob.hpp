@@ -28,6 +28,7 @@ namespace NumbatLogic
 			void PackInt8(signed char val);
 			void PackInt16(signed short val);
 			void PackInt32(signed int val);
+			void PackInt64(long long val);
 			
 			void PackUint8(unsigned char val);
 			void PackUint16(unsigned short val);
@@ -45,6 +46,7 @@ namespace NumbatLogic
 			bool UnpackInt8(signed char& val);
 			bool UnpackInt16(signed short& val);
 			bool UnpackInt32(signed int& val);
+			bool UnpackInt64(long long& val);
 
 			bool UnpackUint8(unsigned char& val);
 			bool UnpackUint16(unsigned short& val);
