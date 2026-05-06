@@ -34,6 +34,12 @@ namespace NumbatLogic
 					return disown pRow;
 				}
 
+				public void AddUserId(Int32 v, string sxWhereGroup = "OR", string sxComparitor = "=") { __AddLoadInt32(0, v, sxWhereGroup, sxComparitor); }
+
+				public void AddOrderByUserId(bool bAscending = true) { __AddOrderBy(0, bAscending); }
+
+				public User GetRowByIndex(int nIndex) { return cast User(GetAt(nIndex)); }
+
 				public User GetRowByUserId(Int32 v) { return cast User(__GetRowByInt32(0, v)); }
 			}
 		}

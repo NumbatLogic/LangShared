@@ -49,6 +49,18 @@ namespace NumbatLogic
 					return disown pRow;
 				}
 
+				public void AddRoomId(Int32 v, string sxWhereGroup = "OR", string sxComparitor = "=") { __AddLoadInt32(0, v, sxWhereGroup, sxComparitor); }
+				public void AddServerId(Int32 v, string sxWhereGroup = "OR", string sxComparitor = "=") { __AddLoadInt32(1, v, sxWhereGroup, sxComparitor); }
+				public void AddRoomType(Int32 v, string sxWhereGroup = "OR", string sxComparitor = "=") { __AddLoadInt32(2, v, sxWhereGroup, sxComparitor); }
+				public void AddUniqueId(Int32 v, string sxWhereGroup = "OR", string sxComparitor = "=") { __AddLoadInt32(3, v, sxWhereGroup, sxComparitor); }
+
+				public void AddOrderByRoomId(bool bAscending = true) { __AddOrderBy(0, bAscending); }
+				public void AddOrderByServerId(bool bAscending = true) { __AddOrderBy(1, bAscending); }
+				public void AddOrderByRoomType(bool bAscending = true) { __AddOrderBy(2, bAscending); }
+				public void AddOrderByUniqueId(bool bAscending = true) { __AddOrderBy(3, bAscending); }
+
+				public Room GetRowByIndex(int nIndex) { return cast Room(GetAt(nIndex)); }
+
 				public Room GetRowByRoomId(Int32 v) { return cast Room(__GetRowByInt32(0, v)); }
 				public Room GetRowByServerId(Int32 v) { return cast Room(__GetRowByInt32(1, v)); }
 				public Room GetRowByRoomType(Int32 v) { return cast Room(__GetRowByInt32(2, v)); }

@@ -42,6 +42,16 @@ namespace NumbatLogic
 					return disown pRow;
 				}
 
+				public void AddServerId(Int32 v, string sxWhereGroup = "OR", string sxComparitor = "=") { __AddLoadInt32(0, v, sxWhereGroup, sxComparitor); }
+				public void AddHostName(string v, string sxWhereGroup = "OR", string sxComparitor = "=") { __AddLoadString(1, v, sxWhereGroup, sxComparitor); }
+				public void AddLastSeen(string v, string sxWhereGroup = "OR", string sxComparitor = "=") { __AddLoadString(2, v, sxWhereGroup, sxComparitor); }
+
+				public void AddOrderByServerId(bool bAscending = true) { __AddOrderBy(0, bAscending); }
+				public void AddOrderByHostName(bool bAscending = true) { __AddOrderBy(1, bAscending); }
+				public void AddOrderByLastSeen(bool bAscending = true) { __AddOrderBy(2, bAscending); }
+
+				public Server GetRowByIndex(int nIndex) { return cast Server(GetAt(nIndex)); }
+
 				public Server GetRowByServerId(Int32 v) { return cast Server(__GetRowByInt32(0, v)); }
 				public Server GetRowByHostName(string v) { return cast Server(__GetRowByString(0, v)); }
 				public Server GetRowByLastSeen(string v) { return cast Server(__GetRowByString(1, v)); }
