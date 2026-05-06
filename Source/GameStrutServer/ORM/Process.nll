@@ -7,7 +7,7 @@ namespace NumbatLogic
 			class ProcessSchema : NumbatLogic::ORM::RowInfo
 			{
 				private static ProcessSchema s_pStatic;
-				public construct() : base("GS_tblProcess", 0, 2, 0, 0, 0, 1, 0)
+				public construct() : base("GS_tblProcess", 0, 2, 0, 0, 0, 0, 1, 0)
 				{
 					s_pStatic = this;
 					AddField(NumbatLogic::ORM::FieldInfo::Type::INT32, "nProcessId", 0, true);

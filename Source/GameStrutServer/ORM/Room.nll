@@ -7,7 +7,7 @@ namespace NumbatLogic
 			class RoomSchema : NumbatLogic::ORM::RowInfo
 			{
 				private static RoomSchema s_pStatic;
-				public construct() : base("GS_tblRoom", 0, 4, 0, 0, 0, 0, 1)
+				public construct() : base("GS_tblRoom", 0, 4, 0, 0, 0, 0, 0, 1)
 				{
 					s_pStatic = this;
 					AddField(NumbatLogic::ORM::FieldInfo::Type::INT32, "nRoomId", 0, true);
